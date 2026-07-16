@@ -60,15 +60,24 @@
 
 <h2>Passenger Registration</h2>
 
-<form>
+{% if success %}
+<p style="color:green; text-align:center;">
+    {{ success }}
+</p>
+{% endif %}
 
-<input type="text" placeholder="Full Name">
-<input type="email" placeholder="Email">
-<input type="text" placeholder="Username">
-<input type="password" placeholder="Password">
-<input type="password" placeholder="Confirm Password">
+<form method="POST">
+    {% csrf_token %}
 
-<button>Create Account</button>
+    <input type="text" name="full_name" placeholder="Full Name">
+
+    <input type="email" name="email" placeholder="Email">
+
+    <input type="text" name="username" placeholder="Username">
+
+    <input type="password" name="password" placeholder="Password">
+
+    <button>Create Account</button>
 
 </form>
 
