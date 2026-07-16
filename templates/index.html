@@ -2,23 +2,139 @@
 <html>
 <head>
     <title>Smart Railway Assistance System</title>
+    <style>
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            background:#f4f7fb;
+        }
+
+        .navbar{
+            background:#003366;
+            color:white;
+            padding:18px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .navbar h2{
+            margin:0;
+        }
+
+        .menu a{
+            color:white;
+            text-decoration:none;
+            margin-left:20px;
+            font-weight:bold;
+        }
+
+        .hero{
+            text-align:center;
+            padding:80px 20px;
+            background:linear-gradient(to right,#0052cc,#0099ff);
+            color:white;
+        }
+
+        .hero h1{
+            font-size:45px;
+        }
+
+        .hero p{
+            font-size:20px;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:25px;
+            padding:12px 30px;
+            background:white;
+            color:#0052cc;
+            text-decoration:none;
+            border-radius:30px;
+            font-weight:bold;
+        }
+
+        .features{
+            display:flex;
+            justify-content:center;
+            flex-wrap:wrap;
+            margin:50px;
+        }
+
+        .card{
+            background:white;
+            width:260px;
+            margin:15px;
+            padding:25px;
+            border-radius:12px;
+            box-shadow:0 5px 15px rgba(0,0,0,0.2);
+            text-align:center;
+        }
+
+        .card h3{
+            color:#0052cc;
+        }
+
+        footer{
+            background:#003366;
+            color:white;
+            text-align:center;
+            padding:15px;
+            margin-top:40px;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h1>🚆 Smart Railway Assistance and Reservation System</h1>
+<div class="navbar">
+    <h2>🚆 Smart Railway Assistance</h2>
 
-    <hr>
+    <div class="menu">
+        <a href="#">Home</a>
+        <a href="#">Station Layout</a>
+        <a href="#">Luggage</a>
+        <a href="#">Emergency</a>
+        <a href="#">Contact</a>
+    </div>
+</div>
 
-    <h2>Welcome</h2>
+<div class="hero">
+    <h1>Smart Railway Assistance and Reservation System</h1>
 
-    <p>This system helps railway passengers by providing:</p>
+    <p>Making railway travel easier, safer and smarter.</p>
 
-    <ul>
-        <li>Station Layout</li>
-        <li>Luggage Transfer Booking</li>
-        <li>Emergency Medical Assistance</li>
-        <li>Train Information</li>
-    </ul>
+    <a href="#" class="btn">Get Started</a>
+</div>
+
+<div class="features">
+
+<div class="card">
+<h3>🗺 Station Layout</h3>
+<p>Find platforms, ticket counters, waiting rooms and exits easily.</p>
+</div>
+
+<div class="card">
+<h3>🧳 Luggage Transfer</h3>
+<p>Book luggage transfer service online with convenient timings.</p>
+</div>
+
+<div class="card">
+<h3>🚑 Emergency Help</h3>
+<p>Quick access to nearby hospitals and ambulance services.</p>
+</div>
+
+<div class="card">
+<h3>ℹ Passenger Assistance</h3>
+<p>Provide useful railway information through a single platform.</p>
+</div>
+
+</div>
+
+<footer>
+© 2026 Smart Railway Assistance and Reservation System
+</footer>
 
 </body>
 </html>
