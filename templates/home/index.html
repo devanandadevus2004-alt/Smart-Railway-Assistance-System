@@ -103,6 +103,12 @@
 <div class="hero">
     <h1>Smart Railway Assistance and Reservation System</h1>
 
+    {% if name %}
+    <h3 style="color:white;">
+        Welcome {{ name }}
+    </h3>
+    {% endif %}
+
     <p>Making railway travel easier, safer and smarter.</p>
 
     <a href="#" class="btn">Get Started</a>

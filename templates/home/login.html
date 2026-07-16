@@ -60,12 +60,20 @@
 <div class="container">
 
 <h2>Passenger Login</h2>
+{% if messages %}
+    {% for message in messages %}
+        <p style="color:red; text-align:center;">
+            {{ message }}
+        </p>
+    {% endfor %}
+{% endif %}
 
-<form>
+<form method="POST">
+    {% csrf_token %}
 
-<input type="text" placeholder="Username">
+<input type="text" name="username" placeholder="Username">
 
-<input type="password" placeholder="Password">
+<input type="password" name="password" placeholder="Password">
 
 <button>Login</button>
 
