@@ -16,8 +16,8 @@ def login(request):
                 username=username,
                 password=password
             )
-            return render(request, "home/index.html", {
-                "name": passenger.full_name
+            return render(request, "home/dashboard.html", {
+            "name": passenger.full_name
             })
 
         except Passenger.DoesNotExist:
