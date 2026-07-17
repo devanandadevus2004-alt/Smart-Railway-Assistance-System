@@ -24,13 +24,17 @@
             color:#003366;
         }
 
-        input{
-            width:100%;
-            padding:12px;
-            margin:10px 0;
-            border:1px solid #ccc;
-            border-radius:5px;
-        }
+        input,
+        select,
+        textarea{
+                 width:100%;
+                 padding:12px;
+                 margin:10px 0;
+                 border:1px solid #ccc;
+                border-radius:5px;
+                box-sizing:border-box;
+                font-family:Arial;
+}
 
         button{
             width:100%;
@@ -60,6 +64,12 @@
 
 <h2>Passenger Registration</h2>
 
+{% if error %}
+<p style="color:red; text-align:center;">
+    {{ error }}
+</p>
+{% endif %}
+
 {% if success %}
 <p style="color:green; text-align:center;">
     {{ success }}
@@ -69,18 +79,47 @@
 <form method="POST">
     {% csrf_token %}
 
-    <input type="text" name="full_name" placeholder="Full Name">
+    <input type="text" name="full_name" placeholder="Full Name"
+       value="{{ full_name|default:'' }}" required>
 
-    <input type="email" name="email" placeholder="Email">
+    <input type="email" name="email" placeholder="Email"
+       value="{{ email|default:'' }}" required>
 
-    <input type="text" name="username" placeholder="Username">
+    <input type="text" name="username" placeholder="Username"
+       value="{{ username|default:'' }}" required>
 
-    <input type="password" name="password" placeholder="Password">
+    <input type="text" name="aadhaar_number"
+       value="{{ aadhaar_number|default:'' }}"
+       placeholder="Aadhaar Number" maxlength="12" required>
+
+    <input type="text" name="phone_number"
+       value="{{ phone_number|default:'' }}"
+       placeholder="Phone Number" maxlength="10" required>
+    <select name="gender" required>
+    <option value="">Select Gender</option>
+
+    <option value="Male" {% if gender == "Male" %}selected{% endif %}>
+        Male
+    </option>
+
+    <option value="Female" {% if gender == "Female" %}selected{% endif %}>
+        Female
+    </option>
+
+    <option value="Other" {% if gender == "Other" %}selected{% endif %}>
+        Other
+    </option>
+    </select>
+
+<textarea name="address" placeholder="Address">{{ address|default:'' }}</textarea>
+
+    <input type="password" name="password" placeholder="Password" required>
+
+    <input type="password" name="confirm_password" placeholder="Confirm Password" required>
 
     <button>Create Account</button>
 
 </form>
-
 <p>
 Already have an account?
 <a href="/login/">Login</a>
