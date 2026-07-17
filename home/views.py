@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Passenger
+from .models import Passenger, LuggageBooking
+from .models import Passenger, LuggageBooking, Station
+
 
 def home(request):
     return render(request, "home/index.html")
@@ -133,4 +136,11 @@ def dashboard(request):
 
     return render(request, "home/dashboard.html", {
         "name": request.session["passenger_name"]
+    })
+
+def luggage_booking(request):
+    stations =list(Station.objects.all())
+
+    return render(request, "home/luggage_booking.html", {
+        "stations": stations
     })
