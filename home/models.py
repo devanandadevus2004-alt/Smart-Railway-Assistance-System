@@ -40,8 +40,18 @@ class LuggageBooking(models.Model):
     weight = models.FloatField()
     travel_date = models.DateField()
     contact_number = models.CharField(max_length=15)
-    status = models.CharField(max_length=20, default="Pending")
+    status = models.CharField(
+    max_length=30,
+    default="Pending"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
+    verification_date = models.DateField(null=True, blank=True)
+
+    verification_time = models.TimeField(null=True, blank=True)
+
+    instructions = models.TextField(blank=True)
+
+    
 
     # ─── ADD THIS META BLOCK ───
     class Meta:
@@ -49,3 +59,22 @@ class LuggageBooking(models.Model):
 
     def __str__(self):
         return self.passenger.full_name
+class Officer(models.Model):
+    full_name = models.CharField(max_length=100)
+
+    employee_id = models.CharField(max_length=20, unique=True)
+
+    username = models.CharField(max_length=50, unique=True)
+
+    password = models.CharField(max_length=100)
+
+    email = models.EmailField(unique=True)
+
+    phone_number = models.CharField(max_length=10)
+
+    station = models.ForeignKey(Station, on_delete=models.CASCADE)
+
+    designation = models.CharField(max_length=50, default="Parcel Officer")
+
+    def __str__(self):
+        return f"{self.full_name} - {self.station.station_name}"

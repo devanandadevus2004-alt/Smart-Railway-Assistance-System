@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Luggage Bookings</title>
+</head>
+<body>
+
+<h2>My Luggage Bookings</h2>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Source</th>
+        <th>Destination</th>
+        <th>Luggage Type</th>
+        <th>Bags</th>
+        <th>Weight</th>
+        <th>Travel Date</th>
+        <th>Status</th>
+    </tr>
+
+    {% for booking in bookings %}
+    <tr>
+        <td>{{ booking.source_station.station_name }}</td>
+        <td>{{ booking.destination_station.station_name }}</td>
+        <td>{{ booking.luggage_type }}</td>
+        <td>{{ booking.number_of_bags }}</td>
+        <td>{{ booking.weight }} kg</td>
+        <td>{{ booking.travel_date }}</td>
+        <td>{{ booking.status }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="7">No luggage bookings found.</td>
+    </tr>
+    {% endfor %}
+</table>
+
+<br>
+
+<a href="/dashboard/">← Back to Dashboard</a>
+
+</body>
+</html>

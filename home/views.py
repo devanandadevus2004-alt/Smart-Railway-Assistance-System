@@ -3,6 +3,7 @@ from django.contrib import messages
 from .models import Passenger
 from .models import Passenger, LuggageBooking
 from .models import Passenger, LuggageBooking, Station
+from .models import Officer
 
 
 def home(request):
@@ -139,8 +140,82 @@ def dashboard(request):
     })
 
 def luggage_booking(request):
-    stations =list(Station.objects.all())
+    stations = Station.objects.all()
+
+    if request.method == "POST":
+        source_station = Station.objects.get(id=request.POST["source_station"])
+        destination_station = Station.objects.get(id=request.POST["destination_station"])
+
+        luggage_type = request.POST["luggage_type"]
+        number_of_bags = request.POST["number_of_bags"]
+        weight = request.POST["weight"]
+        travel_date = request.POST["travel_date"]
+        contact_number = request.POST["contact_number"]
+
+        passenger = Passenger.objects.get(id=request.session["passenger_id"])
+
+        LuggageBooking.objects.create(
+            passenger=passenger,
+            source_station=source_station,
+            destination_station=destination_station,
+            luggage_type=luggage_type,
+            number_of_bags=number_of_bags,
+            weight=weight,
+            travel_date=travel_date,
+            contact_number=contact_number,
+        )
+
+        return render(request, "home/luggage_booking.html", {
+            "stations": stations,
+            "success": "Luggage booking submitted successfully!"
+        })
 
     return render(request, "home/luggage_booking.html", {
         "stations": stations
+    })
+def my_bookings(request):
+    passenger = Passenger.objects.get(id=request.session["passenger_id"])
+
+    bookings = LuggageBooking.objects.filter(passenger=passenger)
+
+    return render(request, "home/my_bookings.html", {
+        "bookings": bookings
+    })
+def officer_login(request):
+
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+
+        try:
+            officer = Officer.objects.get(
+                username=username,
+                password=password
+            )
+
+            request.session["officer_id"] = officer.id
+            request.session["officer_name"] = officer.full_name
+
+            return redirect("officer_dashboard")
+
+        except Officer.DoesNotExist:
+            return render(request, "home/officer_login.html", {
+                "error": "Invalid Username or Password"
+            })
+
+    return render(request, "home/officer_login.html")
+def officer_dashboard(request):
+
+    if "officer_id" not in request.session:
+        return redirect("officer_login")
+
+    officer = Officer.objects.get(id=request.session["officer_id"])
+
+    bookings = LuggageBooking.objects.filter(
+        source_station=officer.station
+    )
+
+    return render(request, "home/officer_dashboard.html", {
+        "officer": officer,
+        "bookings": bookings,
     })

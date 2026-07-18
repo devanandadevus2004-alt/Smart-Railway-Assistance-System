@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Officer Login</title>
+
+    <style>
+        body{
+            margin:0;
+            font-family:Arial;
+            background:#e8f0fe;
+        }
+
+        .container{
+            width:400px;
+            margin:70px auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 15px gray;
+        }
+
+        h2{
+            text-align:center;
+            color:#003366;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin:10px 0;
+            border:1px solid #ccc;
+            border-radius:5px;
+            box-sizing:border-box;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            background:#0052cc;
+            color:white;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        .error{
+            color:red;
+            text-align:center;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Railway Officer Login</h2>
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+
+<form method="POST">
+    {% csrf_token %}
+
+    <input type="text" name="username" placeholder="Username" required>
+
+    <input type="password" name="password" placeholder="Password" required>
+
+    <button>Login</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

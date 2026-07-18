@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Officer Dashboard</title>
+</head>
+
+<body>
+
+<h2>Welcome {{ officer.full_name }}</h2>
+
+<h3>Station : {{ officer.station.station_name }}</h3>
+
+<hr>
+
+<h3>Pending Luggage Bookings</h3>
+
+<table border="1" cellpadding="10">
+
+<tr>
+    <th>Passenger</th>
+    <th>Destination</th>
+    <th>Travel Date</th>
+    <th>Status</th>
+</tr>
+
+{% for booking in bookings %}
+
+<tr>
+
+<td>{{ booking.passenger.full_name }}</td>
+
+<td>{{ booking.destination_station.station_name }}</td>
+
+<td>{{ booking.travel_date }}</td>
+
+<td>{{ booking.status }}</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+<td colspan="4">
+No bookings available.
+</td>
+</tr>
+
+{% endfor %}
+
+</table>
+
+</body>
+</html>
