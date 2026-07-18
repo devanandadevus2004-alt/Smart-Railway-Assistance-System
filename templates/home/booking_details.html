@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking Details</title>
+
+    <style>
+        body{
+            font-family:Arial;
+            background:#eef3f8;
+            margin:30px;
+        }
+
+        .container{
+            width:700px;
+            margin:auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px gray;
+        }
+
+        h2{
+            color:#003366;
+            text-align:center;
+        }
+
+        p{
+            font-size:16px;
+        }
+
+        input, textarea, select{
+            width:100%;
+            padding:10px;
+            margin-top:8px;
+            margin-bottom:15px;
+            box-sizing:border-box;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            background:#0052cc;
+            color:white;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Luggage Booking Details</h2>
+
+<p><b>Passenger:</b> {{ booking.passenger.full_name }}</p>
+
+<p><b>Source Station:</b> {{ booking.source_station.station_name }}</p>
+
+<p><b>Destination Station:</b> {{ booking.destination_station.station_name }}</p>
+
+<p><b>Luggage Type:</b> {{ booking.luggage_type }}</p>
+
+<p><b>Weight:</b> {{ booking.weight }} kg</p>
+
+<p><b>Travel Date:</b> {{ booking.travel_date }}</p>
+
+<hr>
+
+<form method="POST" action="/booking/update/{{ booking.id }}/">
+
+{% csrf_token %}
+
+<label>Verification Date</label>
+
+<input type="date"
+       name="verification_date"
+       required>
+
+<label>Verification Time</label>
+
+<input type="time"
+       name="verification_time"
+       required>
+
+<label>Instructions</label>
+
+<textarea
+name="instructions"
+rows="4"
+placeholder="Enter instructions"></textarea>
+
+<label>Status</label>
+
+<select name="status">
+
+<option value="Verification Scheduled">
+Verification Scheduled
+</option>
+
+<option value="Rejected">
+Rejected
+</option>
+
+</select>
+
+<button type="submit">
+
+Save
+
+</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

@@ -15,26 +15,24 @@
 <h3>Pending Luggage Bookings</h3>
 
 <table border="1" cellpadding="10">
-
 <tr>
     <th>Passenger</th>
     <th>Destination</th>
     <th>Travel Date</th>
     <th>Status</th>
+    <th>Action</th>
 </tr>
 
 {% for booking in bookings %}
 
 <tr>
-
-<td>{{ booking.passenger.full_name }}</td>
-
-<td>{{ booking.destination_station.station_name }}</td>
-
-<td>{{ booking.travel_date }}</td>
-
-<td>{{ booking.status }}</td>
-
+    <td>{{ booking.passenger.full_name }}</td>
+    <td>{{ booking.destination_station.station_name }}</td>
+    <td>{{ booking.travel_date }}</td>
+    <td>{{ booking.status }}</td>
+    <td>
+        <a href="/booking/{{ booking.id }}/">Open</a>
+    </td>
 </tr>
 
 {% empty %}

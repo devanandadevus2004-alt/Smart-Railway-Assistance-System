@@ -4,6 +4,7 @@ from .models import Passenger
 from .models import Passenger, LuggageBooking
 from .models import Passenger, LuggageBooking, Station
 from .models import Officer
+from django.shortcuts import get_object_or_404, redirect
 
 
 def home(request):
@@ -219,3 +220,25 @@ def officer_dashboard(request):
         "officer": officer,
         "bookings": bookings,
     })
+
+
+
+def booking_details(request, booking_id):
+    booking = LuggageBooking.objects.get(id=booking_id)
+
+    return render(request, "home/booking_details.html", {
+        "booking": booking
+    })
+
+
+
+def update_booking(request, booking_id):
+    booking = get_object_or_404(LuggageBooking, id=booking_id)
+
+    if request.method == "POST":
+        booking.verification_date = request.POST["verification_date"]
+        booking.verification_time = request.POST["verification_time"]
+        booking.status = request.POST["status"]
+        booking.save()
+
+    return redirect("officer_dashboard")
