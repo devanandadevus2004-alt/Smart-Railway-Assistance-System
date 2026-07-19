@@ -21,6 +21,7 @@
     <th>Verification Time</th>
     <th>Instructions</th>
     <th>Rejection Reason</th>
+    <th>Action</th>
 </tr>
 
 {% for booking in bookings %}
@@ -37,6 +38,16 @@
     <td>{{ booking.verification_time|default:"Not Scheduled" }}</td>
     <td>{{ booking.instructions|default:"No Instructions" }}</td>
     <td>{{ booking.rejection_reason|default:"-" }}</td>
+    <td>
+    {% if booking.status == "Pending" %}
+    <a href="/cancel-booking/{{ booking.id }}/"
+       onclick="return confirm('Are you sure you want to cancel this booking?')">
+        Cancel
+    </a>
+    {% else %}
+    -
+    {% endif %}
+    </td>
 </tr>
 
 {% empty %}

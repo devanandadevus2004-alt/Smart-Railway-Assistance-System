@@ -13,4 +13,5 @@ urlpatterns = [
     path("officer-dashboard/", views.officer_dashboard, name="officer_dashboard"),
     path("booking/<int:booking_id>/", views.booking_details, name="booking_details"),
     path("booking/update/<int:booking_id>/", views.update_booking, name="update_booking"),
+    path( "cancel-booking/<int:booking_id>/", views.cancel_booking,name="cancel_booking"),
 ]

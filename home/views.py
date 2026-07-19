@@ -258,3 +258,13 @@ def update_booking(request, booking_id):
         booking.save()
 
     return redirect("officer_dashboard")
+
+
+
+def cancel_booking(request, booking_id):
+    booking = get_object_or_404(LuggageBooking, id=booking_id)
+
+    if booking.status == "Pending":
+        booking.delete()
+
+    return redirect("my_bookings")
