@@ -232,13 +232,29 @@ def booking_details(request, booking_id):
 
 
 
+
 def update_booking(request, booking_id):
     booking = get_object_or_404(LuggageBooking, id=booking_id)
 
     if request.method == "POST":
-        booking.verification_date = request.POST["verification_date"]
-        booking.verification_time = request.POST["verification_time"]
-        booking.status = request.POST["status"]
+
+        action = request.POST.get("action")
+
+        if action == "accept":
+            booking.status = "Verification Scheduled"
+            booking.verification_date = request.POST.get("verification_date")
+            booking.verification_time = request.POST.get("verification_time")
+            booking.instructions = request.POST.get("instructions")
+            booking.rejection_reason = ""
+
+        elif action == "reject":
+            booking.status = "Rejected"
+            booking.rejection_reason = request.POST.get("rejection_reason")
+
+            booking.verification_date = None
+            booking.verification_time = None
+            booking.instructions = ""
+
         booking.save()
 
     return redirect("officer_dashboard")

@@ -50,6 +50,7 @@ class LuggageBooking(models.Model):
     verification_time = models.TimeField(null=True, blank=True)
 
     instructions = models.TextField(blank=True)
+    rejection_reason = models.TextField(blank=True)
 
     
 

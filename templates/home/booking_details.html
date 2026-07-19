@@ -71,51 +71,83 @@
 
 <hr>
 
+<button type="button" onclick="showAcceptForm()">
+    Accept Booking
+</button>
+
+<br><br>
+
+<button type="button"
+        onclick="showRejectForm()"
+        style="background:red;color:white;">
+    Reject Booking
+</button>
+
+<hr>
+
+<div id="acceptForm" style="display:none;">
+
 <form method="POST" action="/booking/update/{{ booking.id }}/">
 
-{% csrf_token %}
+    {% csrf_token %}
 
-<label>Verification Date</label>
+    <input type="hidden" name="action" value="accept">
 
-<input type="date"
-       name="verification_date"
-       required>
+    <label>Verification Date</label>
+    <input type="date" name="verification_date" required>
 
-<label>Verification Time</label>
+    <label>Verification Time</label>
+    <input type="time" name="verification_time" required>
 
-<input type="time"
-       name="verification_time"
-       required>
+    <label>Instructions</label>
+    <textarea name="instructions" rows="4"></textarea>
 
-<label>Instructions</label>
-
-<textarea
-name="instructions"
-rows="4"
-placeholder="Enter instructions"></textarea>
-
-<label>Status</label>
-
-<select name="status">
-
-<option value="Verification Scheduled">
-Verification Scheduled
-</option>
-
-<option value="Rejected">
-Rejected
-</option>
-
-</select>
-
-<button type="submit">
-
-Save
-
-</button>
+    <button type="submit">
+        Schedule Verification
+    </button>
 
 </form>
 
+</div>
+
+<div id="rejectForm" style="display:none;">
+
+<form method="POST" action="/booking/update/{{ booking.id }}/">
+
+    {% csrf_token %}
+
+    <input type="hidden" name="action" value="reject">
+
+    <label>Rejection Reason</label>
+
+    <textarea
+        name="rejection_reason"
+        rows="4"
+        required></textarea>
+
+    <button
+        type="submit"
+        style="background:red;">
+        Confirm Rejection
+    </button>
+
+</form>
+
+</div>
+
+<script>
+
+function showAcceptForm() {
+    document.getElementById("acceptForm").style.display = "block";
+    document.getElementById("rejectForm").style.display = "none";
+}
+
+function showRejectForm() {
+    document.getElementById("rejectForm").style.display = "block";
+    document.getElementById("acceptForm").style.display = "none";
+}
+
+</script>
 </div>
 
 </body>
