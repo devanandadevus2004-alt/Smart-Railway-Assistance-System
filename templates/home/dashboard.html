@@ -1,24 +1,263 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Dashboard</title>
+    <title>Passenger Dashboard</title>
+
+    <style>
+        *{
+            box-sizing:border-box;
+        }
+
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            background:#f4f7fb;
+            color:#333;
+        }
+
+        /* Navigation Bar */
+        .navbar{
+            background:#003366;
+            color:white;
+            padding:18px 40px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .navbar h2{
+            margin:0;
+            font-size:22px;
+        }
+
+        .logout{
+            color:white;
+            text-decoration:none;
+            background:#e53935;
+            padding:10px 20px;
+            border-radius:20px;
+            font-weight:bold;
+        }
+
+        .logout:hover{
+            background:#c62828;
+        }
+
+        /* Welcome Section */
+        .welcome{
+            text-align:center;
+            padding:45px 20px 25px;
+        }
+
+        .welcome h1{
+            color:#003366;
+            margin-bottom:10px;
+        }
+
+        .welcome p{
+            color:#666;
+            font-size:17px;
+        }
+
+        /* Service Cards */
+        .services{
+            display:flex;
+            justify-content:center;
+            flex-wrap:wrap;
+            gap:25px;
+            padding:30px 40px 60px;
+        }
+
+        .card{
+            background:white;
+            width:300px;
+            padding:30px;
+            border-radius:15px;
+            text-align:center;
+            box-shadow:0 5px 18px rgba(0,0,0,0.15);
+            transition:transform 0.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-8px);
+        }
+
+        .icon{
+            font-size:45px;
+            margin-bottom:15px;
+        }
+
+        .card h3{
+            color:#0052cc;
+            margin-bottom:12px;
+        }
+
+        .card p{
+            color:#666;
+            line-height:1.5;
+            min-height:48px;
+        }
+
+        .btn{
+            display:inline-block;
+            margin-top:15px;
+            padding:11px 25px;
+            background:#0052cc;
+            color:white;
+            text-decoration:none;
+            border-radius:25px;
+            font-weight:bold;
+        }
+
+        .btn:hover{
+            background:#003d99;
+        }
+
+        /* Footer */
+        footer{
+            background:#003366;
+            color:white;
+            text-align:center;
+            padding:15px;
+        }
+
+        @media(max-width:700px){
+            .navbar{
+                flex-direction:column;
+                gap:15px;
+            }
+
+            .services{
+                padding:20px;
+            }
+
+            .card{
+                width:100%;
+            }
+        }
+
+    </style>
 </head>
+
 <body>
 
-<h1>Welcome {{ name }}</h1>
+<!-- Navigation Bar -->
 
-<h2>Smart Railway Assistance System</h2>
-<p>You have successfully logged in.</p>
+<div class="navbar">
 
-<hr>
+    <h2>🚆 Smart Railway Assistance</h2>
 
-<h3>Passenger Services</h3>
+    <a href="/logout/" class="logout">
+        Logout
+    </a>
 
-<p><a href="/luggage-booking/">📦 Luggage Transfer Booking</a></p>
+</div>
 
-<p><a href="/my-bookings/">📋 My Luggage Bookings</a></p>
 
-<p><a href="/logout/">🚪 Logout</a></p>
+<!-- Welcome Section -->
+
+<div class="welcome">
+
+    <h1>Welcome {{ name }}</h1>
+
+    <p>
+        Manage your railway assistance services from one place.
+    </p>
+
+</div>
+
+
+<!-- Passenger Services -->
+
+<div class="services">
+
+    <!-- Luggage Booking -->
+
+    <div class="card">
+
+        <div class="icon">🧳</div>
+
+        <h3>Luggage Transfer</h3>
+
+        <p>
+            Book luggage transfer services and schedule
+            convenient verification timings.
+        </p>
+
+        <a href="/luggage-booking/" class="btn">
+            Book Now
+        </a>
+
+    </div>
+
+
+    <!-- My Bookings -->
+
+    <div class="card">
+
+        <div class="icon">📋</div>
+
+        <h3>My Luggage Bookings</h3>
+
+        <p>
+            View your luggage bookings, verification schedules,
+            instructions and booking status.
+        </p>
+
+        <a href="/my-bookings/" class="btn">
+            View Bookings
+        </a>
+
+    </div>
+
+
+    <!-- Station Layout - Future Module -->
+
+    <div class="card">
+
+        <div class="icon">🗺️</div>
+
+        <h3>Station Layout</h3>
+
+        <p>
+            Find platforms, waiting rooms, ticket counters
+            and other important station facilities.
+        </p>
+
+        <a href="#" class="btn">
+            Explore
+        </a>
+
+    </div>
+
+
+    <!-- Emergency Help - Future Module -->
+
+    <div class="card">
+
+        <div class="icon">🚑</div>
+
+        <h3>Emergency Help</h3>
+
+        <p>
+            Quickly access nearby hospitals, ambulance
+            services and emergency contact information.
+        </p>
+
+        <a href="#" class="btn">
+            View Help
+        </a>
+
+    </div>
+
+</div>
+
+
+<footer>
+    © 2026 Smart Railway Assistance and Reservation System
+</footer>
+
 
 </body>
 </html>
