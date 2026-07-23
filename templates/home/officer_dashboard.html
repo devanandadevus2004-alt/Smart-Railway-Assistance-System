@@ -1,51 +1,384 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Officer Dashboard</title>
+
+    <style>
+
+        *{
+            box-sizing:border-box;
+        }
+
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            background:#f4f7fb;
+            color:#333;
+        }
+
+        /* Navigation Bar */
+
+        .navbar{
+            background:#003366;
+            color:white;
+            padding:18px 40px;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+
+            box-shadow:0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .navbar h2{
+            margin:0;
+            font-size:22px;
+        }
+
+        .nav-links{
+            display:flex;
+            gap:12px;
+        }
+
+        .nav-btn{
+            color:white;
+            text-decoration:none;
+            padding:9px 18px;
+            border-radius:20px;
+            font-weight:bold;
+            font-size:14px;
+            transition:0.3s;
+        }
+
+        .home-btn{
+            background:#0052cc;
+        }
+
+        .logout-btn{
+            background:#e53935;
+        }
+
+        .nav-btn:hover{
+            transform:translateY(-2px);
+            opacity:0.9;
+        }
+
+
+        /* Welcome Section */
+
+        .welcome{
+            text-align:center;
+            padding:40px 20px 25px;
+        }
+
+        .welcome h1{
+            margin:0;
+            color:#003366;
+        }
+
+        .welcome p{
+            color:#666;
+            font-size:17px;
+            margin-top:10px;
+        }
+
+
+        /* Dashboard Container */
+
+        .dashboard{
+            max-width:1100px;
+            margin:0 auto 60px;
+            padding:0 25px;
+        }
+
+
+        /* Station Information */
+
+        .station-card{
+            background:white;
+            padding:20px 25px;
+            border-radius:12px;
+            box-shadow:0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom:30px;
+            border-left:5px solid #0052cc;
+        }
+
+        .station-card h3{
+            margin:0;
+            color:#0052cc;
+        }
+
+
+        /* Booking Section */
+
+        .booking-section{
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 5px 18px rgba(0,0,0,0.12);
+        }
+
+        .booking-section h2{
+            color:#003366;
+            margin-top:0;
+        }
+
+
+        /* Table */
+
+        .table-container{
+            overflow-x:auto;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        th{
+            background:#003366;
+            color:white;
+            padding:14px;
+            text-align:left;
+        }
+
+        td{
+            padding:14px;
+            border-bottom:1px solid #ddd;
+        }
+
+        tr:hover{
+            background:#f4f8ff;
+        }
+
+
+        /* Status */
+
+        .status{
+            font-weight:bold;
+            color:#0052cc;
+        }
+
+
+        /* Open Button */
+
+        .open-btn{
+            display:inline-block;
+            padding:8px 18px;
+            background:#0052cc;
+            color:white;
+            text-decoration:none;
+            border-radius:20px;
+            font-weight:bold;
+            transition:0.3s;
+        }
+
+        .open-btn:hover{
+            background:#003d99;
+            transform:translateY(-2px);
+        }
+
+
+        /* Empty Message */
+
+        .empty{
+            text-align:center;
+            padding:30px;
+            color:#777;
+        }
+
+
+        /* Footer */
+
+        footer{
+            background:#003366;
+            color:white;
+            text-align:center;
+            padding:15px;
+        }
+
+
+        /* Mobile */
+
+        @media(max-width:700px){
+
+            .navbar{
+                flex-direction:column;
+                gap:15px;
+                padding:18px;
+            }
+
+            .nav-links{
+                flex-wrap:wrap;
+                justify-content:center;
+            }
+
+            .dashboard{
+                padding:0 15px;
+            }
+
+            .booking-section{
+                padding:15px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-<h2>Welcome {{ officer.full_name }}</h2>
 
-<h3>Station : {{ officer.station.station_name }}</h3>
+<!-- Navigation Bar -->
 
-<hr>
+<div class="navbar">
 
-<h3>Pending Luggage Bookings</h3>
+    <h2>🚆 Smart Railway Assistance</h2>
 
-<table border="1" cellpadding="10">
-<tr>
-    <th>Passenger</th>
-    <th>Destination</th>
-    <th>Travel Date</th>
-    <th>Status</th>
-    <th>Action</th>
-</tr>
+    <div class="nav-links">
 
-{% for booking in bookings %}
+        <a href="/" class="nav-btn home-btn">
+            🏠 Home
+        </a>
 
-<tr>
-    <td>{{ booking.passenger.full_name }}</td>
-    <td>{{ booking.destination_station.station_name }}</td>
-    <td>{{ booking.travel_date }}</td>
-    <td>{{ booking.status }}</td>
-    <td>
-        <a href="/booking/{{ booking.id }}/">Open</a>
-    </td>
-</tr>
+        <a href="/officer-login/" class="nav-btn logout-btn">
+            🚪 Logout
+        </a>
 
-{% empty %}
+    </div>
 
-<tr>
-<td colspan="4">
-No bookings available.
-</td>
-</tr>
+</div>
 
-{% endfor %}
 
-</table>
+<!-- Welcome Section -->
+
+<div class="welcome">
+
+    <h1>
+        Welcome {{ officer.full_name }}
+    </h1>
+
+    <p>
+        Railway Officer Dashboard
+    </p>
+
+</div>
+
+
+<!-- Dashboard -->
+
+<div class="dashboard">
+
+
+    <!-- Station Information -->
+
+    <div class="station-card">
+
+        <h3>
+            📍 Station:
+            {{ officer.station.station_name }}
+        </h3>
+
+    </div>
+
+
+    <!-- Pending Bookings -->
+
+    <div class="booking-section">
+
+        <h2>
+            🧳 Pending Luggage Bookings
+        </h2>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <tr>
+
+                    <th>Passenger</th>
+
+                    <th>Destination</th>
+
+                    <th>Travel Date</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+
+                {% for booking in bookings %}
+
+                <tr>
+
+                    <td>
+                        {{ booking.passenger.full_name }}
+                    </td>
+
+                    <td>
+                        {{ booking.destination_station.station_name }}
+                    </td>
+
+                    <td>
+                        {{ booking.travel_date }}
+                    </td>
+
+                    <td class="status">
+                        {{ booking.status }}
+                    </td>
+
+                    <td>
+
+                        <a
+                            href="/booking/{{ booking.id }}/"
+                            class="open-btn"
+                        >
+                            Open
+                        </a>
+
+                    </td>
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="5" class="empty">
+
+                        📭 No bookings available.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<footer>
+
+    © 2026 Smart Railway Assistance and Reservation System
+
+</footer>
+
 
 </body>
 </html>
