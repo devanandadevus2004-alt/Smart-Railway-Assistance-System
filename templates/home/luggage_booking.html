@@ -1,120 +1,656 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>Luggage Transfer Booking</title>
 
     <style>
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#e8f0fe;
-        }
 
-        .container{
-            width:450px;
-            margin:40px auto;
-            background:white;
-            padding:30px;
-            border-radius:10px;
-            box-shadow:0 0 15px gray;
-        }
-
-        h2{
-            text-align:center;
-            color:#003366;
-        }
-
-        input,
-        select{
-            width:100%;
-            padding:12px;
-            margin:10px 0;
-            border:1px solid #ccc;
-            border-radius:5px;
+        *{
             box-sizing:border-box;
         }
 
-        button{
-            width:100%;
-            padding:12px;
-            background:#0052cc;
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            background:#f4f7fb;
+            color:#333;
+        }
+
+
+        /* Navigation Bar */
+
+        .navbar{
+            background:#003366;
             color:white;
-            border:none;
-            border-radius:5px;
-            font-size:16px;
-            cursor:pointer;
+            padding:18px 40px;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+
+            box-shadow:0 3px 10px rgba(0,0,0,0.2);
         }
 
-        a{
+        .navbar h2{
+            margin:0;
+            font-size:22px;
+        }
+
+        .nav-links{
+            display:flex;
+            gap:12px;
+        }
+
+        .nav-btn{
+            color:white;
             text-decoration:none;
-            color:#0052cc;
+            padding:9px 18px;
+            border-radius:20px;
+            font-weight:bold;
+            font-size:14px;
+            transition:0.3s;
         }
 
-        p{
-            text-align:center;
+        .home-btn{
+            background:#0052cc;
         }
+
+        .logout-btn{
+            background:#e53935;
+        }
+
+        .nav-btn:hover{
+            transform:translateY(-2px);
+            opacity:0.9;
+        }
+
+
+        /* Main Section */
+
+        .main{
+            min-height:calc(100vh - 70px);
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            padding:50px 20px;
+        }
+
+
+        /* Booking Card */
+
+        .container{
+            width:100%;
+            max-width:520px;
+
+            background:white;
+
+            padding:35px;
+
+            border-radius:18px;
+
+            box-shadow:
+                0 8px 25px rgba(0,0,0,0.12);
+
+            animation:slideUp 0.6s ease;
+        }
+
+
+        @keyframes slideUp{
+
+            from{
+                opacity:0;
+                transform:translateY(30px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+
+        }
+
+
+        /* Heading */
+
+        .heading{
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        .heading .icon{
+            font-size:45px;
+            margin-bottom:10px;
+        }
+
+        h1{
+            margin:0;
+            color:#003366;
+            font-size:28px;
+        }
+
+        .subtitle{
+            color:#777;
+            font-size:15px;
+            margin-top:8px;
+        }
+
+
+        /* Form */
+
+        .form-group{
+            margin-bottom:18px;
+        }
+
+        label{
+            display:block;
+            font-weight:bold;
+            color:#003366;
+            margin-bottom:7px;
+            font-size:14px;
+        }
+
+
+        input,
+        select{
+
+            width:100%;
+
+            padding:13px 14px;
+
+            border:1px solid #d0d7e2;
+
+            border-radius:8px;
+
+            font-size:15px;
+
+            background:#fafcff;
+
+            transition:0.3s;
+
+        }
+
+
+        input:focus,
+        select:focus{
+
+            outline:none;
+
+            border-color:#0052cc;
+
+            box-shadow:0 0 0 3px rgba(0,82,204,0.12);
+
+            background:white;
+
+        }
+
+
+        /* Station Row */
+
+        .station-row{
+
+            display:grid;
+
+            grid-template-columns:1fr 1fr;
+
+            gap:15px;
+
+        }
+
+
+        /* Luggage Row */
+
+        .luggage-row{
+
+            display:grid;
+
+            grid-template-columns:1fr 1fr;
+
+            gap:15px;
+
+        }
+
+
+        /* Success Message */
+
+        .success{
+
+            background:#d1e7dd;
+
+            color:#0f5132;
+
+            padding:12px;
+
+            border-radius:8px;
+
+            text-align:center;
+
+            margin-bottom:20px;
+
+            font-weight:bold;
+
+        }
+
+
+        /* Submit Button */
+
+        button{
+
+            width:100%;
+
+            padding:14px;
+
+            margin-top:10px;
+
+            background:#0052cc;
+
+            color:white;
+
+            border:none;
+
+            border-radius:25px;
+
+            font-size:16px;
+
+            font-weight:bold;
+
+            cursor:pointer;
+
+            transition:0.3s;
+
+        }
+
+
+        button:hover{
+
+            background:#003d99;
+
+            transform:translateY(-2px);
+
+            box-shadow:0 5px 12px rgba(0,82,204,0.3);
+
+        }
+
+
+        /* Back Button */
+
+        .back-section{
+
+            text-align:center;
+
+            margin-top:22px;
+
+        }
+
+        .back-btn{
+
+            color:#0052cc;
+
+            text-decoration:none;
+
+            font-weight:bold;
+
+        }
+
+        .back-btn:hover{
+
+            text-decoration:underline;
+
+        }
+
+
+        /* Footer */
+
+        footer{
+
+            background:#003366;
+
+            color:white;
+
+            text-align:center;
+
+            padding:15px;
+
+        }
+
+
+        /* Mobile */
+
+        @media(max-width:600px){
+
+            .navbar{
+
+                flex-direction:column;
+
+                gap:15px;
+
+                padding:18px;
+
+            }
+
+            .nav-links{
+
+                flex-wrap:wrap;
+
+                justify-content:center;
+
+            }
+
+            .container{
+
+                padding:25px 20px;
+
+            }
+
+            .station-row,
+            .luggage-row{
+
+                grid-template-columns:1fr;
+
+                gap:0;
+
+            }
+
+        }
+
     </style>
 
 </head>
 
+
 <body>
+
+
+<!-- Navigation Bar -->
+
+<div class="navbar">
+
+    <h2>
+        🚆 Smart Railway Assistance
+    </h2>
+
+    <div class="nav-links">
+
+        <a href="/dashboard/" class="nav-btn home-btn">
+            🏠 Dashboard
+        </a>
+
+        <a href="/logout/" class="nav-btn logout-btn">
+            🚪 Logout
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- Main Content -->
+
+<div class="main">
 
 <div class="container">
 
-<h2>Luggage Transfer Booking</h2>
-{% if success %}
-<p style="color:green; text-align:center;">
-    {{ success }}
-</p>
-{% endif %}
 
-<form method="POST">
-    {% csrf_token %}
+    <!-- Heading -->
 
-    <select name="source_station" required>
-    <option value="">Select Source Station</option>
-    {% for station in stations %}
-        <option value="{{ station.id }}">
-            {{ station.station_name }} ({{ station.station_code }})
-        </option>
-    {% endfor %}
-</select>
+    <div class="heading">
 
-    <select name="destination_station" required>
-    <option value="">Select Destination Station</option>
-    {% for station in stations %}
-        <option value="{{ station.id }}">
-            {{ station.station_name }} ({{ station.station_code }})
-        </option>
-    {% endfor %}
-</select>
+        <div class="icon">
+            🧳
+        </div>
 
-    <select name="luggage_type" required>
-        <option value="">Select Luggage Type</option>
-        <option value="Suitcase">Suitcase</option>
-        <option value="Backpack">Backpack</option>
-        <option value="Carton Box">Carton Box</option>
-        <option value="Parcel">Parcel</option>
-        <option value="Other">Other</option>
-    </select>
+        <h1>
+            Luggage Transfer Booking
+        </h1>
 
-    <input type="number" name="number_of_bags" placeholder="Number of Bags" min="1" required>
+        <p class="subtitle">
+            Book a convenient luggage transfer service for your railway journey
+        </p>
 
-    <input type="number" step="0.1" name="weight" placeholder="Total Weight (kg)" required>
+    </div>
 
-    <input type="date" name="travel_date" required>
 
-    <input type="tel" name="contact_number" placeholder="Contact Number" required>
+    <!-- Success Message -->
 
-    <button type="submit">Book Luggage Transfer</button>
+    {% if success %}
 
-</form>
+    <div class="success">
 
-<p>
-<a href="/dashboard/">← Back to Dashboard</a>
-</p>
+        ✅ {{ success }}
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- Booking Form -->
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <!-- Stations -->
+
+        <div class="station-row">
+
+
+            <div class="form-group">
+
+                <label>
+                    Source Station
+                </label>
+
+                <select name="source_station" required>
+
+                    <option value="">
+                        Select Source Station
+                    </option>
+
+                    {% for station in stations %}
+
+                    <option value="{{ station.id }}">
+
+                        {{ station.station_name }}
+                        ({{ station.station_code }})
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Destination Station
+                </label>
+
+                <select name="destination_station" required>
+
+                    <option value="">
+                        Select Destination Station
+                    </option>
+
+                    {% for station in stations %}
+
+                    <option value="{{ station.id }}">
+
+                        {{ station.station_name }}
+                        ({{ station.station_code }})
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- Luggage Type -->
+
+        <div class="form-group">
+
+            <label>
+                Luggage Type
+            </label>
+
+            <select name="luggage_type" required>
+
+                <option value="">
+                    Select Luggage Type
+                </option>
+
+                <option value="Suitcase">
+                    🧳 Suitcase
+                </option>
+
+                <option value="Backpack">
+                    🎒 Backpack
+                </option>
+
+                <option value="Carton Box">
+                    📦 Carton Box
+                </option>
+
+                <option value="Parcel">
+                    📮 Parcel
+                </option>
+
+                <option value="Other">
+                    📁 Other
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- Bags and Weight -->
+
+        <div class="luggage-row">
+
+
+            <div class="form-group">
+
+                <label>
+                    Number of Bags
+                </label>
+
+                <input
+                    type="number"
+                    name="number_of_bags"
+                    placeholder="Enter number of bags"
+                    min="1"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Total Weight
+                </label>
+
+                <input
+                    type="number"
+                    step="0.1"
+                    name="weight"
+                    placeholder="Weight in kg"
+                    min="0.1"
+                    required
+                >
+
+            </div>
+
+
+        </div>
+
+
+        <!-- Travel Date -->
+
+        <div class="form-group">
+
+            <label>
+                Travel Date
+            </label>
+
+            <input
+                type="date"
+                name="travel_date"
+                required
+            >
+
+        </div>
+
+
+        <!-- Contact Number -->
+
+        <div class="form-group">
+
+            <label>
+                Contact Number
+            </label>
+
+            <input
+                type="tel"
+                name="contact_number"
+                placeholder="Enter your contact number"
+                required
+            >
+
+        </div>
+
+
+        <!-- Submit -->
+
+        <button type="submit">
+
+            🧳 Book Luggage Transfer
+
+        </button>
+
+
+    </form>
+
+
+    <!-- Back -->
+
+    <div class="back-section">
+
+        <a href="/dashboard/" class="back-btn">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
+
 
 </div>
+
+</div>
+
+
+<!-- Footer -->
+
+<footer>
+
+    © 2026 Smart Railway Assistance and Reservation System
+
+</footer>
+
 
 </body>
 </html>

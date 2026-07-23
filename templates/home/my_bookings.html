@@ -1,68 +1,511 @@
 <!DOCTYPE html>
 <html>
 <head>
+
     <title>My Luggage Bookings</title>
+
+    <style>
+
+        *{
+            box-sizing:border-box;
+        }
+
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            background:#f4f7fb;
+            color:#333;
+        }
+
+        /* Navigation Bar */
+
+        .navbar{
+            background:#003366;
+            color:white;
+            padding:18px 40px;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+
+            box-shadow:0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .navbar h2{
+            margin:0;
+            font-size:22px;
+        }
+
+        .nav-links{
+            display:flex;
+            gap:12px;
+        }
+
+        .nav-btn{
+            color:white;
+            text-decoration:none;
+            padding:9px 18px;
+            border-radius:20px;
+            font-weight:bold;
+            font-size:14px;
+            transition:0.3s;
+        }
+
+        .home-btn{
+            background:#0052cc;
+        }
+
+        .logout-btn{
+            background:#e53935;
+        }
+
+        .nav-btn:hover{
+            transform:translateY(-2px);
+            opacity:0.9;
+        }
+
+
+        /* Page Header */
+
+        .page-header{
+            text-align:center;
+            padding:40px 20px 25px;
+        }
+
+        .page-header h1{
+            color:#003366;
+            margin:0 0 10px;
+        }
+
+        .page-header p{
+            color:#666;
+            font-size:16px;
+        }
+
+
+        /* Booking Container */
+
+        .booking-container{
+            max-width:1200px;
+            margin:0 auto 60px;
+            padding:0 25px;
+        }
+
+
+        /* Booking Table Card */
+
+        .table-card{
+            background:white;
+            padding:25px;
+            border-radius:15px;
+
+            box-shadow:
+                0 5px 18px rgba(0,0,0,0.12);
+
+            overflow:hidden;
+        }
+
+
+        /* Responsive Table */
+
+        .table-container{
+            overflow-x:auto;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            min-width:1100px;
+        }
+
+
+        /* Table Header */
+
+        th{
+            background:#003366;
+            color:white;
+            padding:14px 12px;
+            text-align:left;
+            font-size:14px;
+        }
+
+
+        /* Table Data */
+
+        td{
+            padding:14px 12px;
+            border-bottom:1px solid #e0e0e0;
+            font-size:14px;
+            vertical-align:middle;
+        }
+
+        tr:hover{
+            background:#f4f8ff;
+        }
+
+
+        /* Status Badges */
+
+        .status{
+            display:inline-block;
+            padding:7px 12px;
+            border-radius:20px;
+            font-size:12px;
+            font-weight:bold;
+            white-space:nowrap;
+        }
+
+        .pending{
+            background:#fff3cd;
+            color:#856404;
+        }
+
+        .scheduled{
+            background:#cfe2ff;
+            color:#084298;
+        }
+
+        .rejected{
+            background:#f8d7da;
+            color:#842029;
+        }
+
+        .accepted{
+            background:#d1e7dd;
+            color:#0f5132;
+        }
+
+
+        /* Cancel Button */
+
+        .cancel-btn{
+            display:inline-block;
+            padding:8px 15px;
+
+            background:#e53935;
+            color:white;
+
+            text-decoration:none;
+
+            border-radius:20px;
+
+            font-size:13px;
+            font-weight:bold;
+
+            transition:0.3s;
+        }
+
+        .cancel-btn:hover{
+            background:#c62828;
+            transform:translateY(-2px);
+        }
+
+
+        /* Empty Booking */
+
+        .empty{
+            text-align:center;
+            padding:40px;
+            color:#777;
+            font-size:16px;
+        }
+
+
+        /* Back Button */
+
+        .back-section{
+            text-align:center;
+            margin-top:25px;
+        }
+
+        .back-btn{
+            display:inline-block;
+
+            padding:11px 25px;
+
+            background:#0052cc;
+            color:white;
+
+            text-decoration:none;
+
+            border-radius:25px;
+
+            font-weight:bold;
+
+            transition:0.3s;
+        }
+
+        .back-btn:hover{
+            background:#003d99;
+            transform:translateY(-2px);
+        }
+
+
+        /* Footer */
+
+        footer{
+            background:#003366;
+            color:white;
+            text-align:center;
+            padding:15px;
+        }
+
+
+        /* Mobile */
+
+        @media(max-width:700px){
+
+            .navbar{
+                flex-direction:column;
+                gap:15px;
+                padding:18px;
+            }
+
+            .nav-links{
+                flex-wrap:wrap;
+                justify-content:center;
+            }
+
+            .booking-container{
+                padding:0 15px;
+            }
+
+            .table-card{
+                padding:15px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
+
 <body>
 
-<h2>My Luggage Bookings</h2>
 
-<table border="1" cellpadding="10">
+<!-- Navigation Bar -->
 
-<tr>
-    <th>Source</th>
-    <th>Destination</th>
-    <th>Luggage Type</th>
-    <th>Bags</th>
-    <th>Weight</th>
-    <th>Travel Date</th>
-    <th>Status</th>
-    <th>Verification Date</th>
-    <th>Verification Time</th>
-    <th>Instructions</th>
-    <th>Rejection Reason</th>
-    <th>Action</th>
-</tr>
+<div class="navbar">
 
-{% for booking in bookings %}
+    <h2>
+        🚆 Smart Railway Assistance
+    </h2>
 
-<tr>
-    <td>{{ booking.source_station.station_name }}</td>
-    <td>{{ booking.destination_station.station_name }}</td>
-    <td>{{ booking.luggage_type }}</td>
-    <td>{{ booking.number_of_bags }}</td>
-    <td>{{ booking.weight }} kg</td>
-    <td>{{ booking.travel_date }}</td>
-    <td>{{ booking.status }}</td>
-    <td>{{ booking.verification_date|default:"Not Scheduled" }}</td>
-    <td>{{ booking.verification_time|default:"Not Scheduled" }}</td>
-    <td>{{ booking.instructions|default:"No Instructions" }}</td>
-    <td>{{ booking.rejection_reason|default:"-" }}</td>
-    <td>
-    {% if booking.status == "Pending" %}
-    <a href="/cancel-booking/{{ booking.id }}/"
-       onclick="return confirm('Are you sure you want to cancel this booking?')">
-        Cancel
-    </a>
-    {% else %}
-    -
-    {% endif %}
-    </td>
-</tr>
+    <div class="nav-links">
 
-{% empty %}
+        <a href="/dashboard/" class="nav-btn home-btn">
+            🏠 Dashboard
+        </a>
 
-<tr>
-    <td colspan="11">No luggage bookings found.</td>
-</tr>
+        <a href="/logout/" class="nav-btn logout-btn">
+            🚪 Logout
+        </a>
 
-{% endfor %}
+    </div>
 
-</table>
+</div>
 
-<br>
 
-<a href="/dashboard/">← Back to Dashboard</a>
+<!-- Page Header -->
+
+<div class="page-header">
+
+    <h1>
+        🧳 My Luggage Bookings
+    </h1>
+
+    <p>
+        View and manage your luggage transfer bookings
+    </p>
+
+</div>
+
+
+<!-- Booking Table -->
+
+<div class="booking-container">
+
+    <div class="table-card">
+
+        <div class="table-container">
+
+            <table>
+
+                <tr>
+
+                    <th>Source</th>
+                    <th>Destination</th>
+                    <th>Luggage Type</th>
+                    <th>Bags</th>
+                    <th>Weight</th>
+                    <th>Travel Date</th>
+                    <th>Status</th>
+                    <th>Verification Date</th>
+                    <th>Verification Time</th>
+                    <th>Instructions</th>
+                    <th>Rejection Reason</th>
+                    <th>Action</th>
+
+                </tr>
+
+
+                {% for booking in bookings %}
+
+                <tr>
+
+                    <td>
+                        {{ booking.source_station.station_name }}
+                    </td>
+
+                    <td>
+                        {{ booking.destination_station.station_name }}
+                    </td>
+
+                    <td>
+                        {{ booking.luggage_type }}
+                    </td>
+
+                    <td>
+                        {{ booking.number_of_bags }}
+                    </td>
+
+                    <td>
+                        {{ booking.weight }} kg
+                    </td>
+
+                    <td>
+                        {{ booking.travel_date }}
+                    </td>
+
+
+                    <!-- Status -->
+
+                    <td>
+
+                        {% if booking.status == "Pending" %}
+
+                            <span class="status pending">
+                                🟡 Pending
+                            </span>
+
+                        {% elif booking.status == "Verification Scheduled" %}
+
+                            <span class="status scheduled">
+                                🔵 Verification Scheduled
+                            </span>
+
+                        {% elif booking.status == "Rejected" %}
+
+                            <span class="status rejected">
+                                🔴 Rejected
+                            </span>
+
+                        {% elif booking.status == "Accepted" %}
+
+                            <span class="status accepted">
+                                🟢 Accepted
+                            </span>
+
+                        {% else %}
+
+                            <span class="status">
+                                {{ booking.status }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+                        {{ booking.verification_date|default:"Not Scheduled" }}
+                    </td>
+
+
+                    <td>
+                        {{ booking.verification_time|default:"Not Scheduled" }}
+                    </td>
+
+
+                    <td>
+                        {{ booking.instructions|default:"No Instructions" }}
+                    </td>
+
+
+                    <td>
+                        {{ booking.rejection_reason|default:"-" }}
+                    </td>
+
+
+                    <!-- Action -->
+
+                    <td>
+
+                        {% if booking.status == "Pending" %}
+
+                            <a
+                                href="/cancel-booking/{{ booking.id }}/"
+                                class="cancel-btn"
+                                onclick="return confirm('Are you sure you want to cancel this booking?')"
+                            >
+                                Cancel
+                            </a>
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="12" class="empty">
+
+                        📭 No luggage bookings found.
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- Back to Dashboard -->
+
+    <div class="back-section">
+
+        <a href="/dashboard/" class="back-btn">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- Footer -->
+
+<footer>
+
+    © 2026 Smart Railway Assistance and Reservation System
+
+</footer>
+
 
 </body>
 </html>
