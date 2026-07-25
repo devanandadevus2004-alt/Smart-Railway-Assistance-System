@@ -1,56 +1,247 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
+    <title>Passenger Login</title>
 
     <style>
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#e8f0fe;
+
+        *{
+            box-sizing:border-box;
         }
 
+        body{
+            margin:0;
+            min-height:100vh;
+            font-family:Arial, sans-serif;
+
+            /* Railway background */
+            background:
+                linear-gradient(rgba(0,35,80,0.65), rgba(0,35,80,0.65)),
+                url("https://images.unsplash.com/photo-1474487548417-781cb71495f3")
+                center/cover no-repeat;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            overflow:hidden;
+        }
+
+        /* Animated background glow */
+
+        body::before{
+            content:"";
+            position:absolute;
+            width:500px;
+            height:500px;
+            background:rgba(0,153,255,0.25);
+            border-radius:50%;
+            filter:blur(80px);
+            animation:glow 6s infinite alternate;
+        }
+
+        @keyframes glow{
+            from{
+                transform:translate(-200px,-100px);
+            }
+
+            to{
+                transform:translate(200px,100px);
+            }
+        }
+
+        /* Login Card */
+
         .container{
-            width:350px;
-            margin:100px auto;
-            background:white;
-            padding:30px;
-            border-radius:10px;
-            box-shadow:0 0 15px gray;
+            position:relative;
+            z-index:1;
+
+            width:380px;
+            padding:40px;
+
+            background:rgba(255,255,255,0.92);
+
+            border-radius:20px;
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,0.35);
+
+            animation:slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp{
+
+            from{
+                opacity:0;
+                transform:translateY(50px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+
+        }
+
+        /* Train Icon */
+
+        .train-icon{
+            text-align:center;
+            font-size:50px;
+
+            animation:trainMove 2s infinite alternate;
+        }
+
+        @keyframes trainMove{
+
+            from{
+                transform:translateX(-5px);
+            }
+
+            to{
+                transform:translateX(5px);
+            }
+
         }
 
         h2{
             text-align:center;
             color:#003366;
+            margin:10px 0 5px;
+        }
+
+        .subtitle{
+            text-align:center;
+            color:#666;
+            margin-bottom:25px;
+        }
+
+        /* Input fields */
+
+        .input-group{
+            margin-bottom:18px;
+        }
+
+        .input-group label{
+            display:block;
+            margin-bottom:6px;
+            color:#003366;
+            font-weight:bold;
         }
 
         input{
             width:100%;
-            padding:12px;
-            margin:10px 0;
-            border:1px solid #ccc;
-            border-radius:5px;
+            padding:13px 15px;
+
+            border:2px solid #ddd;
+            border-radius:10px;
+
+            font-size:15px;
+
+            outline:none;
+
+            transition:0.3s;
         }
+
+        input:focus{
+            border-color:#007bff;
+
+            box-shadow:
+                0 0 10px rgba(0,123,255,0.25);
+        }
+
+        /* Login Button */
 
         button{
             width:100%;
-            padding:12px;
-            background:#0052cc;
+            padding:14px;
+
+            background:linear-gradient(
+                135deg,
+                #0052cc,
+                #0099ff
+            );
+
             color:white;
+
             border:none;
-            border-radius:5px;
+            border-radius:25px;
+
             font-size:16px;
+            font-weight:bold;
+
             cursor:pointer;
+
+            transition:0.3s;
         }
 
-        p{
+        button:hover{
+            transform:translateY(-3px);
+
+            box-shadow:
+                0 8px 20px rgba(0,82,204,0.4);
+        }
+
+        /* Error Messages */
+
+        .message{
+            color:#d32f2f;
             text-align:center;
+
+            background:#ffebee;
+
+            padding:10px;
+
+            border-radius:8px;
+
+            margin-bottom:15px;
         }
 
-        a{
+        /* Register */
+
+        .register{
+            text-align:center;
+            margin-top:22px;
+            color:#555;
+        }
+
+        .register a{
             color:#0052cc;
+            font-weight:bold;
             text-decoration:none;
         }
+
+        .register a:hover{
+            text-decoration:underline;
+        }
+
+        /* Back to Home */
+
+        .home-link{
+            display:block;
+            text-align:center;
+            margin-top:15px;
+
+            color:#666;
+            text-decoration:none;
+            font-size:14px;
+        }
+
+        .home-link:hover{
+            color:#0052cc;
+        }
+
+        /* Mobile */
+
+        @media(max-width:500px){
+
+            .container{
+                width:90%;
+                padding:30px 25px;
+            }
+
+        }
+
     </style>
 
 </head>
@@ -59,30 +250,84 @@
 
 <div class="container">
 
-<h2>Passenger Login</h2>
-{% if messages %}
-    {% for message in messages %}
-        <p style="color:red; text-align:center;">
-            {{ message }}
-        </p>
-    {% endfor %}
-{% endif %}
+    <div class="train-icon">
+        🚆
+    </div>
 
-<form method="POST">
-    {% csrf_token %}
+    <h2>Passenger Login</h2>
 
-<input type="text" name="username" placeholder="Username">
+    <p class="subtitle">
+        Welcome back! Login to access railway services.
+    </p>
 
-<input type="password" name="password" placeholder="Password">
 
-<button>Login</button>
+    {% if messages %}
 
-</form>
+        {% for message in messages %}
 
-<p>
-Don't have an account?
-<a href="/register/">Register</a>
-</p>
+            <div class="message">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <div class="input-group">
+
+            <label>Username</label>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Enter your username"
+                required
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter your password"
+                required
+            >
+
+        </div>
+
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+
+    <p class="register">
+
+        Don't have an account?
+
+        <a href="/register/">
+            Register
+        </a>
+
+    </p>
+
+
+    <a href="/" class="home-link">
+        ← Back to Home
+    </a>
 
 </div>
 

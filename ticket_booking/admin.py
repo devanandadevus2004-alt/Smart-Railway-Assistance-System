@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Train, Coach, Seat, TicketBooking
+from .models import Train, Coach, Seat, TicketBooking,Payment
 
 
 @admin.register(Train)
@@ -85,3 +85,26 @@ class TicketBookingAdmin(admin.ModelAdmin):
         'train__train_number',
         'train__train_name',
     )
+
+@admin.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = (
+        'booking',
+        'amount',
+        'payment_method',
+        'payment_status',
+        'transaction_id',
+        'paid_at',
+    )
+
+    list_filter = (
+        'payment_status',
+        'payment_method',
+    )
+
+    search_fields = (
+        'booking__passenger__full_name',
+        'booking__train__train_number',
+        'transaction_id',
+    )
+

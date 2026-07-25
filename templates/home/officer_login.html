@@ -1,79 +1,369 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Officer Login</title>
+    <title>Railway Officer Login</title>
 
     <style>
-        body{
-            margin:0;
-            font-family:Arial;
-            background:#e8f0fe;
-        }
 
-        .container{
-            width:400px;
-            margin:70px auto;
-            background:white;
-            padding:30px;
-            border-radius:10px;
-            box-shadow:0 0 15px gray;
-        }
-
-        h2{
-            text-align:center;
-            color:#003366;
-        }
-
-        input{
-            width:100%;
-            padding:12px;
-            margin:10px 0;
-            border:1px solid #ccc;
-            border-radius:5px;
+        *{
             box-sizing:border-box;
         }
 
-        button{
-            width:100%;
-            padding:12px;
-            background:#0052cc;
-            color:white;
-            border:none;
-            border-radius:5px;
-            cursor:pointer;
-            font-size:16px;
+        body{
+            margin:0;
+            min-height:100vh;
+            font-family:Arial, sans-serif;
+
+            background:
+    linear-gradient(rgba(0,35,80,0.65), rgba(0,35,80,0.65)),
+    url("YOUR_NEW_IMAGE_URL")
+    center/cover no-repeat;
+
+            display:flex;
+            justify-content:center;
+            align-items:center;
+
+            overflow:hidden;
         }
 
-        .error{
-            color:red;
-            text-align:center;
+        /* Animated background glow */
+
+        body::before{
+            content:"";
+            position:absolute;
+
+            width:500px;
+            height:500px;
+
+            background:rgba(0,153,255,0.25);
+
+            border-radius:50%;
+
+            filter:blur(80px);
+
+            animation:glow 6s infinite alternate;
         }
+
+        @keyframes glow{
+
+            from{
+                transform:translate(-200px,-100px);
+            }
+
+            to{
+                transform:translate(200px,100px);
+            }
+
+        }
+
+        /* Login Card */
+
+        .container{
+
+            position:relative;
+            z-index:1;
+
+            width:400px;
+
+            padding:40px;
+
+            background:rgba(255,255,255,0.93);
+
+            border-radius:20px;
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,0.35);
+
+            animation:slideUp 0.8s ease;
+        }
+
+        @keyframes slideUp{
+
+            from{
+                opacity:0;
+                transform:translateY(50px);
+            }
+
+            to{
+                opacity:1;
+                transform:translateY(0);
+            }
+
+        }
+
+        /* Officer Icon */
+
+        .officer-icon{
+
+            text-align:center;
+
+            font-size:50px;
+
+            animation:float 2s infinite alternate;
+        }
+
+        @keyframes float{
+
+            from{
+                transform:translateY(0);
+            }
+
+            to{
+                transform:translateY(-8px);
+            }
+
+        }
+
+        h2{
+
+            text-align:center;
+
+            color:#003366;
+
+            margin:10px 0 5px;
+
+        }
+
+        .subtitle{
+
+            text-align:center;
+
+            color:#666;
+
+            margin-bottom:25px;
+
+        }
+
+        /* Input Fields */
+
+        .input-group{
+
+            margin-bottom:18px;
+
+        }
+
+        .input-group label{
+
+            display:block;
+
+            margin-bottom:6px;
+
+            color:#003366;
+
+            font-weight:bold;
+
+        }
+
+        input{
+
+            width:100%;
+
+            padding:13px 15px;
+
+            border:2px solid #ddd;
+
+            border-radius:10px;
+
+            font-size:15px;
+
+            outline:none;
+
+            transition:0.3s;
+
+        }
+
+        input:focus{
+
+            border-color:#007bff;
+
+            box-shadow:
+                0 0 10px rgba(0,123,255,0.25);
+
+        }
+
+        /* Login Button */
+
+        button{
+
+            width:100%;
+
+            padding:14px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0052cc,
+                    #0099ff
+                );
+
+            color:white;
+
+            border:none;
+
+            border-radius:25px;
+
+            font-size:16px;
+
+            font-weight:bold;
+
+            cursor:pointer;
+
+            transition:0.3s;
+
+        }
+
+        button:hover{
+
+            transform:translateY(-3px);
+
+            box-shadow:
+                0 8px 20px rgba(0,82,204,0.4);
+
+        }
+
+        /* Error Message */
+
+        .error{
+
+            color:#d32f2f;
+
+            text-align:center;
+
+            background:#ffebee;
+
+            padding:10px;
+
+            border-radius:8px;
+
+            margin-bottom:15px;
+
+        }
+
+        /* Home Link */
+
+        .home-link{
+
+            display:block;
+
+            text-align:center;
+
+            margin-top:20px;
+
+            color:#666;
+
+            text-decoration:none;
+
+            font-size:14px;
+
+        }
+
+        .home-link:hover{
+
+            color:#0052cc;
+
+        }
+
+        /* Mobile */
+
+        @media(max-width:500px){
+
+            .container{
+
+                width:90%;
+
+                padding:30px 25px;
+
+            }
+
+        }
+
     </style>
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
-<h2>Railway Officer Login</h2>
 
-{% if error %}
-<p class="error">{{ error }}</p>
-{% endif %}
+    <div class="officer-icon">
+        👮‍♂️
+    </div>
 
-<form method="POST">
-    {% csrf_token %}
 
-    <input type="text" name="username" placeholder="Username" required>
+    <h2>
+        Railway Officer Login
+    </h2>
 
-    <input type="password" name="password" placeholder="Password" required>
 
-    <button>Login</button>
+    <p class="subtitle">
+        Secure access to the Railway Assistance System
+    </p>
 
-</form>
+
+    {% if error %}
+
+        <p class="error">
+            {{ error }}
+        </p>
+
+    {% endif %}
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        <div class="input-group">
+
+            <label>
+                Username
+            </label>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Enter officer username"
+                required
+            >
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Password
+            </label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Enter officer password"
+                required
+            >
+
+        </div>
+
+
+        <button type="submit">
+            Officer Login
+        </button>
+
+
+    </form>
+
+
+    <a href="/" class="home-link">
+        ← Back to Home
+    </a>
+
 
 </div>
+
 
 </body>
 </html>

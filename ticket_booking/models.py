@@ -103,6 +103,7 @@ class Seat(models.Model):
 class TicketBooking(models.Model):
 
     STATUS_CHOICES = [
+        ('PENDING','Pending'),
         ('CONFIRMED', 'Confirmed'),
         ('CANCELLED', 'Cancelled'),
     ]
@@ -127,6 +128,12 @@ class TicketBooking(models.Model):
 
     travel_date = models.DateField()
 
+    fare = models.DecimalField(
+    max_digits=10,
+    decimal_places=2,
+    default=0
+    )
+
     booking_date = models.DateTimeField(
         auto_now_add=True
     )
@@ -134,7 +141,7 @@ class TicketBooking(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='CONFIRMED'
+        default='PENDING'
     )
 
     def __str__(self):
@@ -142,4 +149,60 @@ class TicketBooking(models.Model):
             f"{self.passenger.full_name} - "
             f"{self.train.train_number} - "
             f"{self.seat}"
+        )
+
+class Payment(models.Model):
+
+    PAYMENT_METHOD_CHOICES = [
+        ('UPI', 'UPI'),
+        ('CARD', 'Credit / Debit Card'),
+        ('NET_BANKING', 'Net Banking'),
+    ]
+
+    PAYMENT_STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('SUCCESS', 'Success'),
+        ('FAILED', 'Failed'),
+        ('REFUNDED', 'Refunded'),
+    ]
+
+    booking = models.OneToOneField(
+        TicketBooking,
+        on_delete=models.CASCADE,
+        related_name='payment'
+    )
+
+    amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    payment_method = models.CharField(
+        max_length=20,
+        choices=PAYMENT_METHOD_CHOICES
+    )
+
+    payment_status = models.CharField(
+        max_length=20,
+        choices=PAYMENT_STATUS_CHOICES,
+        default='PENDING'
+    )
+
+    transaction_id = models.CharField(
+        max_length=100,
+        unique=True,
+        null=True,
+        blank=True
+    )
+
+    paid_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    def __str__(self):
+        return (
+            f"Payment - "
+            f"{self.booking.passenger.full_name} - "
+            f"{self.payment_status}"
         )
