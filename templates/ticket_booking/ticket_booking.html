@@ -1,0 +1,563 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Train Ticket Booking</title>
+
+    <!-- Select2 & jQuery CDNs for Searchable Dropdowns -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e8f0fe, #f5f9ff);
+            color: #333;
+        }
+
+        /* Navigation Bar */
+
+        .navbar {
+            background: #003366;
+            color: white;
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+            background: #0052cc;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #003d99;
+        }
+
+        /* Main Container */
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* Search Card */
+
+        .search-card {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            animation: fadeIn 0.7s ease;
+        }
+
+        .search-card h1 {
+            text-align: center;
+            color: #003366;
+            margin-top: 0;
+        }
+
+        .search-card p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        /* Form */
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #003366;
+            font-weight: bold;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            background: white;
+        }
+
+        select:focus,
+        input:focus {
+            border-color: #0052cc;
+            box-shadow: 0 0 5px rgba(0, 82, 204, 0.2);
+        }
+
+        /* Customizing Select2 to match template design */
+        .select2-container--default .select2-selection--single {
+            height: 46px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 8px 5px;
+            font-size: 15px;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #333;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 44px;
+        }
+
+        .search-btn {
+            display: block;
+            width: 100%;
+            margin-top: 25px;
+            padding: 14px;
+            background: #0052cc;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-btn:hover {
+            background: #003d99;
+            transform: translateY(-2px);
+        }
+
+        /* Train Results */
+
+        .results {
+            margin-top: 40px;
+        }
+
+        .results h2 {
+            text-align: center;
+            color: #003366;
+            margin-bottom: 25px;
+        }
+
+        .train-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+        }
+
+        .train-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .train-info h3 {
+            color: #0052cc;
+            margin-top: 0;
+        }
+
+        .train-info p {
+            color: #555;
+        }
+
+        .time-info {
+            display: flex;
+            gap: 30px;
+            color: #444;
+        }
+
+        .select-train-btn {
+            background: #0052cc;
+            color: white;
+            padding: 12px 22px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .select-train-btn:hover {
+            background: #003d99;
+        }
+
+        /* No Results */
+
+        .no-results {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-results h3 {
+            color: #d32f2f;
+        }
+
+        .no-results p {
+            color: #666;
+        }
+
+        /* Animation */
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        /* Mobile */
+
+        @media (max-width: 700px) {
+
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            .search-card {
+                padding: 25px 20px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .train-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .time-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .select-train-btn {
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- Navigation Bar -->
+
+<div class="navbar">
+
+    <h2>🚆 Smart Railway Assistance</h2>
+
+    <a href="/dashboard/" class="back-btn">
+        ← Dashboard
+    </a>
+
+</div>
+
+
+<!-- Main Container -->
+
+<div class="container">
+
+
+    <!-- Search Section -->
+
+    <div class="search-card">
+
+        <h1>🎫 Train Ticket Booking</h1>
+
+        <p>
+            Search trains and select your preferred coach
+            and seat or berth.
+        </p>
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-row">
+
+
+                <!-- Source Station -->
+
+                <div class="form-group">
+
+                    <label for="source_station">
+                        🚉 From Station
+                    </label>
+
+                    <select name="source_station" id="source_station" required>
+
+                        <option value="">
+                            Select Source Station
+                        </option>
+
+                        {% for station in stations %}
+
+                        <option value="{{ station.id }}">
+
+                            {{ station.station_name }}
+                            ({{ station.station_code }})
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Destination Station -->
+
+                <div class="form-group">
+
+                    <label for="destination_station">
+                        🚉 To Station
+                    </label>
+
+                    <select name="destination_station" id="destination_station" required>
+
+                        <option value="">
+                            Select Destination Station
+                        </option>
+
+                        {% for station in stations %}
+
+                        <option value="{{ station.id }}">
+
+                            {{ station.station_name }}
+                            ({{ station.station_code }})
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Travel Date -->
+
+                <div class="form-group">
+
+                    <label>
+                        📅 Travel Date
+                    </label>
+
+                    <input
+                        type="date"
+                        name="travel_date"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="search-btn">
+
+                🔍 Search Available Trains
+
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+    <!-- Search Results -->
+
+    {% if trains is not None %}
+
+    <div class="results">
+
+        <h2>🚆 Available Trains</h2>
+
+
+        {% for train in trains %}
+
+
+        <div class="train-card">
+
+
+            <div class="train-info">
+
+                <h3>
+
+                    {{ train.train_number }}
+                    -
+                    {{ train.train_name }}
+
+                </h3>
+
+
+                <p>
+
+                    🚉
+                    {{ train.source_station.station_name }}
+
+                    →
+
+                    {{ train.destination_station.station_name }}
+
+                </p>
+
+
+                <div class="time-info">
+
+                    <span>
+
+                        🕐 Departure:
+
+                        <strong>
+                            {{ train.departure_time }}
+                        </strong>
+
+                    </span>
+
+
+                    <span>
+
+                        🕐 Arrival:
+
+                        <strong>
+                            {{ train.arrival_time }}
+                        </strong>
+
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <a
+                href="#"
+                class="select-train-btn">
+
+                Select Train
+
+            </a>
+
+
+        </div>
+
+
+        {% empty %}
+
+
+        <div class="no-results">
+
+            <h3>
+                😔 No Trains Found
+            </h3>
+
+            <p>
+
+                No active trains are available
+                for the selected route.
+
+            </p>
+
+        </div>
+
+
+        {% endfor %}
+
+
+    </div>
+
+    {% endif %}
+
+
+</div>
+
+<!-- Initialize Select2 for instant station searching -->
+<script>
+    $(document).ready(function() {
+        $('#source_station').select2({
+            placeholder: "Select Source Station",
+            allowClear: true,
+            width: '100%'
+        });
+
+        $('#destination_station').select2({
+            placeholder: "Select Destination Station",
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>
+
+</body>
+
+</html>

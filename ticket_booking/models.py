@@ -26,6 +26,44 @@ class Train(models.Model):
         return f"{self.train_number} - {self.train_name}"
 
 
+class TrainStop(models.Model):
+
+    train = models.ForeignKey(  
+    Train,  
+    on_delete=models.CASCADE,  
+    related_name='stops'  
+    )  
+
+    station = models.ForeignKey(  
+    'home.Station',  
+    on_delete=models.CASCADE,  
+    related_name='train_stops'  
+    )  
+
+    stop_order = models.PositiveIntegerField()  
+
+    arrival_time = models.TimeField(  
+    null=True,  
+    blank=True  
+    )  
+
+    departure_time = models.TimeField(  
+    null=True,  
+    blank=True  
+    )  
+
+class Meta:  
+    ordering = ['stop_order']  
+    unique_together = ('train', 'station')  
+
+def __str__(self):  
+    return (  
+        f"{self.train.train_number} - "  
+        f"{self.stop_order} - "  
+        f"{self.station.station_name}"  
+    )
+
+
 class Coach(models.Model):
 
     COACH_TYPE_CHOICES = [
@@ -206,3 +244,4 @@ class Payment(models.Model):
             f"{self.booking.passenger.full_name} - "
             f"{self.payment_status}"
         )
+

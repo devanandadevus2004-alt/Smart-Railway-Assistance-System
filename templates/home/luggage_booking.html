@@ -4,353 +4,280 @@
 
     <title>Luggage Transfer Booking</title>
 
+    <!-- jQuery and Select2 CDNs for Searchable Station Dropdowns -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <style>
 
-        *{
-            box-sizing:border-box;
+        * {
+            box-sizing: border-box;
         }
 
-        body{
-            margin:0;
-            font-family:Arial, sans-serif;
-            background:#f4f7fb;
-            color:#333;
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #333;
         }
-
 
         /* Navigation Bar */
 
-        .navbar{
-            background:#003366;
-            color:white;
-            padding:18px 40px;
-
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-
-            box-shadow:0 3px 10px rgba(0,0,0,0.2);
+        .navbar {
+            background: #003366;
+            color: white;
+            padding: 18px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
         }
 
-        .navbar h2{
-            margin:0;
-            font-size:22px;
+        .navbar h2 {
+            margin: 0;
+            font-size: 22px;
         }
 
-        .nav-links{
-            display:flex;
-            gap:12px;
+        .nav-links {
+            display: flex;
+            gap: 12px;
         }
 
-        .nav-btn{
-            color:white;
-            text-decoration:none;
-            padding:9px 18px;
-            border-radius:20px;
-            font-weight:bold;
-            font-size:14px;
-            transition:0.3s;
+        .nav-btn {
+            color: white;
+            text-decoration: none;
+            padding: 9px 18px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            transition: 0.3s;
         }
 
-        .home-btn{
-            background:#0052cc;
+        .home-btn {
+            background: #0052cc;
         }
 
-        .logout-btn{
-            background:#e53935;
+        .logout-btn {
+            background: #e53935;
         }
 
-        .nav-btn:hover{
-            transform:translateY(-2px);
-            opacity:0.9;
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
         }
-
 
         /* Main Section */
 
-        .main{
-            min-height:calc(100vh - 70px);
-
-            display:flex;
-            justify-content:center;
-            align-items:center;
-
-            padding:50px 20px;
+        .main {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 50px 20px;
         }
-
 
         /* Booking Card */
 
-        .container{
-            width:100%;
-            max-width:520px;
-
-            background:white;
-
-            padding:35px;
-
-            border-radius:18px;
-
-            box-shadow:
-                0 8px 25px rgba(0,0,0,0.12);
-
-            animation:slideUp 0.6s ease;
+        .container {
+            width: 100%;
+            max-width: 620px;
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            animation: slideUp 0.6s ease;
         }
 
-
-        @keyframes slideUp{
-
-            from{
-                opacity:0;
-                transform:translateY(30px);
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
             }
-
-            to{
-                opacity:1;
-                transform:translateY(0);
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
-
         }
-
 
         /* Heading */
 
-        .heading{
-            text-align:center;
-            margin-bottom:30px;
+        .heading {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .heading .icon{
-            font-size:45px;
-            margin-bottom:10px;
+        .heading .icon {
+            font-size: 45px;
+            margin-bottom: 10px;
         }
 
-        h1{
-            margin:0;
-            color:#003366;
-            font-size:28px;
+        h1 {
+            margin: 0;
+            color: #003366;
+            font-size: 28px;
         }
 
-        .subtitle{
-            color:#777;
-            font-size:15px;
-            margin-top:8px;
+        .subtitle {
+            color: #777;
+            font-size: 15px;
+            margin-top: 8px;
         }
-
 
         /* Form */
 
-        .form-group{
-            margin-bottom:18px;
+        .form-row {
+            display: flex;
+            gap: 15px;
         }
 
-        label{
-            display:block;
-            font-weight:bold;
-            color:#003366;
-            margin-bottom:7px;
-            font-size:14px;
+        .form-group {
+            flex: 1;
+            margin-bottom: 18px;
+            min-width: 0;
         }
 
+        label {
+            display: block;
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 7px;
+            font-size: 14px;
+        }
 
         input,
-        select{
-
-            width:100%;
-
-            padding:13px 14px;
-
-            border:1px solid #d0d7e2;
-
-            border-radius:8px;
-
-            font-size:15px;
-
-            background:#fafcff;
-
-            transition:0.3s;
-
+        select {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d0d7e2;
+            border-radius: 8px;
+            font-size: 15px;
+            background: #fafcff;
+            transition: 0.3s;
         }
-
 
         input:focus,
-        select:focus{
-
-            outline:none;
-
-            border-color:#0052cc;
-
-            box-shadow:0 0 0 3px rgba(0,82,204,0.12);
-
-            background:white;
-
+        select:focus {
+            outline: none;
+            border-color: #0052cc;
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.12);
+            background: white;
         }
+        /* Customizing Select2 to match template design cleanly */
+.select2-container {
+    width: 100% !important;
+    display: block !important;
+}
 
+.select2-container--default .select2-selection--single {
+    height: 48px !important;
+    border: 1px solid #d0d7e2 !important;
+    border-radius: 8px !important;
+    background: #fafcff !important;
+    display: flex !important;
+    align-items: center !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+}
 
-        /* Station Row */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #333 !important;
+    text-align: left !important;
+    padding-left: 14px !important;
+    padding-right: 30px !important;
+    line-height: normal !important;
+    width: 100% !important;
+    display: block !important;
+}
 
-        .station-row{
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100% !important;
+    top: 0 !important;
+    right: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+}
 
-            display:grid;
-
-            grid-template-columns:1fr 1fr;
-
-            gap:15px;
-
+        .success {
+            background: #d1e7dd;
+            color: #0f5132;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
         }
-
-
-        /* Luggage Row */
-
-        .luggage-row{
-
-            display:grid;
-
-            grid-template-columns:1fr 1fr;
-
-            gap:15px;
-
-        }
-
-
-        /* Success Message */
-
-        .success{
-
-            background:#d1e7dd;
-
-            color:#0f5132;
-
-            padding:12px;
-
-            border-radius:8px;
-
-            text-align:center;
-
-            margin-bottom:20px;
-
-            font-weight:bold;
-
-        }
-
 
         /* Submit Button */
 
-        button{
-
-            width:100%;
-
-            padding:14px;
-
-            margin-top:10px;
-
-            background:#0052cc;
-
-            color:white;
-
-            border:none;
-
-            border-radius:25px;
-
-            font-size:16px;
-
-            font-weight:bold;
-
-            cursor:pointer;
-
-            transition:0.3s;
-
+        button {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            background: #0052cc;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-
-        button:hover{
-
-            background:#003d99;
-
-            transform:translateY(-2px);
-
-            box-shadow:0 5px 12px rgba(0,82,204,0.3);
-
+        button:hover {
+            background: #003d99;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0, 82, 204, 0.3);
         }
-
 
         /* Back Button */
 
-        .back-section{
-
-            text-align:center;
-
-            margin-top:22px;
-
+        .back-section {
+            text-align: center;
+            margin-top: 22px;
         }
 
-        .back-btn{
-
-            color:#0052cc;
-
-            text-decoration:none;
-
-            font-weight:bold;
-
+        .back-btn {
+            color: #0052cc;
+            text-decoration: none;
+            font-weight: bold;
         }
 
-        .back-btn:hover{
-
-            text-decoration:underline;
-
+        .back-btn:hover {
+            text-decoration: underline;
         }
-
 
         /* Footer */
 
-        footer{
-
-            background:#003366;
-
-            color:white;
-
-            text-align:center;
-
-            padding:15px;
-
+        footer {
+            background: #003366;
+            color: white;
+            text-align: center;
+            padding: 15px;
         }
-
 
         /* Mobile */
 
-        @media(max-width:600px){
+        @media (max-width: 600px) {
 
-            .navbar{
-
-                flex-direction:column;
-
-                gap:15px;
-
-                padding:18px;
-
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                padding: 18px;
             }
 
-            .nav-links{
-
-                flex-wrap:wrap;
-
-                justify-content:center;
-
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
             }
 
-            .container{
-
-                padding:25px 20px;
-
+            .container {
+                padding: 25px 20px;
             }
 
-            .station-row,
-            .luggage-row{
-
-                grid-template-columns:1fr;
-
-                gap:0;
-
+            .form-row {
+                flex-direction: column;
+                gap: 0;
             }
 
         }
@@ -390,255 +317,255 @@
 
 <div class="main">
 
-<div class="container">
+    <div class="container">
 
 
-    <!-- Heading -->
+        <!-- Heading -->
 
-    <div class="heading">
+        <div class="heading">
 
-        <div class="icon">
-            🧳
+            <div class="icon">
+                🧳
+            </div>
+
+            <h1>
+                Luggage Transfer Booking
+            </h1>
+
+            <p class="subtitle">
+                Book a convenient luggage transfer service for your railway journey
+            </p>
+
         </div>
 
-        <h1>
-            Luggage Transfer Booking
-        </h1>
 
-        <p class="subtitle">
-            Book a convenient luggage transfer service for your railway journey
-        </p>
+        <!-- Success Message -->
 
-    </div>
+        {% if success %}
 
+        <div class="success">
 
-    <!-- Success Message -->
+            ✅ {{ success }}
 
-    {% if success %}
+        </div>
 
-    <div class="success">
-
-        ✅ {{ success }}
-
-    </div>
-
-    {% endif %}
+        {% endif %}
 
 
-    <!-- Booking Form -->
+        <!-- Booking Form -->
 
-    <form method="POST">
+        <form method="POST">
 
-        {% csrf_token %}
+            {% csrf_token %}
 
 
-        <!-- Stations -->
+            <!-- Stations -->
 
-        <div class="station-row">
+            <div class="form-row">
 
+
+                <div class="form-group">
+
+                    <label for="source_station">
+                        Source Station
+                    </label>
+
+                    <select name="source_station" id="source_station" required>
+
+                        <option value="">
+                            Select Source Station
+                        </option>
+
+                        {% for station in stations %}
+
+                        <option value="{{ station.id }}">
+
+                            {{ station.station_name }}
+                            ({{ station.station_code }})
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="destination_station">
+                        Destination Station
+                    </label>
+
+                    <select name="destination_station" id="destination_station" required>
+
+                        <option value="">
+                            Select Destination Station
+                        </option>
+
+                        {% for station in stations %}
+
+                        <option value="{{ station.id }}">
+
+                            {{ station.station_name }}
+                            ({{ station.station_code }})
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- Luggage Type -->
 
             <div class="form-group">
 
                 <label>
-                    Source Station
+                    Luggage Type
                 </label>
 
-                <select name="source_station" required>
+                <select name="luggage_type" required>
 
                     <option value="">
-                        Select Source Station
+                        Select Luggage Type
                     </option>
 
-                    {% for station in stations %}
-
-                    <option value="{{ station.id }}">
-
-                        {{ station.station_name }}
-                        ({{ station.station_code }})
-
+                    <option value="Suitcase">
+                        🧳 Suitcase
                     </option>
 
-                    {% endfor %}
+                    <option value="Backpack">
+                        🎒 Backpack
+                    </option>
+
+                    <option value="Carton Box">
+                        📦 Carton Box
+                    </option>
+
+                    <option value="Parcel">
+                        📮 Parcel
+                    </option>
+
+                    <option value="Other">
+                        📁 Other
+                    </option>
 
                 </select>
 
             </div>
 
 
-            <div class="form-group">
+            <!-- Bags and Weight -->
 
-                <label>
-                    Destination Station
-                </label>
+            <div class="form-row">
 
-                <select name="destination_station" required>
 
-                    <option value="">
-                        Select Destination Station
-                    </option>
+                <div class="form-group">
 
-                    {% for station in stations %}
+                    <label>
+                        Number of Bags
+                    </label>
 
-                    <option value="{{ station.id }}">
+                    <input
+                        type="number"
+                        name="number_of_bags"
+                        placeholder="Enter number of bags"
+                        min="1"
+                        required
+                    >
 
-                        {{ station.station_name }}
-                        ({{ station.station_code }})
+                </div>
 
-                    </option>
 
-                    {% endfor %}
+                <div class="form-group">
 
-                </select>
+                    <label>
+                        Total Weight
+                    </label>
+
+                    <input
+                        type="number"
+                        step="0.1"
+                        name="weight"
+                        placeholder="Weight in kg"
+                        min="0.1"
+                        required
+                    >
+
+                </div>
+
 
             </div>
 
 
-        </div>
-
-
-        <!-- Luggage Type -->
-
-        <div class="form-group">
-
-            <label>
-                Luggage Type
-            </label>
-
-            <select name="luggage_type" required>
-
-                <option value="">
-                    Select Luggage Type
-                </option>
-
-                <option value="Suitcase">
-                    🧳 Suitcase
-                </option>
-
-                <option value="Backpack">
-                    🎒 Backpack
-                </option>
-
-                <option value="Carton Box">
-                    📦 Carton Box
-                </option>
-
-                <option value="Parcel">
-                    📮 Parcel
-                </option>
-
-                <option value="Other">
-                    📁 Other
-                </option>
-
-            </select>
-
-        </div>
-
-
-        <!-- Bags and Weight -->
-
-        <div class="luggage-row">
-
+            <!-- Travel Date -->
 
             <div class="form-group">
 
                 <label>
-                    Number of Bags
+                    Travel Date
                 </label>
 
                 <input
-                    type="number"
-                    name="number_of_bags"
-                    placeholder="Enter number of bags"
-                    min="1"
+                    type="date"
+                    name="travel_date"
                     required
                 >
 
             </div>
 
 
+            <!-- Contact Number -->
+
             <div class="form-group">
 
                 <label>
-                    Total Weight
+                    Contact Number
                 </label>
 
                 <input
-                    type="number"
-                    step="0.1"
-                    name="weight"
-                    placeholder="Weight in kg"
-                    min="0.1"
+                    type="tel"
+                    name="contact_number"
+                    placeholder="Enter your contact number"
                     required
                 >
 
             </div>
 
 
-        </div>
+            <!-- Submit -->
+
+            <button type="submit">
+
+                🧳 Book Luggage Transfer
+
+            </button>
 
 
-        <!-- Travel Date -->
-
-        <div class="form-group">
-
-            <label>
-                Travel Date
-            </label>
-
-            <input
-                type="date"
-                name="travel_date"
-                required
-            >
-
-        </div>
+        </form>
 
 
-        <!-- Contact Number -->
+        <!-- Back -->
 
-        <div class="form-group">
+        <div class="back-section">
 
-            <label>
-                Contact Number
-            </label>
+            <a href="/dashboard/" class="back-btn">
 
-            <input
-                type="tel"
-                name="contact_number"
-                placeholder="Enter your contact number"
-                required
-            >
+                ← Back to Dashboard
+
+            </a>
 
         </div>
 
-
-        <!-- Submit -->
-
-        <button type="submit">
-
-            🧳 Book Luggage Transfer
-
-        </button>
-
-
-    </form>
-
-
-    <!-- Back -->
-
-    <div class="back-section">
-
-        <a href="/dashboard/" class="back-btn">
-
-            ← Back to Dashboard
-
-        </a>
 
     </div>
-
-
-</div>
 
 </div>
 
@@ -651,6 +578,22 @@
 
 </footer>
 
+<!-- Select2 Initialization Script -->
+<script>
+    $(document).ready(function() {
+        $('#source_station').select2({
+            placeholder: "Select Source Station",
+            allowClear: true,
+            width: '100%'
+        });
+
+        $('#destination_station').select2({
+            placeholder: "Select Destination Station",
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>
 
 </body>
 </html>
