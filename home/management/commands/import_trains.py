@@ -89,14 +89,13 @@ class Command(BaseCommand):
                 )
             )
 
-            # Find source and destination stations
-            source_station = Station.objects.filter(
-                station_code=first_code
-            ).first()
+            source_station = get_or_create_station(
+                 first_station_data.get("stationName", "")
+            )
 
-            destination_station = Station.objects.filter(
-                station_code=last_code
-            ).first()
+            destination_station = get_or_create_station(
+                last_station_data.get("stationName", "")
+            )
 
             # Skip if station is not found
             if not source_station or not destination_station:
@@ -147,9 +146,9 @@ class Command(BaseCommand):
                     station_name
                 )
 
-                station = Station.objects.filter(
-                    station_code=station_code
-                ).first()
+                station = get_or_create_station(
+                    station_name
+                    )
 
                 if not station:
                     stops_skipped += 1
@@ -256,3 +255,36 @@ def convert_time(time_value):
         return time_value
 
     return None
+
+def get_or_create_station(station_name):
+    """
+    Find a station by its station code.
+    If it does not exist, create it automatically.
+    """
+
+    station_code = extract_station_code(station_name)
+
+    if not station_code:
+        return None
+
+    station = Station.objects.filter(
+        station_code=station_code
+    ).first()
+
+    if station:
+        return station
+
+    # Remove station code from name
+    clean_name = re.sub(
+        r"\s*-\s*[A-Z0-9]+\s*$",
+        "",
+        station_name
+    ).strip()
+
+    # Create missing station
+    station = Station.objects.create(
+        station_name=clean_name,
+        station_code=station_code
+    )
+
+    return station
