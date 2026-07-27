@@ -21,6 +21,7 @@ class Train(models.Model):
     arrival_time = models.TimeField()
 
     is_active = models.BooleanField(default=True)
+    is_reserved = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.train_number} - {self.train_name}"
