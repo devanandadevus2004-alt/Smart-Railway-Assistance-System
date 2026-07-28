@@ -286,8 +286,11 @@
             </p>
 
             <div id="seat-container"
-                 class="seat-grid">
-            </div>
+     class="seat-grid">
+
+    <!-- Seats will be displayed here -->
+
+        </div>
 
             <button class="continue-btn">
                 Continue
@@ -299,125 +302,256 @@
 
 </div>
 
-
 <script>
 
+    let selectedSeat = null;
+
+    // Coach and seat data from Django
+    const coachesData = {{ coaches_json|safe }};
+
+
     function selectCoach(
-    element,
-    coachId,
-    coachNumber,
-    coachType
-) {
+        element,
+        coachId,
+        coachNumber,
+        coachType
+    ) {
 
-    // Remove previous selection
-    document
-        .querySelectorAll('.coach')
-        .forEach(function(coach) {
+        // Remove previous coach selection
 
-            coach.classList.remove(
-                'selected'
+        document
+            .querySelectorAll('.coach')
+            .forEach(function(coach) {
+
+                coach.classList.remove(
+                    'selected'
+                );
+
+            });
+
+
+        // Select clicked coach
+
+        element.classList.add(
+            'selected'
+        );
+
+
+        // Show coach details
+
+        const details =
+            document.getElementById(
+                'coach-details'
             );
 
-        });
+        details.style.display = 'block';
 
 
-    // Select clicked coach
-    element.classList.add(
-        'selected'
-    );
+        // Display selected coach
 
-
-    // Show coach details
-    const details =
         document.getElementById(
-            'coach-details'
+            'selected-coach-name'
+        ).innerText =
+            'Selected Coach: '
+            + coachNumber
+            + ' ('
+            + coachType
+            + ')';
+
+
+        // Get seat container
+
+        const seatContainer =
+            document.getElementById(
+                'seat-container'
+            );
+
+
+        // Reset selected seat
+
+        selectedSeat = null;
+
+
+        // --------------------------------
+        // GENERAL COACH
+        // --------------------------------
+
+        if (coachType === 'GEN') {
+
+            seatContainer.innerHTML =
+
+                '<div style="'
+                + 'grid-column:1/-1;'
+                + 'text-align:center;'
+                + 'padding:30px;'
+                + 'background:#fff3cd;'
+                + 'border:2px solid #ffc107;'
+                + 'border-radius:15px;'
+                + '">'
+
+                + '<div style="'
+                + 'font-size:40px;'
+                + 'margin-bottom:15px;'
+                + '">🚫</div>'
+
+                + '<h3 style="'
+                + 'margin:0 0 10px 0;'
+                + 'color:#856404;'
+                + '">'
+                + 'Preferred Seat Booking Not Available'
+                + '</h3>'
+
+                + '<p style="'
+                + 'margin:0;'
+                + 'color:#856404;'
+                + '">'
+                + 'General coaches do not support '
+                + 'preferred seat or berth reservation.'
+                + '</p>'
+
+                + '<p style="'
+                + 'margin-top:10px;'
+                + 'color:#856404;'
+                + '">'
+                + 'Please select a reserved coach '
+                + 'to choose your preferred seat or berth.'
+                + '</p>'
+
+                + '</div>';
+
+            return;
+        }
+
+
+        // --------------------------------
+        // RESERVED COACH
+        // --------------------------------
+
+        const selectedCoach =
+            coachesData.find(
+                function(coach) {
+
+                    return coach.id == coachId;
+
+                }
+            );
+
+
+        // Coach not found
+
+        if (!selectedCoach) {
+
+            seatContainer.innerHTML =
+
+                '<p style="'
+                + 'grid-column:1/-1;'
+                + 'text-align:center;'
+                + '">'
+                + 'Unable to load seats.'
+                + '</p>';
+
+            return;
+        }
+
+
+        // No seats available
+
+        if (
+            !selectedCoach.seats ||
+            selectedCoach.seats.length === 0
+        ) {
+
+            seatContainer.innerHTML =
+
+                '<p style="'
+                + 'grid-column:1/-1;'
+                + 'text-align:center;'
+                + '">'
+                + 'No seats available in this coach.'
+                + '</p>';
+
+            return;
+        }
+
+
+        // Clear old content
+
+        seatContainer.innerHTML = '';
+
+
+        // Display seats
+
+        selectedCoach.seats.forEach(
+            function(seat) {
+
+                const seatElement =
+                    document.createElement(
+                        'div'
+                    );
+
+                seatElement.className =
+                    'seat';
+
+
+                seatElement.innerHTML =
+
+                    '<strong>'
+                    + 'Seat '
+                    + seat.seat_number
+                    + '</strong>'
+                    + '<br>'
+                    + '<small>'
+                    + seat.seat_type
+                    + '</small>';
+
+
+                // Seat selection
+
+                seatElement.onclick =
+                    function() {
+
+                        // Remove previous selection
+
+                        document
+                            .querySelectorAll(
+                                '.seat'
+                            )
+                            .forEach(
+                                function(item) {
+
+                                    item.classList.remove(
+                                        'selected-seat'
+                                    );
+
+                                }
+                            );
+
+
+                        // Select current seat
+
+                        seatElement.classList.add(
+                            'selected-seat'
+                        );
+
+
+                        selectedSeat =
+                            seat.id;
+
+                    };
+
+
+                // Add seat to page
+
+                seatContainer.appendChild(
+                    seatElement
+                );
+
+            }
         );
 
-    details.style.display = 'block';
-
-
-    // Display selected coach
-    document.getElementById(
-        'selected-coach-name'
-    ).innerText =
-        'Selected Coach: '
-        + coachNumber
-        + ' ('
-        + coachType
-        + ')';
-
-
-    // Get seat container
-    const seatContainer =
-        document.getElementById(
-            'seat-container'
-        );
-
-
-    // Check if coach is General
-    if (coachType === 'GEN') {
-
-        // General coach does not allow
-        // preferred seat booking
-
-        seatContainer.innerHTML =
-
-            '<div style="'
-            + 'text-align:center;'
-            + 'padding:30px;'
-            + 'background:#fff3cd;'
-            + 'border:2px solid #ffc107;'
-            + 'border-radius:15px;'
-            + '">'
-
-            + '<div style="'
-            + 'font-size:40px;'
-            + 'margin-bottom:15px;'
-            + '">🚫</div>'
-
-            + '<h3 style="'
-            + 'margin:0 0 10px 0;'
-            + 'color:#856404;'
-            + '">'
-            + 'Preferred Seat Booking Not Available'
-            + '</h3>'
-
-            + '<p style="'
-            + 'margin:0;'
-            + 'color:#856404;'
-            + '">'
-            + 'General coaches do not support '
-            + 'preferred seat or berth reservation.'
-            + '</p>'
-
-            + '<p style="'
-            + 'margin-top:10px;'
-            + 'color:#856404;'
-            + '">'
-            + 'Please select a reserved coach '
-            + 'to choose your preferred seat or berth.'
-            + '</p>'
-
-            + '</div>';
-
-        return;
     }
 
-
-    // For reserved coaches
-    // show seat layout placeholder
-
-    seatContainer.innerHTML =
-
-        '<p style="text-align:center;">'
-        + 'Seat layout will appear here.'
-        + '</p>';
-
-}
-
 </script>
-
-
 </body>
 
 </html>

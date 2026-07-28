@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from home.models import Station
 from .models import Train, TrainStop
@@ -80,8 +81,34 @@ def select_seat(request, train_id):
 
     coaches = Coach.objects.filter(
         train=train,
-
     ).prefetch_related('seats')
+
+
+    # Prepare coach and seat data
+    coaches_data = []
+
+    for coach in coaches:
+
+        seats_data = []
+
+        for seat in coach.seats.all():
+
+            seats_data.append({
+                'id': seat.id,
+                'seat_number': seat.seat_number,
+                'seat_type': seat.get_seat_type_display(),
+                'is_active': seat.is_active,
+            })
+
+
+        coaches_data.append({
+            'id': coach.id,
+            'coach_number': coach.coach_number,
+            'coach_type': coach.coach_type,
+            'is_bookable': coach.is_bookable,
+            'seats': seats_data,
+        })
+
 
     return render(
         request,
@@ -89,5 +116,8 @@ def select_seat(request, train_id):
         {
             'train': train,
             'coaches': coaches,
+            'coaches_json': json.dumps(
+                coaches_data
+            ),
         }
     )
