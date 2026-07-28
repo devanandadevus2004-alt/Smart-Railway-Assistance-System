@@ -2,6 +2,9 @@ from django.shortcuts import render
 from home.models import Station
 from .models import Train, TrainStop
 
+from django.shortcuts import render, get_object_or_404
+from .models import Train, Coach
+
 
 def ticket_booking(request):
 
@@ -63,5 +66,28 @@ def ticket_booking(request):
             'stations': stations,
             'trains': trains,
             'travel_date': travel_date,
+        }
+    )
+
+
+
+def select_seat(request, train_id):
+
+    train = get_object_or_404(
+        Train,
+        id=train_id
+    )
+
+    coaches = Coach.objects.filter(
+        train=train,
+
+    ).prefetch_related('seats')
+
+    return render(
+        request,
+        'ticket_booking/select_seat.html',
+        {
+            'train': train,
+            'coaches': coaches,
         }
     )

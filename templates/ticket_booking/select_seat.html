@@ -1,0 +1,423 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Select Coach</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef6ff;
+            color: #17324d;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 40px auto;
+        }
+
+        .train-header {
+            background: white;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .train-header h1 {
+            margin-top: 0;
+        }
+
+        .route {
+            font-size: 18px;
+            margin-top: 10px;
+        }
+
+        /* Coach Section */
+
+        .coach-section {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .coach-section h2 {
+            text-align: center;
+        }
+
+        .train-track {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 40px 20px;
+        }
+
+        .engine {
+            min-width: 100px;
+            height: 90px;
+            background: #26384a;
+            color: white;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* Coach */
+
+        .coach {
+            min-width: 130px;
+            height: 90px;
+            border-radius: 15px;
+            background: #e7f1ff;
+            border: 3px solid #1976d2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                background 0.3s ease;
+        }
+
+        .coach:hover {
+            transform: translateY(-12px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+        }
+
+        .coach.selected {
+            background: #1976d2;
+            color: white;
+            transform: translateY(-10px);
+            box-shadow: 0 12px 25px rgba(25,118,210,0.4);
+        }
+
+        .coach-number {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .coach-type {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+
+        /* Coach Details */
+
+        #coach-details {
+            margin-top: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        #coach-details h2 {
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        /* Seats */
+
+        .seat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .seat {
+            padding: 15px;
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .seat:hover {
+            transform: scale(1.05);
+        }
+
+        .seat.selected-seat {
+            background: #1976d2;
+            color: white;
+            border-color: #1976d2;
+        }
+
+        .seat.booked {
+            background: #eeeeee;
+            border-color: #999;
+            color: #777;
+            cursor: not-allowed;
+        }
+
+        .continue-btn {
+            display: block;
+            margin: 30px auto 0;
+            padding: 14px 35px;
+            border: none;
+            border-radius: 25px;
+            background: #1976d2;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Train Information -->
+
+    <div class="train-header">
+
+        <h1>
+            🚆 {{ train.train_number }} -
+            {{ train.train_name }}
+        </h1>
+
+        <div class="route">
+
+            🚉
+            {{ train.source_station.station_name }}
+
+            →
+
+            {{ train.destination_station.station_name }}
+
+        </div>
+
+    </div>
+
+
+    <!-- Animated Coach Train -->
+
+    <div class="coach-section">
+
+        <h2>🚆 Select Your Coach</h2>
+
+        <div class="train-track">
+
+            <div class="engine">
+                🚂 Engine
+            </div>
+
+
+            {% for coach in coaches %}
+
+            <div class="coach"
+                 onclick="selectCoach(
+                    this,
+                    '{{ coach.id }}',
+                    '{{ coach.coach_number }}',
+                    '{{ coach.coach_type }}'
+                 )">
+
+                <div class="coach-number">
+                    {{ coach.coach_number }}
+                </div>
+
+                <div class="coach-type">
+                    {{ coach.get_coach_type_display }}
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <p>
+                No coaches available for this train.
+            </p>
+
+            {% endfor %}
+
+        </div>
+
+
+        <!-- Selected Coach -->
+
+        <div id="coach-details">
+
+            <h2>
+                🪑 Select Your Seat / Berth
+            </h2>
+
+            <p id="selected-coach-name"
+               style="text-align:center;">
+            </p>
+
+            <div id="seat-container"
+                 class="seat-grid">
+            </div>
+
+            <button class="continue-btn">
+                Continue
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    function selectCoach(
+    element,
+    coachId,
+    coachNumber,
+    coachType
+) {
+
+    // Remove previous selection
+    document
+        .querySelectorAll('.coach')
+        .forEach(function(coach) {
+
+            coach.classList.remove(
+                'selected'
+            );
+
+        });
+
+
+    // Select clicked coach
+    element.classList.add(
+        'selected'
+    );
+
+
+    // Show coach details
+    const details =
+        document.getElementById(
+            'coach-details'
+        );
+
+    details.style.display = 'block';
+
+
+    // Display selected coach
+    document.getElementById(
+        'selected-coach-name'
+    ).innerText =
+        'Selected Coach: '
+        + coachNumber
+        + ' ('
+        + coachType
+        + ')';
+
+
+    // Get seat container
+    const seatContainer =
+        document.getElementById(
+            'seat-container'
+        );
+
+
+    // Check if coach is General
+    if (coachType === 'GEN') {
+
+        // General coach does not allow
+        // preferred seat booking
+
+        seatContainer.innerHTML =
+
+            '<div style="'
+            + 'text-align:center;'
+            + 'padding:30px;'
+            + 'background:#fff3cd;'
+            + 'border:2px solid #ffc107;'
+            + 'border-radius:15px;'
+            + '">'
+
+            + '<div style="'
+            + 'font-size:40px;'
+            + 'margin-bottom:15px;'
+            + '">🚫</div>'
+
+            + '<h3 style="'
+            + 'margin:0 0 10px 0;'
+            + 'color:#856404;'
+            + '">'
+            + 'Preferred Seat Booking Not Available'
+            + '</h3>'
+
+            + '<p style="'
+            + 'margin:0;'
+            + 'color:#856404;'
+            + '">'
+            + 'General coaches do not support '
+            + 'preferred seat or berth reservation.'
+            + '</p>'
+
+            + '<p style="'
+            + 'margin-top:10px;'
+            + 'color:#856404;'
+            + '">'
+            + 'Please select a reserved coach '
+            + 'to choose your preferred seat or berth.'
+            + '</p>'
+
+            + '</div>';
+
+        return;
+    }
+
+
+    // For reserved coaches
+    // show seat layout placeholder
+
+    seatContainer.innerHTML =
+
+        '<p style="text-align:center;">'
+        + 'Seat layout will appear here.'
+        + '</p>';
+
+}
+
+</script>
+
+
+</body>
+
+</html>
