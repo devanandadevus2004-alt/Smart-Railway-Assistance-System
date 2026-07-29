@@ -79,10 +79,13 @@ def select_seat(request, train_id):
         id=train_id
     )
 
+    travel_date = request.GET.get(
+        'travel_date'
+    )
+
     coaches = Coach.objects.filter(
         train=train,
     ).prefetch_related('seats')
-
 
     # Prepare coach and seat data
     coaches_data = []
@@ -100,7 +103,6 @@ def select_seat(request, train_id):
                 'is_active': seat.is_active,
             })
 
-
         coaches_data.append({
             'id': coach.id,
             'coach_number': coach.coach_number,
@@ -108,7 +110,6 @@ def select_seat(request, train_id):
             'is_bookable': coach.is_bookable,
             'seats': seats_data,
         })
-
 
     return render(
         request,
@@ -119,5 +120,6 @@ def select_seat(request, train_id):
             'coaches_json': json.dumps(
                 coaches_data
             ),
+            'travel_date': travel_date,
         }
     )

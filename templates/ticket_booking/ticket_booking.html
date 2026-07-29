@@ -536,9 +536,9 @@
             </div>
 
                 {% if train.is_reserved %}
-            <a href="{% url 'select_seat' train.id %}" class="btn">
+            <a href="{% url 'select_seat' train.id %}?travel_date={{ travel_date }}" class="btn">
     🎫 Book Ticket
-        </a>
+</a>
 
     {% else %}
 
