@@ -1,10 +1,22 @@
 import json
-from django.shortcuts import render
-from home.models import Station
-from .models import Train, TrainStop
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404
+)
 
-from django.shortcuts import render, get_object_or_404
-from .models import Train, Coach
+from home.models import (
+    Station,
+    Passenger
+)
+
+from .models import (
+    Train,
+    TrainStop,
+    Coach,
+    Seat
+)
+
 
 
 def ticket_booking(request):
@@ -120,6 +132,48 @@ def select_seat(request, train_id):
             'coaches_json': json.dumps(
                 coaches_data
             ),
+            'travel_date': travel_date,
+        }
+    )
+
+def booking_summary(request):
+
+    train_id = request.GET.get('train_id')
+    seat_id = request.GET.get('seat_id')
+    travel_date = request.GET.get('travel_date')
+
+    # Get logged-in passenger
+    passenger_id = request.session.get('passenger_id')
+
+    # User must be logged in
+    if not passenger_id:
+        return redirect('login')
+
+    # Get train
+    train = get_object_or_404(
+        Train,
+        id=train_id
+    )
+
+    # Get selected seat
+    seat = get_object_or_404(
+        Seat,
+        id=seat_id
+    )
+
+    # Get passenger
+    passenger = get_object_or_404(
+        Passenger,
+        id=passenger_id
+    )
+
+    return render(
+        request,
+        'ticket_booking/booking_summary.html',
+        {
+            'train': train,
+            'seat': seat,
+            'passenger': passenger,
             'travel_date': travel_date,
         }
     )

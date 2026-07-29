@@ -297,9 +297,12 @@
 
         </div>
 
-            <button class="continue-btn">
-                Continue
-            </button>
+                    <button
+            type="button"
+            class="continue-btn"
+            onclick="continueBooking()">
+            Continue
+        </button>
 
         </div>
 
@@ -309,10 +312,8 @@
 
 <script>
 
-    let selectedSeat = null;
-
-    // Coach and seat data from Django
-    const coachesData = {{ coaches_json|safe }};
+    // Store the selected seat ID
+    let selectedSeatId = null;
 
 
     function selectCoach(
@@ -323,7 +324,6 @@
     ) {
 
         // Remove previous coach selection
-
         document
             .querySelectorAll('.coach')
             .forEach(function(coach) {
@@ -336,14 +336,12 @@
 
 
         // Select clicked coach
-
         element.classList.add(
             'selected'
         );
 
 
         // Show coach details
-
         const details =
             document.getElementById(
                 'coach-details'
@@ -353,7 +351,6 @@
 
 
         // Display selected coach
-
         document.getElementById(
             'selected-coach-name'
         ).innerText =
@@ -365,28 +362,22 @@
 
 
         // Get seat container
-
         const seatContainer =
             document.getElementById(
                 'seat-container'
             );
 
 
-        // Reset selected seat
+        // Reset previously selected seat
+        selectedSeatId = null;
 
-        selectedSeat = null;
 
-
-        // --------------------------------
-        // GENERAL COACH
-        // --------------------------------
-
+        // General coach
         if (coachType === 'GEN') {
 
             seatContainer.innerHTML =
 
                 '<div style="'
-                + 'grid-column:1/-1;'
                 + 'text-align:center;'
                 + 'padding:30px;'
                 + 'background:#fff3cd;'
@@ -414,64 +405,47 @@
                 + 'preferred seat or berth reservation.'
                 + '</p>'
 
-                + '<p style="'
-                + 'margin-top:10px;'
-                + 'color:#856404;'
-                + '">'
-                + 'Please select a reserved coach '
-                + 'to choose your preferred seat or berth.'
-                + '</p>'
-
                 + '</div>';
 
             return;
         }
 
 
-        // --------------------------------
-        // RESERVED COACH
-        // --------------------------------
+        // Convert Django JSON data into JavaScript
+        const coaches =
+            {{ coaches_json|safe }};
 
+
+        // Find selected coach
         const selectedCoach =
-            coachesData.find(
-                function(coach) {
+            coaches.find(function(coach) {
 
-                    return coach.id == coachId;
+                return coach.id ==
+                    coachId;
 
-                }
-            );
+            });
 
 
-        // Coach not found
-
+        // If no coach found
         if (!selectedCoach) {
 
             seatContainer.innerHTML =
-
-                '<p style="'
-                + 'grid-column:1/-1;'
-                + 'text-align:center;'
-                + '">'
-                + 'Unable to load seats.'
+                '<p style="text-align:center;">'
+                + 'Coach information not found.'
                 + '</p>';
 
             return;
         }
 
 
-        // No seats available
-
+        // If coach has no seats
         if (
             !selectedCoach.seats ||
             selectedCoach.seats.length === 0
         ) {
 
             seatContainer.innerHTML =
-
-                '<p style="'
-                + 'grid-column:1/-1;'
-                + 'text-align:center;'
-                + '">'
+                '<p style="text-align:center;">'
                 + 'No seats available in this coach.'
                 + '</p>';
 
@@ -479,13 +453,11 @@
         }
 
 
-        // Clear old content
-
+        // Clear seat container
         seatContainer.innerHTML = '';
 
 
         // Display seats
-
         selectedCoach.seats.forEach(
             function(seat) {
 
@@ -500,52 +472,37 @@
 
                 seatElement.innerHTML =
 
-                    '<strong>'
-                    + 'Seat '
+                    '<strong>Seat '
                     + seat.seat_number
-                    + '</strong>'
-                    + '<br>'
-                    + '<small>'
-                    + seat.seat_type
-                    + '</small>';
+                    + '</strong><br>'
+                    + seat.seat_type;
 
 
-                // Seat selection
+                // Check if seat is active
+                if (!seat.is_active) {
 
-                seatElement.onclick =
-                    function() {
+                    seatElement.classList.add(
+                        'booked'
+                    );
 
-                        // Remove previous selection
+                    seatElement.innerHTML +=
+                        '<br><small>Not Available</small>';
 
-                        document
-                            .querySelectorAll(
-                                '.seat'
-                            )
-                            .forEach(
-                                function(item) {
+                } else {
 
-                                    item.classList.remove(
-                                        'selected-seat'
-                                    );
+                    // Click active seat
+                    seatElement.onclick =
+                        function() {
 
-                                }
+                            selectSeat(
+                                seatElement,
+                                seat.id
                             );
 
+                        };
 
-                        // Select current seat
+                }
 
-                        seatElement.classList.add(
-                            'selected-seat'
-                        );
-
-
-                        selectedSeat =
-                            seat.id;
-
-                    };
-
-
-                // Add seat to page
 
                 seatContainer.appendChild(
                     seatElement
@@ -553,6 +510,79 @@
 
             }
         );
+
+    }
+
+
+    // Select a seat
+    function selectSeat(
+        seatElement,
+        seatId
+    ) {
+
+        // Remove previous seat selection
+        document
+            .querySelectorAll('.seat')
+            .forEach(function(seat) {
+
+                seat.classList.remove(
+                    'selected-seat'
+                );
+
+            });
+
+
+        // Select clicked seat
+        seatElement.classList.add(
+            'selected-seat'
+        );
+
+
+        // Remember selected seat
+        selectedSeatId = seatId;
+
+    }
+
+
+    // Continue booking
+    function continueBooking() {
+
+        // Check whether seat is selected
+        if (!selectedSeatId) {
+
+            alert(
+                'Please select a seat or berth first.'
+            );
+
+            return;
+        }
+
+
+        // Get travel date
+        const travelDate =
+            "{{ travel_date }}";
+
+
+        // Get train ID
+        const trainId =
+            "{{ train.id }}";
+
+
+        // Create booking summary URL
+        const url =
+            "{% url 'booking_summary' %}"
+            + "?train_id="
+            + trainId
+            + "&seat_id="
+            + selectedSeatId
+            + "&travel_date="
+            + encodeURIComponent(
+                travelDate
+            );
+
+
+        // Open booking summary page
+        window.location.href = url;
 
     }
 

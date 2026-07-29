@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Booking Summary</title>
+
+</head>
+
+<body>
+
+    <h1>
+        Booking Summary
+    </h1>
+
+
+    <hr>
+
+
+    <h2>
+        🚆 Train Details
+    </h2>
+
+    <p>
+        Train Number:
+        {{ train.train_number }}
+    </p>
+
+    <p>
+        Train Name:
+        {{ train.train_name }}
+    </p>
+
+    <p>
+        Route:
+        {{ train.source_station.station_name }}
+        →
+        {{ train.destination_station.station_name }}
+    </p>
+
+    <p>
+        📅 Travel Date:
+        {{ travel_date }}
+    </p>
+
+
+    <hr>
+
+
+    <h2>
+        👤 Passenger Details
+    </h2>
+
+    <p>
+        Name:
+        {{ passenger.full_name }}
+    </p>
+
+    <p>
+        Email:
+        {{ passenger.email }}
+    </p>
+
+    <p>
+        Phone:
+        {{ passenger.phone_number }}
+    </p>
+
+
+    <hr>
+
+
+    <h2>
+        🪑 Seat Details
+    </h2>
+
+    <p>
+        Coach:
+        {{ seat.coach.coach_number }}
+    </p>
+
+    <p>
+        Coach Type:
+        {{ seat.coach.get_coach_type_display }}
+    </p>
+
+    <p>
+        Seat Number:
+        {{ seat.seat_number }}
+    </p>
+
+    <p>
+        Seat Type:
+        {{ seat.get_seat_type_display }}
+    </p>
+
+
+    <hr>
+
+
+    <button type="button">
+        Confirm Booking
+    </button>
+
+</body>
+
+</html>
