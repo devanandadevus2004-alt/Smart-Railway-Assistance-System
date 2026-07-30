@@ -14,7 +14,9 @@ from .models import (
     Train,
     TrainStop,
     Coach,
-    Seat
+    Seat,
+     TicketBooking
+
 )
 
 
@@ -25,12 +27,19 @@ def ticket_booking(request):
 
     trains = None
     travel_date = None
+    source_id = None
+    destination_id = None
 
     if request.method == 'POST':
 
         source_id = request.POST.get('source_station')
         destination_id = request.POST.get('destination_station')
         travel_date = request.POST.get('travel_date')
+
+        # Store selected journey details in session
+        request.session['source_station_id'] = source_id
+        request.session['destination_station_id'] = destination_id
+        request.session['travel_date'] = travel_date
 
         if source_id and destination_id:
 
@@ -62,6 +71,7 @@ def ticket_booking(request):
                 if destination_order is not None:
 
                     if source_stop.stop_order < destination_order:
+
                         valid_train_ids.append(
                             source_stop.train_id
                         )
@@ -83,13 +93,16 @@ def ticket_booking(request):
     )
 
 
-
 def select_seat(request, train_id):
 
     train = get_object_or_404(
         Train,
         id=train_id
     )
+
+    source_id = request.session.get('source_station_id')
+    destination_id = request.session.get('destination_station_id')
+    travel_date = request.session.get('travel_date')
 
     travel_date = request.GET.get(
         'travel_date'
@@ -136,6 +149,8 @@ def select_seat(request, train_id):
         }
     )
 
+    
+
 def booking_summary(request):
 
     train_id = request.GET.get('train_id')
@@ -175,5 +190,85 @@ def booking_summary(request):
             'seat': seat,
             'passenger': passenger,
             'travel_date': travel_date,
+        }
+    )
+
+
+def confirm_booking(request):
+
+    if request.method != 'POST':
+        return redirect('ticket_booking')
+
+    # Get passenger from session
+    passenger_id = request.session.get(
+        'passenger_id'
+    )
+
+    if not passenger_id:
+        return redirect('login')
+
+    passenger = get_object_or_404(
+        Passenger,
+        id=passenger_id
+    )
+
+    # Get submitted data
+    train_id = request.POST.get(
+        'train_id'
+    )
+
+    seat_id = request.POST.get(
+        'seat_id'
+    )
+
+    travel_date = request.POST.get(
+        'travel_date'
+    )
+
+    # Get train and seat
+    train = get_object_or_404(
+        Train,
+        id=train_id
+    )
+
+    seat = get_object_or_404(
+        Seat,
+        id=seat_id
+    )
+
+    # Create pending booking
+    booking = TicketBooking.objects.create(
+
+        passenger=passenger,
+
+        train=train,
+
+        seat=seat,
+
+        travel_date=travel_date,
+
+        fare=0,
+
+        status='PENDING'
+    )
+
+    # Go to payment page
+    return redirect(
+        'payment',
+        booking_id=booking.id
+    )
+
+def payment(request, booking_id):
+
+    booking = get_object_or_404(
+        TicketBooking,
+        id=booking_id
+    )
+
+    return render(
+        request,
+        'ticket_booking/payment.html',
+        {
+            'booking': booking,
         }
     )

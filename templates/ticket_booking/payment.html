@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Payment</title>
+
+</head>
+
+<body>
+
+    <h1>💳 Payment</h1>
+
+    <h2>Booking Details</h2>
+
+    <p>
+        Train:
+        {{ booking.train.train_number }}
+        -
+        {{ booking.train.train_name }}
+    </p>
+
+    <p>
+        Coach:
+        {{ booking.seat.coach.coach_number }}
+    </p>
+
+    <p>
+        Seat:
+        {{ booking.seat.seat_number }}
+    </p>
+
+    <p>
+        Travel Date:
+        {{ booking.travel_date }}
+    </p>
+
+    <p>
+        Amount:
+        ₹{{ booking.fare }}
+    </p>
+
+    <hr>
+
+    <h2>Select Payment Method</h2>
+
+    <button>UPI</button>
+
+    <button>Credit / Debit Card</button>
+
+    <button>Net Banking</button>
+
+</body>
+
+</html>

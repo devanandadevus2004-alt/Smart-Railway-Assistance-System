@@ -20,5 +20,16 @@ urlpatterns = [
         views.booking_summary,
         name='booking_summary'
     ),
+    path(
+    'confirm-booking/',
+    views.confirm_booking,
+    name='confirm_booking'
+    ),
+    
+    path(
+    'payment/<int:booking_id>/',
+    views.payment,
+    name='payment'
+),
 
 ]
