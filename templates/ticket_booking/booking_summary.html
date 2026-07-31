@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -11,123 +10,780 @@
 
     <title>Booking Summary</title>
 
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+            min-height: 100vh;
+        }
+
+        /* ============================= */
+        /* HEADER */
+        /* ============================= */
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #0f3d63,
+                #1769aa
+            );
+
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .header h1 {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        /* ============================= */
+        /* MAIN CONTAINER */
+        /* ============================= */
+
+        .container {
+            width: 90%;
+            max-width: 950px;
+            margin: 35px auto;
+        }
+
+        /* ============================= */
+        /* SUMMARY CARD */
+        /* ============================= */
+
+        .summary-card {
+            background: white;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(
+                15,
+                61,
+                99,
+                0.12
+            );
+        }
+
+        /* ============================= */
+        /* SECTION */
+        /* ============================= */
+
+        .section {
+            padding: 25px 30px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            font-size: 20px;
+            color: #0f3d63;
+
+            margin-bottom: 20px;
+        }
+
+        /* ============================= */
+        /* TRAIN DETAILS */
+        /* ============================= */
+
+        .train-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            background: #eef6ff;
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .train-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #0f3d63;
+        }
+
+        .train-name {
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .travel-date {
+            text-align: right;
+            font-weight: bold;
+            color: #1769aa;
+        }
+
+        /* ============================= */
+        /* ROUTE */
+        /* ============================= */
+
+        .route {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+
+            margin: 25px 0;
+        }
+
+        .station {
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .station-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .station-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .route-line {
+            flex: 1;
+            max-width: 200px;
+            height: 3px;
+            background: #1769aa;
+            position: relative;
+        }
+
+        .route-line::before,
+        .route-line::after {
+            content: "";
+            position: absolute;
+
+            width: 10px;
+            height: 10px;
+
+            background: #1769aa;
+            border-radius: 50%;
+
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .route-line::before {
+            left: 0;
+        }
+
+        .route-line::after {
+            right: 0;
+        }
+
+        /* ============================= */
+        /* DETAILS GRID */
+        /* ============================= */
+
+        .details-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+        .detail-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        /* ============================= */
+        /* FARE SECTION */
+        /* ============================= */
+
+        .fare-section {
+            background: linear-gradient(
+                135deg,
+                #f0fdf4,
+                #ecfdf5
+            );
+        }
+
+        .fare-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            background: white;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            border: 1px solid #bbf7d0;
+        }
+
+        .fare-info h3 {
+            color: #166534;
+            margin-bottom: 8px;
+        }
+
+        .fare-info p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .fare-amount {
+            font-size: 30px;
+            font-weight: bold;
+            color: #15803d;
+        }
+
+        /* ============================= */
+        /* BUTTON */
+        /* ============================= */
+
+        .action-section {
+            text-align: center;
+            padding: 30px;
+        }
+
+        .confirm-button {
+            width: 100%;
+            max-width: 400px;
+
+            padding: 15px 25px;
+
+            border: none;
+            border-radius: 10px;
+
+            background: linear-gradient(
+                135deg,
+                #1769aa,
+                #0f3d63
+            );
+
+            color: white;
+
+            font-size: 17px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+
+            box-shadow: 0 5px 15px
+                rgba(15, 61, 99, 0.25);
+        }
+
+        .confirm-button:hover {
+            transform: translateY(-2px);
+
+            box-shadow: 0 8px 20px
+                rgba(15, 61, 99, 0.35);
+        }
+
+        /* ============================= */
+        /* RESPONSIVE */
+        /* ============================= */
+
+        @media (max-width: 700px) {
+
+            .container {
+                width: 95%;
+                margin: 20px auto;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .train-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .travel-date {
+                text-align: center;
+            }
+
+            .route {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .route-line {
+                width: 3px;
+                height: 40px;
+                flex: none;
+            }
+
+            .route-line::before,
+            .route-line::after {
+                left: 50%;
+                top: 0;
+                transform: translateX(-50%);
+            }
+
+            .route-line::after {
+                top: auto;
+                bottom: 0;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .fare-card {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    <h1>
-        Booking Summary
-    </h1>
+
+    <!-- ============================= -->
+    <!-- HEADER -->
+    <!-- ============================= -->
+
+    <header class="header">
+
+        <h1>
+            🚆 Booking Summary
+        </h1>
+
+        <p>
+            Review your journey details before confirming your booking
+        </p>
+
+    </header>
 
 
-    <hr>
+    <!-- ============================= -->
+    <!-- MAIN -->
+    <!-- ============================= -->
+
+    <main class="container">
+
+        <div class="summary-card">
 
 
-    <h2>
-        🚆 Train Details
-    </h2>
+            <!-- ============================= -->
+            <!-- TRAIN DETAILS -->
+            <!-- ============================= -->
 
-    <p>
-        Train Number:
-        {{ train.train_number }}
-    </p>
+            <section class="section">
 
-    <p>
-        Train Name:
-        {{ train.train_name }}
-    </p>
-
-    <p>
-        Route:
-        {{ train.source_station.station_name }}
-        →
-        {{ train.destination_station.station_name }}
-    </p>
-
-    <p>
-        📅 Travel Date:
-        {{ travel_date }}
-    </p>
+                <h2 class="section-title">
+                    🚆 Train Details
+                </h2>
 
 
-    <hr>
+                <div class="train-header">
+
+                    <div>
+
+                        <div class="train-number">
+
+                            {{ train.train_number }}
+
+                        </div>
+
+                        <div class="train-name">
+
+                            {{ train.train_name }}
+
+                        </div>
+
+                    </div>
 
 
-    <h2>
-        👤 Passenger Details
-    </h2>
+                    <div class="travel-date">
 
-    <p>
-        Name:
-        {{ passenger.full_name }}
-    </p>
+                        📅 {{ travel_date }}
 
-    <p>
-        Email:
-        {{ passenger.email }}
-    </p>
+                    </div>
 
-    <p>
-        Phone:
-        {{ passenger.phone_number }}
-    </p>
+                </div>
 
 
-    <hr>
+                <!-- ROUTE -->
+
+                <div class="route">
+
+                    <div class="station">
+
+                        <div class="station-name">
+
+                            {{ source_station.station_name }}
+
+                        </div>
+
+                        <div class="station-label">
+
+                            Departure Station
+
+                        </div>
+
+                    </div>
 
 
-    <h2>
-        🪑 Seat Details
-    </h2>
-
-    <p>
-        Coach:
-        {{ seat.coach.coach_number }}
-    </p>
-
-    <p>
-        Coach Type:
-        {{ seat.coach.get_coach_type_display }}
-    </p>
-
-    <p>
-        Seat Number:
-        {{ seat.seat_number }}
-    </p>
-
-    <p>
-        Seat Type:
-        {{ seat.get_seat_type_display }}
-    </p>
+                    <div class="route-line"></div>
 
 
-    <hr>
+                    <div class="station">
 
-    <form method="POST" action="{% url 'confirm_booking' %}">
-    {% csrf_token %}
+                        <div class="station-name">
 
-    <input
-        type="hidden"
-        name="train_id"
-        value="{{ train.id }}"
-    >
+                            {{ destination_station.station_name }}
 
-    <input
-        type="hidden"
-        name="seat_id"
-        value="{{ seat.id }}"
-    >
+                        </div>
 
-    <input
-        type="hidden"
-        name="travel_date"
-        value="{{ travel_date }}"
-    >
+                        <div class="station-label">
 
-    <button type="submit">
-        Confirm Booking
-    </button>
-</form>
+                            Arrival Station
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="details-grid">
+
+                    <div class="detail-box">
+
+                        <div class="detail-label">
+
+                            Journey Length
+
+                        </div>
+
+                        <div class="detail-value">
+
+                            {{ stop_count }} Stops
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <div class="detail-label">
+
+                            Journey Status
+
+                        </div>
+
+                        <div class="detail-value">
+
+                            Ready for Confirmation
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ============================= -->
+            <!-- PASSENGER DETAILS -->
+            <!-- ============================= -->
+
+            <section class="section">
+
+                <h2 class="section-title">
+
+                    👤 Passenger Details
+
+                </h2>
+
+
+                <div class="details-grid">
+
+                    <div class="detail-box">
+
+                        <div class="detail-label">
+
+                            Full Name
+
+                        </div>
+
+                        <div class="detail-value">
+
+                            {{ passenger.full_name }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <div class="detail-label">
+
+                            Email
+
+                        </div>
+
+                        <div class="detail-value">
+
+                            {{ passenger.email }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <div class="detail-label">
+
+                            Phone Number
+
+                        </div>
+
+                        <div class="detail-value">
+
+                            {{ passenger.phone_number }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ============================= -->
+            <!-- SEAT DETAILS -->
+            <!-- ============================= -->
+
+            <section class="section">
+
+                <h2 class="section-title">
+
+                    🪑 Seat Details
+
+                </h2>
+
+
+                <div class="details-grid">
+
+                    <div class="detail-box">
+
+                        <div class="detail-label">
+
+                            Coach
+
+                        </div>
+
+                        <div class="detail-value">
+
+                            {{ seat.coach.coach_number }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <div class="detail-label">
+
+                            Coach Type
+
+                        </div>
+
+                        <div class="detail-value">
+
+                            {{ seat.coach.get_coach_type_display }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <div class="detail-label">
+
+                            Seat Number
+
+                        </div>
+
+                        <div class="detail-value">
+
+                            {{ seat.seat_number }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-box">
+
+                        <div class="detail-label">
+
+                            Seat Type
+
+                        </div>
+
+                        <div class="detail-value">
+
+                            {{ seat.get_seat_type_display }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ============================= -->
+            <!-- FARE DETAILS -->
+            <!-- ============================= -->
+
+            <section class="section fare-section">
+
+                <h2 class="section-title">
+
+                    💰 Fare Details
+
+                </h2>
+
+
+                <div class="fare-card">
+
+                    <div class="fare-info">
+
+                        <h3>
+
+                            {{ seat.coach.get_coach_type_display }}
+
+                        </h3>
+
+                        <p>
+
+                            Fare calculated for
+                            {{ stop_count }} stops
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="fare-amount">
+
+                        ₹{{ fare }}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ============================= -->
+            <!-- CONFIRM BOOKING -->
+            <!-- ============================= -->
+
+            <section class="action-section">
+
+                <form method="POST"
+                      action="{% url 'confirm_booking' %}">
+
+                    {% csrf_token %}
+
+
+                    <input
+                        type="hidden"
+                        name="train_id"
+                        value="{{ train.id }}"
+                    >
+
+
+                    <input
+                        type="hidden"
+                        name="seat_id"
+                        value="{{ seat.id }}"
+                    >
+
+
+                    <input
+                        type="hidden"
+                        name="travel_date"
+                        value="{{ travel_date }}"
+                    >
+
+
+                    <button
+                        type="submit"
+                        class="confirm-button"
+                    >
+
+                        Confirm Booking & Continue to Payment →
+
+                    </button>
+
+                </form>
+
+            </section>
+
+
+        </div>
+
+    </main>
+
 
 </body>
 
