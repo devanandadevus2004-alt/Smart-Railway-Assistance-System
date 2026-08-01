@@ -53,16 +53,68 @@ class TrainStop(models.Model):
     blank=True  
     )  
 
-class Meta:  
-    ordering = ['stop_order']  
-    unique_together = ('train', 'station')  
 
-def __str__(self):  
-    return (  
-        f"{self.train.train_number} - "  
-        f"{self.stop_order} - "  
-        f"{self.station.station_name}"  
+
+
+    class Meta:  
+        ordering = ['stop_order']  
+        unique_together = ('train', 'station')  
+
+    def __str__(self):  
+        return (  
+            f"{self.train.train_number} - "  
+            f"{self.stop_order} - "  
+            f"{self.station.station_name}"  
+        )
+
+
+class TrainStopDistance(models.Model):
+
+    train = models.ForeignKey(
+        Train,
+        on_delete=models.CASCADE,
+        related_name='stop_distances'
     )
+
+    source_station = models.ForeignKey(
+        'home.Station',
+        on_delete=models.CASCADE,
+        related_name='distance_sources'
+    )
+
+    destination_station = models.ForeignKey(
+        'home.Station',
+        on_delete=models.CASCADE,
+        related_name='distance_destinations'
+    )
+
+    distance = models.DecimalField(
+        max_digits=10,
+        decimal_places=2
+    )
+
+    class Meta:
+
+        unique_together = (
+            'train',
+            'source_station',
+            'destination_station'
+        )
+
+        ordering = [
+            'train',
+            'source_station',
+            'destination_station'
+        ]
+
+    def __str__(self):
+
+        return (
+            f"{self.train.train_number} - "
+            f"{self.source_station.station_code} → "
+            f"{self.destination_station.station_code} - "
+            f"{self.distance} km"
+        )
 
 
 class Coach(models.Model):
