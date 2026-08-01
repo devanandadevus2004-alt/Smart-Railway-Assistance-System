@@ -17,7 +17,9 @@ from .models import (
     TrainStopDistance,
     Coach,
     Seat,
-    TicketBooking
+    TicketBooking,
+    BookingPassenger,
+    SeatReservation
 )
 
 from .fare_calculator import calculate_fare
@@ -43,11 +45,9 @@ def get_journey_distance(
 
             train=train,
 
-            source_station_id=
-                source_id,
+            source_station_id=source_id,
 
-            destination_station_id=
-                destination_id
+            destination_station_id=destination_id
 
         )
         .first()
@@ -82,8 +82,7 @@ def get_journey_distance(
 
             train=train,
 
-            station_id=
-                source_id
+            station_id=source_id
 
         )
         .first()
@@ -94,8 +93,7 @@ def get_journey_distance(
 
             train=train,
 
-            station_id=
-                destination_id
+            station_id=destination_id
 
         )
         .first()
@@ -105,15 +103,7 @@ def get_journey_distance(
     # If both stops exist
     # --------------------------------------------------------
 
-    if (
-
-        source_stop
-
-        and
-
-        destination_stop
-
-    ):
+    if source_stop and destination_stop:
 
         stop_segments = (
 
@@ -133,7 +123,6 @@ def get_journey_distance(
 
         stop_segments = 0
 
-
     return {
 
         "distance":
@@ -149,7 +138,7 @@ def get_journey_distance(
 
 
 # ============================================================
-# TICKET BOOKING
+# TICKET BOOKING / TRAIN SEARCH
 # ============================================================
 
 def ticket_booking(request):
@@ -204,15 +193,7 @@ def ticket_booking(request):
         # Check source and destination
         # ----------------------------------------------------
 
-        if (
-
-            source_id
-
-            and
-
-            destination_id
-
-        ):
+        if source_id and destination_id:
 
             # ------------------------------------------------
             # Get source stops
@@ -220,8 +201,7 @@ def ticket_booking(request):
 
             source_stops = (
                 TrainStop.objects.filter(
-                    station_id=
-                        source_id
+                    station_id=source_id
                 )
             )
 
@@ -231,8 +211,7 @@ def ticket_booking(request):
 
             destination_stops = (
                 TrainStop.objects.filter(
-                    station_id=
-                        destination_id
+                    station_id=destination_id
                 )
             )
 
@@ -265,19 +244,13 @@ def ticket_booking(request):
                 if destination_order is not None:
 
                     if (
-
                         source_stop.stop_order
-
                         <
-
                         destination_order
-
                     ):
 
                         valid_train_ids.append(
-
                             source_stop.train_id
-
                         )
 
             # ------------------------------------------------
@@ -287,8 +260,7 @@ def ticket_booking(request):
             trains = (
                 Train.objects.filter(
 
-                    id__in=
-                        valid_train_ids,
+                    id__in=valid_train_ids,
 
                     is_active=True
 
@@ -326,12 +298,13 @@ def select_seat(
     train_id
 ):
 
+    # --------------------------------------------------------
+    # Get train
+    # --------------------------------------------------------
+
     train = get_object_or_404(
-
         Train,
-
         id=train_id
-
     )
 
     # --------------------------------------------------------
@@ -351,36 +324,42 @@ def select_seat(
     )
 
     # --------------------------------------------------------
-    # Allow GET travel date if provided
+    # Allow travel date from URL
     # --------------------------------------------------------
 
     travel_date = request.GET.get(
-
         'travel_date',
-
         travel_date
-
     )
 
     # --------------------------------------------------------
-    # Get coaches
+    # Get coaches for selected train
+    #
+    # Only load required fields.
     # --------------------------------------------------------
 
     coaches = (
-
-        Coach.objects.filter(
-
-            train=train
-
+        Coach.objects
+        .filter(
+            train_id=train_id,
+            is_bookable=True
+        )
+        .only(
+            'id',
+            'coach_number',
+            'coach_type',
+            'is_bookable'
         )
         .prefetch_related(
             'seats'
         )
-
+        .order_by(
+            'id'
+        )
     )
 
     # --------------------------------------------------------
-    # Prepare coach and seat data
+    # Prepare JSON data for JavaScript
     # --------------------------------------------------------
 
     coaches_data = []
@@ -388,6 +367,10 @@ def select_seat(
     for coach in coaches:
 
         seats_data = []
+
+        # ----------------------------------------------------
+        # Get seats belonging to this coach
+        # ----------------------------------------------------
 
         for seat in coach.seats.all():
 
@@ -407,6 +390,10 @@ def select_seat(
 
             })
 
+        # ----------------------------------------------------
+        # Add coach information
+        # ----------------------------------------------------
+
         coaches_data.append({
 
             'id':
@@ -425,6 +412,10 @@ def select_seat(
                 seats_data,
 
         })
+
+    # --------------------------------------------------------
+    # Render select seat page
+    # --------------------------------------------------------
 
     return render(
 
@@ -504,7 +495,7 @@ def booking_summary(request):
     )
 
     # --------------------------------------------------------
-    # Get seat
+    # Get selected seat
     # --------------------------------------------------------
 
     seat = get_object_or_404(
@@ -516,7 +507,7 @@ def booking_summary(request):
     )
 
     # --------------------------------------------------------
-    # Get passenger
+    # Get logged-in passenger
     # --------------------------------------------------------
 
     passenger = get_object_or_404(
@@ -558,7 +549,7 @@ def booking_summary(request):
     )
 
     # --------------------------------------------------------
-    # Coach type
+    # Get coach type
     # --------------------------------------------------------
 
     coach_type = (
@@ -588,6 +579,34 @@ def booking_summary(request):
 
     )
 
+    # --------------------------------------------------------
+    # Get actual source station
+    # --------------------------------------------------------
+
+    source_station = get_object_or_404(
+
+        Station,
+
+        id=source_id
+
+    )
+
+    # --------------------------------------------------------
+    # Get actual destination station
+    # --------------------------------------------------------
+
+    destination_station = get_object_or_404(
+
+        Station,
+
+        id=destination_id
+
+    )
+
+    # --------------------------------------------------------
+    # Render booking summary
+    # --------------------------------------------------------
+
     return render(
 
         request,
@@ -609,10 +628,10 @@ def booking_summary(request):
                 travel_date,
 
             'source_station':
-                seat.coach.train.source_station,
+                source_station,
 
             'destination_station':
-                seat.coach.train.destination_station,
+                destination_station,
 
             'distance':
                 fare_data[
@@ -665,13 +684,11 @@ def confirm_booking(request):
         )
 
     # --------------------------------------------------------
-    # Get passenger
+    # Get logged-in passenger
     # --------------------------------------------------------
 
-    passenger_id = (
-        request.session.get(
-            'passenger_id'
-        )
+    passenger_id = request.session.get(
+        'passenger_id'
     )
 
     if not passenger_id:
@@ -723,7 +740,7 @@ def confirm_booking(request):
     )
 
     # --------------------------------------------------------
-    # Get seat
+    # Get selected seat
     # --------------------------------------------------------
 
     seat = get_object_or_404(
@@ -796,7 +813,32 @@ def confirm_booking(request):
     )
 
     # --------------------------------------------------------
-    # Create pending booking
+    # Get passenger details from form
+    #
+    # These fields will be added to the HTML form
+    # in the next step.
+    # --------------------------------------------------------
+
+    passenger_age = request.POST.get(
+
+        'passenger_age'
+
+    )
+
+    passenger_gender = request.POST.get(
+
+        'passenger_gender'
+
+    )
+
+    aadhaar_number = request.POST.get(
+
+        'aadhaar_number'
+
+    )
+
+    # --------------------------------------------------------
+    # Create main TicketBooking
     # --------------------------------------------------------
 
     booking = TicketBooking.objects.create(
@@ -806,9 +848,6 @@ def confirm_booking(request):
 
         train=
             train,
-
-        seat=
-            seat,
 
         travel_date=
             travel_date,
@@ -820,6 +859,43 @@ def confirm_booking(request):
 
         status=
             'PENDING'
+
+    )
+
+    # --------------------------------------------------------
+    # Create BookingPassenger
+    # --------------------------------------------------------
+
+    BookingPassenger.objects.create(
+
+        booking=
+            booking,
+
+        full_name=
+            passenger.full_name,
+
+        age=
+            passenger_age
+            if passenger_age
+            else 0,
+
+        gender=
+            passenger_gender
+            if passenger_gender
+            else 'OTHER',
+
+        aadhaar_number=
+            aadhaar_number
+            if aadhaar_number
+            else '',
+
+        seat=
+            seat,
+
+        fare=
+            fare_data[
+                'total_fare'
+            ]
 
     )
 

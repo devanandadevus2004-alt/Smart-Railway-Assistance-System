@@ -194,7 +194,7 @@ class Seat(models.Model):
 class TicketBooking(models.Model):
 
     STATUS_CHOICES = [
-        ('PENDING','Pending'),
+        ('PENDING', 'Pending'),
         ('CONFIRMED', 'Confirmed'),
         ('CANCELLED', 'Cancelled'),
     ]
@@ -211,18 +211,12 @@ class TicketBooking(models.Model):
         related_name='ticket_bookings'
     )
 
-    seat = models.ForeignKey(
-        Seat,
-        on_delete=models.CASCADE,
-        related_name='ticket_bookings'
-    )
-
     travel_date = models.DateField()
 
     fare = models.DecimalField(
-    max_digits=10,
-    decimal_places=2,
-    default=0
+        max_digits=10,
+        decimal_places=2,
+        default=0
     )
 
     booking_date = models.DateTimeField(
@@ -239,7 +233,57 @@ class TicketBooking(models.Model):
         return (
             f"{self.passenger.full_name} - "
             f"{self.train.train_number} - "
-            f"{self.seat}"
+            f"Booking {self.id}"
+        )
+
+class BookingPassenger(models.Model):
+
+    GENDER_CHOICES = [
+        ('MALE', 'Male'),
+        ('FEMALE', 'Female'),
+        ('OTHER', 'Other'),
+    ]
+
+    booking = models.ForeignKey(
+        TicketBooking,
+        on_delete=models.CASCADE,
+        related_name='booking_passengers'
+    )
+
+    full_name = models.CharField(
+        max_length=100
+    )
+
+    age = models.PositiveIntegerField()
+
+    gender = models.CharField(
+        max_length=10,
+        choices=GENDER_CHOICES
+    )
+
+    aadhaar_number = models.CharField(
+        max_length=12
+    )
+
+    seat = models.ForeignKey(
+        Seat,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='booking_passengers'
+    )
+
+    fare = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0
+    )
+
+    def __str__(self):
+
+        return (
+            f"{self.full_name} - "
+            f"{self.booking.train.train_number}"
         )
 
 class Payment(models.Model):
@@ -298,3 +342,69 @@ class Payment(models.Model):
             f"{self.payment_status}"
         )
 
+
+class SeatReservation(models.Model):
+
+    STATUS_CHOICES = [
+        ('LOCKED', 'Temporarily Locked'),
+        ('BOOKED', 'Booked'),
+        ('CANCELLED', 'Cancelled'),
+        ('EXPIRED', 'Expired'),
+    ]
+
+    seat = models.ForeignKey(
+        Seat,
+        on_delete=models.CASCADE,
+        related_name='reservations'
+    )
+
+    booking = models.ForeignKey(
+        TicketBooking,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='seat_reservations'
+    )
+
+    travel_date = models.DateField()
+
+    source_station = models.ForeignKey(
+        'home.Station',
+        on_delete=models.CASCADE,
+        related_name='seat_reservation_sources'
+    )
+
+    destination_station = models.ForeignKey(
+        'home.Station',
+        on_delete=models.CASCADE,
+        related_name='seat_reservation_destinations'
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='LOCKED'
+    )
+
+    locked_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    lock_expires_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+
+    reserved_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return (
+            f"{self.seat.coach.train.train_number} - "
+            f"{self.seat.coach.coach_number} - "
+            f"Seat {self.seat.seat_number} - "
+            f"{self.travel_date} - "
+            f"{self.status}"
+        )
