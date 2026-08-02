@@ -10,7 +10,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Select Coach</title>
+    <title>Select Coach and Seats</title>
 
     <style>
 
@@ -31,6 +31,10 @@
             margin: 40px auto;
         }
 
+        /* ============================= */
+        /* TRAIN HEADER */
+        /* ============================= */
+
         .train-header {
             background: white;
             padding: 25px;
@@ -48,7 +52,9 @@
             margin-top: 10px;
         }
 
-        /* Coach Section */
+        /* ============================= */
+        /* COACH SECTION */
+        /* ============================= */
 
         .coach-section {
             background: white;
@@ -61,6 +67,10 @@
         .coach-section h2 {
             text-align: center;
         }
+
+        /* ============================= */
+        /* TRAIN TRACK */
+        /* ============================= */
 
         .train-track {
             display: flex;
@@ -76,24 +86,32 @@
             background: #26384a;
             color: white;
             border-radius: 15px;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             font-weight: bold;
         }
 
-        /* Coach */
+        /* ============================= */
+        /* COACH */
+        /* ============================= */
 
         .coach {
             min-width: 130px;
             height: 90px;
+
             border-radius: 15px;
+
             background: #e7f1ff;
             border: 3px solid #1976d2;
+
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+
             cursor: pointer;
 
             transition:
@@ -104,14 +122,19 @@
 
         .coach:hover {
             transform: translateY(-12px) scale(1.05);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+
+            box-shadow:
+                0 12px 25px rgba(0,0,0,0.2);
         }
 
         .coach.selected {
             background: #1976d2;
             color: white;
+
             transform: translateY(-10px);
-            box-shadow: 0 12px 25px rgba(25,118,210,0.4);
+
+            box-shadow:
+                0 12px 25px rgba(25,118,210,0.4);
         }
 
         .coach-number {
@@ -124,12 +147,16 @@
             font-size: 14px;
         }
 
-        /* Coach Details */
+        /* ============================= */
+        /* COACH DETAILS */
+        /* ============================= */
 
         #coach-details {
             margin-top: 30px;
             display: none;
-            animation: fadeIn 0.5s ease;
+
+            animation:
+                fadeIn 0.5s ease;
         }
 
         #coach-details h2 {
@@ -150,74 +177,266 @@
 
         }
 
-        /* Seats */
+        /* ============================= */
+        /* SELECTED COACH */
+        /* ============================= */
+
+        #selected-coach-name {
+            text-align: center;
+            font-size: 17px;
+            font-weight: bold;
+            color: #1976d2;
+            margin-top: 10px;
+        }
+
+        /* ============================= */
+        /* SEAT SELECTION INFO */
+        /* ============================= */
+
+        .selection-info {
+            text-align: center;
+
+            margin-top: 15px;
+            padding: 12px;
+
+            background: #eef6ff;
+
+            border-radius: 10px;
+
+            color: #17324d;
+
+            font-size: 15px;
+        }
+
+        .selection-info strong {
+            color: #1976d2;
+        }
+
+        /* ============================= */
+        /* SEATS */
+        /* ============================= */
 
         .seat-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(90px, 1fr)
+                );
+
             gap: 15px;
+
             margin-top: 25px;
         }
 
         .seat {
+
             padding: 15px;
+
             background: #e8f5e9;
+
             border: 2px solid #4caf50;
+
             border-radius: 10px;
+
             text-align: center;
+
             cursor: pointer;
-            transition: 0.3s;
+
+            transition:
+                transform 0.3s ease,
+                background 0.3s ease,
+                border-color 0.3s ease;
+
         }
 
         .seat:hover {
-            transform: scale(1.05);
+
+            transform:
+                scale(1.05);
+
         }
+
+        /* ============================= */
+        /* SELECTED SEAT */
+        /* ============================= */
 
         .seat.selected-seat {
+
             background: #1976d2;
+
             color: white;
-            border-color: #1976d2;
+
+            border-color:
+                #1976d2;
+
+            transform:
+                scale(1.05);
+
+            box-shadow:
+                0 5px 15px
+                rgba(25,118,210,0.3);
+
         }
+
+        /* ============================= */
+        /* BOOKED / INACTIVE SEAT */
+        /* ============================= */
 
         .seat.booked {
-            background: #eeeeee;
-            border-color: #999;
-            color: #777;
-            cursor: not-allowed;
+
+            background:
+                #eeeeee;
+
+            border-color:
+                #999;
+
+            color:
+                #777;
+
+            cursor:
+                not-allowed;
+
         }
 
+        /* ============================= */
+        /* CONTINUE BUTTON */
+        /* ============================= */
+
         .continue-btn {
+
             display: block;
-            margin: 30px auto 0;
-            padding: 14px 35px;
+
+            margin:
+                30px auto 0;
+
+            padding:
+                14px 35px;
+
             border: none;
-            border-radius: 25px;
-            background: #1976d2;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
+
+            border-radius:
+                25px;
+
+            background:
+                #1976d2;
+
+            color:
+                white;
+
+            font-size:
+                16px;
+
+            font-weight:
+                bold;
+
+            cursor:
+                pointer;
+
+            transition:
+                transform 0.3s ease,
+                background 0.3s ease;
+
+        }
+
+        .continue-btn:hover {
+
+            background:
+                #125ca1;
+
+            transform:
+                translateY(-2px);
+
+        }
+
+        /* ============================= */
+        /* GENERAL COACH MESSAGE */
+        /* ============================= */
+
+        .general-message {
+
+            text-align:
+                center;
+
+            padding:
+                30px;
+
+            background:
+                #fff3cd;
+
+            border:
+                2px solid #ffc107;
+
+            border-radius:
+                15px;
+
+            margin-top:
+                20px;
+
+        }
+
+        .general-message .icon {
+
+            font-size:
+                40px;
+
+            margin-bottom:
+                15px;
+
+        }
+
+        .general-message h3 {
+
+            margin:
+                0 0 10px 0;
+
+            color:
+                #856404;
+
+        }
+
+        .general-message p {
+
+            margin:
+                0;
+
+            color:
+                #856404;
+
         }
 
     </style>
 
 </head>
 
+
 <body>
+
 
 <div class="container">
 
-    <!-- Train Information -->
+
+    <!-- ============================= -->
+    <!-- TRAIN INFORMATION -->
+    <!-- ============================= -->
 
     <div class="train-header">
 
         <h1>
-            🚆 {{ train.train_number }} -
+
+            🚆
+            {{ train.train_number }}
+            -
             {{ train.train_name }}
+
         </h1>
+
 
         <div class="route">
 
             🚉
+
             {{ train.source_station.station_name }}
 
             →
@@ -226,367 +445,790 @@
 
         </div>
 
+
         <div class="route">
-    📅 Travel Date:
-    <strong>{{ travel_date }}</strong>
+
+            📅 Travel Date:
+
+            <strong>
+                {{ travel_date }}
+            </strong>
+
         </div>
 
     </div>
 
 
-    <!-- Animated Coach Train -->
+    <!-- ============================= -->
+    <!-- COACH SECTION -->
+    <!-- ============================= -->
 
     <div class="coach-section">
 
-        <h2>🚆 Select Your Coach</h2>
+
+        <h2>
+
+            🚆 Select Your Coach
+
+        </h2>
+
+
+        <!-- ============================= -->
+        <!-- TRAIN TRACK -->
+        <!-- ============================= -->
 
         <div class="train-track">
 
+
             <div class="engine">
+
                 🚂 Engine
+
             </div>
 
 
             {% for coach in coaches %}
 
+
             <div class="coach"
+
                  onclick="selectCoach(
+
                     this,
+
                     '{{ coach.id }}',
+
                     '{{ coach.coach_number }}',
+
                     '{{ coach.coach_type }}'
+
                  )">
 
+
                 <div class="coach-number">
+
                     {{ coach.coach_number }}
+
                 </div>
 
+
                 <div class="coach-type">
+
                     {{ coach.get_coach_type_display }}
+
                 </div>
+
 
             </div>
 
+
             {% empty %}
 
+
             <p>
-                No coaches available for this train.
+
+                No coaches available
+                for this train.
+
             </p>
+
 
             {% endfor %}
 
+
         </div>
 
 
-        <!-- Selected Coach -->
+        <!-- ============================= -->
+        <!-- SELECTED COACH DETAILS -->
+        <!-- ============================= -->
 
         <div id="coach-details">
 
+
             <h2>
+
                 🪑 Select Your Seat / Berth
+
             </h2>
 
-            <p id="selected-coach-name"
-               style="text-align:center;">
+
+            <p id="selected-coach-name">
+
             </p>
 
+
+            <!-- ============================= -->
+            <!-- SELECTION INFORMATION -->
+            <!-- ============================= -->
+
+            <div class="selection-info">
+
+                Selected Seats:
+
+                <strong id="selected-seat-count">
+
+                    0
+
+                </strong>
+
+            </div>
+
+
+            <!-- ============================= -->
+            <!-- SEAT CONTAINER -->
+            <!-- ============================= -->
+
             <div id="seat-container"
-     class="seat-grid">
 
-    <!-- Seats will be displayed here -->
+                 class="seat-grid">
+
+                <!-- Seats will be displayed here -->
+
+            </div>
+
+
+            <!-- ============================= -->
+            <!-- CONTINUE -->
+            <!-- ============================= -->
+
+            <button
+
+                type="button"
+
+                class="continue-btn"
+
+                onclick="continueBooking()">
+
+                Continue
+
+            </button>
+
 
         </div>
 
-                    <button
-            type="button"
-            class="continue-btn"
-            onclick="continueBooking()">
-            Continue
-        </button>
-
-        </div>
 
     </div>
 
+
 </div>
+
 
 <script>
 
-    // Store the selected seat ID
-    let selectedSeatId = null;
 
+    // ============================================================
+    // STORE MULTIPLE SELECTED SEAT IDs
+    // ============================================================
+
+    let selectedSeatIds = [];
+
+
+    // ============================================================
+    // SELECT COACH
+    // ============================================================
 
     function selectCoach(
+
         element,
+
         coachId,
+
         coachNumber,
+
         coachType
+
     ) {
 
+
+        // --------------------------------------------------------
         // Remove previous coach selection
+        // --------------------------------------------------------
+
         document
+
             .querySelectorAll('.coach')
-            .forEach(function(coach) {
 
-                coach.classList.remove(
-                    'selected'
-                );
+            .forEach(
 
-            });
+                function(coach) {
+
+                    coach.classList.remove(
+
+                        'selected'
+
+                    );
+
+                }
+
+            );
 
 
+        // --------------------------------------------------------
         // Select clicked coach
+        // --------------------------------------------------------
+
         element.classList.add(
+
             'selected'
+
         );
 
 
+        // --------------------------------------------------------
         // Show coach details
+        // --------------------------------------------------------
+
         const details =
+
             document.getElementById(
+
                 'coach-details'
+
             );
 
-        details.style.display = 'block';
+
+        details.style.display =
+
+            'block';
 
 
+        // --------------------------------------------------------
         // Display selected coach
+        // --------------------------------------------------------
+
         document.getElementById(
+
             'selected-coach-name'
+
         ).innerText =
+
             'Selected Coach: '
-            + coachNumber
-            + ' ('
-            + coachType
-            + ')';
+
+            +
+
+            coachNumber
+
+            +
+
+            ' ('
+
+            +
+
+            coachType
+
+            +
+
+            ')';
 
 
+        // --------------------------------------------------------
         // Get seat container
+        // --------------------------------------------------------
+
         const seatContainer =
+
             document.getElementById(
+
                 'seat-container'
+
             );
 
 
-        // Reset previously selected seat
-        selectedSeatId = null;
+        // --------------------------------------------------------
+        // Reset previous seat selections
+        // --------------------------------------------------------
+
+        selectedSeatIds = [];
 
 
-        // General coach
-        if (coachType === 'GEN') {
+        updateSelectedSeatCount();
+
+
+        // ========================================================
+        // GENERAL COACH
+        // ========================================================
+
+        if (
+
+            coachType ===
+
+            'GEN'
+
+        ) {
+
 
             seatContainer.innerHTML =
 
-                '<div style="'
-                + 'text-align:center;'
-                + 'padding:30px;'
-                + 'background:#fff3cd;'
-                + 'border:2px solid #ffc107;'
-                + 'border-radius:15px;'
-                + '">'
+                '<div class="general-message">'
 
-                + '<div style="'
-                + 'font-size:40px;'
-                + 'margin-bottom:15px;'
-                + '">🚫</div>'
+                +
 
-                + '<h3 style="'
-                + 'margin:0 0 10px 0;'
-                + 'color:#856404;'
-                + '">'
-                + 'Preferred Seat Booking Not Available'
-                + '</h3>'
+                '<div class="icon">🚫</div>'
 
-                + '<p style="'
-                + 'margin:0;'
-                + 'color:#856404;'
-                + '">'
-                + 'General coaches do not support '
-                + 'preferred seat or berth reservation.'
-                + '</p>'
+                +
 
-                + '</div>';
+                '<h3>'
+
+                +
+
+                'Preferred Seat Booking Not Available'
+
+                +
+
+                '</h3>'
+
+                +
+
+                '<p>'
+
+                +
+
+                'General coaches do not support '
+
+                +
+
+                'preferred seat or berth reservation.'
+
+                +
+
+                '</p>'
+
+                +
+
+                '</div>';
+
 
             return;
+
         }
 
 
-        // Convert Django JSON data into JavaScript
+        // ========================================================
+        // CONVERT DJANGO JSON TO JAVASCRIPT
+        // ========================================================
+
         const coaches =
+
             {{ coaches_json|safe }};
 
 
-        // Find selected coach
+        // ========================================================
+        // FIND SELECTED COACH
+        // ========================================================
+
         const selectedCoach =
-            coaches.find(function(coach) {
 
-                return coach.id ==
-                    coachId;
+            coaches.find(
 
-            });
+                function(coach) {
+
+                    return coach.id ==
+
+                        coachId;
+
+                }
+
+            );
 
 
-        // If no coach found
+        // ========================================================
+        // IF COACH NOT FOUND
+        // ========================================================
+
         if (!selectedCoach) {
 
+
             seatContainer.innerHTML =
+
                 '<p style="text-align:center;">'
-                + 'Coach information not found.'
-                + '</p>';
+
+                +
+
+                'Coach information not found.'
+
+                +
+
+                '</p>';
+
 
             return;
+
         }
 
 
-        // If coach has no seats
+        // ========================================================
+        // IF NO SEATS
+        // ========================================================
+
         if (
-            !selectedCoach.seats ||
+
+            !selectedCoach.seats
+
+            ||
+
             selectedCoach.seats.length === 0
+
         ) {
 
+
             seatContainer.innerHTML =
+
                 '<p style="text-align:center;">'
-                + 'No seats available in this coach.'
-                + '</p>';
+
+                +
+
+                'No seats available in this coach.'
+
+                +
+
+                '</p>';
+
 
             return;
+
         }
 
 
-        // Clear seat container
+        // ========================================================
+        // CLEAR SEAT CONTAINER
+        // ========================================================
+
         seatContainer.innerHTML = '';
 
 
-        // Display seats
+        // ========================================================
+        // DISPLAY SEATS
+        // ========================================================
+
         selectedCoach.seats.forEach(
+
             function(seat) {
 
+
+                // ------------------------------------------------
+                // Create seat element
+                // ------------------------------------------------
+
                 const seatElement =
+
                     document.createElement(
+
                         'div'
+
                     );
 
+
                 seatElement.className =
+
                     'seat';
 
+
+                // ------------------------------------------------
+                // Seat information
+                // ------------------------------------------------
 
                 seatElement.innerHTML =
 
                     '<strong>Seat '
-                    + seat.seat_number
-                    + '</strong><br>'
-                    + seat.seat_type;
+
+                    +
+
+                    seat.seat_number
+
+                    +
+
+                    '</strong><br>'
+
+                    +
+
+                    seat.seat_type;
 
 
-                // Check if seat is active
+                // =================================================
+                // CHECK SEAT AVAILABILITY
+                // =================================================
+
                 if (!seat.is_active) {
 
+
                     seatElement.classList.add(
+
                         'booked'
+
                     );
 
+
                     seatElement.innerHTML +=
-                        '<br><small>Not Available</small>';
 
-                } else {
+                        '<br><small>'
 
-                    // Click active seat
+                        +
+
+                        'Not Available'
+
+                        +
+
+                        '</small>';
+
+
+                }
+
+                else {
+
+
+                    // =============================================
+                    // ACTIVE SEAT CLICK
+                    // =============================================
+
                     seatElement.onclick =
+
                         function() {
 
+
                             selectSeat(
+
                                 seatElement,
+
                                 seat.id
+
                             );
 
+
                         };
+
 
                 }
 
 
+                // ------------------------------------------------
+                // Add seat to page
+                // ------------------------------------------------
+
                 seatContainer.appendChild(
+
                     seatElement
+
                 );
+
 
             }
+
         );
+
 
     }
 
 
-    // Select a seat
+    // ============================================================
+    // SELECT / DESELECT MULTIPLE SEATS
+    // ============================================================
+
     function selectSeat(
+
         seatElement,
+
         seatId
+
     ) {
 
-        // Remove previous seat selection
-        document
-            .querySelectorAll('.seat')
-            .forEach(function(seat) {
 
-                seat.classList.remove(
-                    'selected-seat'
-                );
+        // --------------------------------------------------------
+        // Check if seat already selected
+        // --------------------------------------------------------
 
-            });
+        const seatIndex =
 
+            selectedSeatIds.indexOf(
 
-        // Select clicked seat
-        seatElement.classList.add(
-            'selected-seat'
-        );
+                seatId
 
-
-        // Remember selected seat
-        selectedSeatId = seatId;
-
-    }
-
-
-    // Continue booking
-    function continueBooking() {
-
-        // Check whether seat is selected
-        if (!selectedSeatId) {
-
-            alert(
-                'Please select a seat or berth first.'
             );
 
-            return;
+
+        // ========================================================
+        // DESELECT SEAT
+        // ========================================================
+
+        if (
+
+            seatIndex !== -1
+
+        ) {
+
+
+            // Remove seat from array
+
+            selectedSeatIds.splice(
+
+                seatIndex,
+
+                1
+
+            );
+
+
+            // Remove visual selection
+
+            seatElement.classList.remove(
+
+                'selected-seat'
+
+            );
+
+
         }
 
 
-        // Get travel date
-        const travelDate =
-            "{{ travel_date }}";
+        // ========================================================
+        // SELECT SEAT
+        // ========================================================
+
+        else {
 
 
-        // Get train ID
-        const trainId =
-            "{{ train.id }}";
+            // Add seat to array
 
+            selectedSeatIds.push(
 
-        // Create booking summary URL
-        const url =
-            "{% url 'booking_summary' %}"
-            + "?train_id="
-            + trainId
-            + "&seat_id="
-            + selectedSeatId
-            + "&travel_date="
-            + encodeURIComponent(
-                travelDate
+                seatId
+
             );
 
 
-        // Open booking summary page
-        window.location.href = url;
+            // Add visual selection
+
+            seatElement.classList.add(
+
+                'selected-seat'
+
+            );
+
+
+        }
+
+
+        // --------------------------------------------------------
+        // Update selected seat count
+        // --------------------------------------------------------
+
+        updateSelectedSeatCount();
+
 
     }
 
+
+    // ============================================================
+    // UPDATE SELECTED SEAT COUNT
+    // ============================================================
+
+    function updateSelectedSeatCount() {
+
+
+        document.getElementById(
+
+            'selected-seat-count'
+
+        ).innerText =
+
+            selectedSeatIds.length;
+
+
+    }
+
+
+    // ============================================================
+    // CONTINUE BOOKING
+    // ============================================================
+
+    function continueBooking() {
+
+
+        // ========================================================
+        // CHECK SEAT SELECTION
+        // ========================================================
+
+        if (
+
+            selectedSeatIds.length === 0
+
+        ) {
+
+
+            alert(
+
+                'Please select at least one seat.'
+
+            );
+
+
+            return;
+
+        }
+
+
+        // ========================================================
+        // GET TRAVEL DATE
+        // ========================================================
+
+        const travelDate =
+
+            "{{ travel_date }}";
+
+
+        // ========================================================
+        // GET TRAIN ID
+        // ========================================================
+
+        const trainId =
+
+            "{{ train.id }}";
+
+
+        // ========================================================
+        // CONVERT SELECTED SEATS TO STRING
+        // ========================================================
+
+        const seatIds =
+
+            selectedSeatIds.join(
+
+                ','
+
+            );
+
+
+                // ========================================================
+                // CREATE PASSENGER DETAILS URL
+                // ========================================================
+
+                const url =
+            "{% url 'booking_summary' %}"
+            +
+            "?train_id="
+            + trainId
+            +
+            "&seat_id="
+            + seatId
+            +
+            "&travel_date="
+            + travelDate;
+
+        // ========================================================
+        // OPEN PASSENGER DETAILS PAGE
+        // ========================================================
+
+        window.location.href =
+
+            url;
+
+
+    }
+
+
 </script>
+
+
 </body>
 
 </html>

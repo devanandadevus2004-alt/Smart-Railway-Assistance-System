@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Train,TrainStop,TrainStopDistance, Coach, Seat, TicketBooking,Payment
+from .models import Train,TrainStop,TrainStopDistance, Coach, Seat, TicketBooking, BookingPassenger,Payment
 
 
 @admin.register(Train)
@@ -87,15 +87,14 @@ class SeatAdmin(admin.ModelAdmin):
 
 @admin.register(TicketBooking)
 class TicketBookingAdmin(admin.ModelAdmin):
+
     list_display = (
         'passenger',
         'train',
-        'seat',
         'travel_date',
-        'booking_date',
+        'fare',
         'status',
     )
-
     list_filter = (
         'status',
         'travel_date',
@@ -150,5 +149,24 @@ class TrainStopDistanceAdmin(admin.ModelAdmin):
         'train__train_name',
         'source_station__station_code',
         'destination_station__station_code',
+    )
+
+
+@admin.register(BookingPassenger)
+class BookingPassengerAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'full_name',
+        'age',
+        'gender',
+        'aadhaar_number',
+        'booking',
+        'seat',
+        'fare',
+    )
+
+    search_fields = (
+        'full_name',
+        'aadhaar_number',
     )
 

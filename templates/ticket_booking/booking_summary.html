@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,7 +40,10 @@
             color: white;
             padding: 25px 20px;
             text-align: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+
+            box-shadow:
+                0 4px 15px
+                rgba(0, 0, 0, 0.15);
         }
 
         .header h1 {
@@ -70,12 +74,10 @@
             background: white;
             border-radius: 18px;
             overflow: hidden;
-            box-shadow: 0 8px 30px rgba(
-                15,
-                61,
-                99,
-                0.12
-            );
+
+            box-shadow:
+                0 8px 30px
+                rgba(15, 61, 99, 0.12);
         }
 
         /* ============================= */
@@ -112,8 +114,11 @@
             align-items: center;
 
             background: #eef6ff;
+
             padding: 18px;
+
             border-radius: 12px;
+
             margin-bottom: 20px;
         }
 
@@ -142,6 +147,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+
             gap: 25px;
 
             margin: 25px 0;
@@ -168,23 +174,30 @@
             flex: 1;
             max-width: 200px;
             height: 3px;
+
             background: #1769aa;
+
             position: relative;
         }
 
         .route-line::before,
         .route-line::after {
+
             content: "";
+
             position: absolute;
 
             width: 10px;
             height: 10px;
 
             background: #1769aa;
+
             border-radius: 50%;
 
             top: 50%;
-            transform: translateY(-50%);
+
+            transform:
+                translateY(-50%);
         }
 
         .route-line::before {
@@ -200,7 +213,9 @@
         /* ============================= */
 
         .details-grid {
+
             display: grid;
+
             grid-template-columns:
                 repeat(2, 1fr);
 
@@ -208,22 +223,218 @@
         }
 
         .detail-box {
+
             background: #f8fafc;
+
             padding: 15px;
+
             border-radius: 10px;
+
             border: 1px solid #e5e7eb;
         }
 
         .detail-label {
+
             font-size: 12px;
+
             color: #64748b;
+
             margin-bottom: 6px;
         }
 
         .detail-value {
+
             font-size: 16px;
+
             font-weight: bold;
+
             color: #1f2937;
+        }
+
+        /* ============================= */
+        /* PASSENGER SECTION */
+        /* ============================= */
+
+        .passenger-section {
+
+            background: #ffffff;
+        }
+
+        .passenger-card {
+
+            background: #f8fafc;
+
+            border: 1px solid #dbe3ec;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+
+            position: relative;
+        }
+
+        .passenger-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .passenger-title {
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            color: #0f3d63;
+        }
+
+        .remove-button {
+
+            background: #fee2e2;
+
+            color: #b91c1c;
+
+            border: none;
+
+            padding: 8px 14px;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+        .remove-button:hover {
+
+            background: #fecaca;
+        }
+
+        /* ============================= */
+        /* FORM GRID */
+        /* ============================= */
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 18px;
+        }
+
+        .form-group {
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+        .form-group label {
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            color: #374151;
+
+            margin-bottom: 7px;
+        }
+
+        .form-group input,
+        .form-group select {
+
+            width: 100%;
+
+            padding: 12px 14px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 8px;
+
+            background: white;
+
+            font-size: 15px;
+
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+
+            border-color: #1769aa;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(23, 105, 170, 0.1);
+        }
+
+        /* ============================= */
+        /* ADD PASSENGER BUTTON */
+        /* ============================= */
+
+        .add-passenger-button {
+
+            display: block;
+
+            width: 100%;
+
+            padding: 13px;
+
+            margin-top: 10px;
+
+            border: 2px dashed #1769aa;
+
+            border-radius: 10px;
+
+            background: #eef6ff;
+
+            color: #1769aa;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .add-passenger-button:hover {
+
+            background: #dbeafe;
+        }
+
+        .passenger-note {
+
+            margin-top: 12px;
+
+            font-size: 13px;
+
+            color: #64748b;
+
+            line-height: 1.5;
+        }
+
+        /* ============================= */
+        /* SEAT DETAILS */
+        /* ============================= */
+
+        .seat-card {
+
+            background: #f8fafc;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            border: 1px solid #e5e7eb;
         }
 
         /* ============================= */
@@ -231,16 +442,21 @@
         /* ============================= */
 
         .fare-section {
-            background: linear-gradient(
-                135deg,
-                #f0fdf4,
-                #ecfdf5
-            );
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #f0fdf4,
+                    #ecfdf5
+                );
         }
 
         .fare-card {
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
 
             background: white;
@@ -253,18 +469,25 @@
         }
 
         .fare-info h3 {
+
             color: #166534;
+
             margin-bottom: 8px;
         }
 
         .fare-info p {
+
             color: #64748b;
+
             font-size: 14px;
         }
 
         .fare-amount {
+
             font-size: 30px;
+
             font-weight: bold;
+
             color: #15803d;
         }
 
@@ -273,42 +496,54 @@
         /* ============================= */
 
         .action-section {
+
             text-align: center;
+
             padding: 30px;
         }
 
         .confirm-button {
+
             width: 100%;
+
             max-width: 400px;
 
             padding: 15px 25px;
 
             border: none;
+
             border-radius: 10px;
 
-            background: linear-gradient(
-                135deg,
-                #1769aa,
-                #0f3d63
-            );
+            background:
+                linear-gradient(
+                    135deg,
+                    #1769aa,
+                    #0f3d63
+                );
 
             color: white;
 
             font-size: 17px;
+
             font-weight: bold;
 
             cursor: pointer;
 
-            transition: all 0.3s ease;
+            transition:
+                all 0.3s ease;
 
-            box-shadow: 0 5px 15px
+            box-shadow:
+                0 5px 15px
                 rgba(15, 61, 99, 0.25);
         }
 
         .confirm-button:hover {
-            transform: translateY(-2px);
 
-            box-shadow: 0 8px 20px
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 8px 20px
                 rgba(15, 61, 99, 0.35);
         }
 
@@ -319,58 +554,82 @@
         @media (max-width: 700px) {
 
             .container {
+
                 width: 95%;
+
                 margin: 20px auto;
             }
 
             .section {
+
                 padding: 20px;
             }
 
             .train-header {
+
                 flex-direction: column;
+
                 gap: 15px;
+
                 text-align: center;
             }
 
             .travel-date {
+
                 text-align: center;
             }
 
             .route {
+
                 flex-direction: column;
+
                 gap: 15px;
             }
 
             .route-line {
+
                 width: 3px;
+
                 height: 40px;
+
                 flex: none;
             }
 
             .route-line::before,
             .route-line::after {
+
                 left: 50%;
+
                 top: 0;
-                transform: translateX(-50%);
+
+                transform:
+                    translateX(-50%);
             }
 
             .route-line::after {
+
                 top: auto;
+
                 bottom: 0;
             }
 
-            .details-grid {
+            .details-grid,
+            .form-grid {
+
                 grid-template-columns: 1fr;
             }
 
             .fare-card {
+
                 flex-direction: column;
+
                 gap: 15px;
+
                 text-align: center;
             }
 
             .header h1 {
+
                 font-size: 24px;
             }
 
@@ -384,238 +643,433 @@
 <body>
 
 
-    <!-- ============================= -->
-    <!-- HEADER -->
-    <!-- ============================= -->
+<header class="header">
 
-    <header class="header">
+    <h1>
+        🚆 Booking Summary
+    </h1>
 
-        <h1>
-            🚆 Booking Summary
-        </h1>
+    <p>
+        Review your journey and passenger details
+        before confirming your booking
+    </p>
 
-        <p>
-            Review your journey details before confirming your booking
+</header>
+
+
+<main class="container">
+
+<div class="summary-card">
+
+
+<!-- ===================================================== -->
+<!-- TRAIN DETAILS -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+    <h2 class="section-title">
+        🚆 Train Details
+    </h2>
+
+
+    <div class="train-header">
+
+        <div>
+
+            <div class="train-number">
+
+                {{ train.train_number }}
+
+            </div>
+
+            <div class="train-name">
+
+                {{ train.train_name }}
+
+            </div>
+
+        </div>
+
+
+        <div class="travel-date">
+
+            📅 {{ travel_date }}
+
+        </div>
+
+    </div>
+
+
+    <!-- ROUTE -->
+
+    <div class="route">
+
+        <div class="station">
+
+            <div class="station-name">
+
+                {{ source_station.station_name }}
+
+            </div>
+
+            <div class="station-label">
+
+                Departure Station
+
+            </div>
+
+        </div>
+
+
+        <div class="route-line"></div>
+
+
+        <div class="station">
+
+            <div class="station-name">
+
+                {{ destination_station.station_name }}
+
+            </div>
+
+            <div class="station-label">
+
+                Arrival Station
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="details-grid">
+
+        <div class="detail-box">
+
+            <div class="detail-label">
+
+                Journey Length
+
+            </div>
+
+            <div class="detail-value">
+
+                {{ stop_count }} Stops
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-box">
+
+            <div class="detail-label">
+
+                Journey Status
+
+            </div>
+
+            <div class="detail-value">
+
+                Ready for Confirmation
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- LOGGED-IN USER -->
+<!-- ===================================================== -->
+
+<section class="section">
+
+    <h2 class="section-title">
+
+        👤 Booking Account
+
+    </h2>
+
+
+    <div class="details-grid">
+
+        <div class="detail-box">
+
+            <div class="detail-label">
+
+                Account Holder
+
+            </div>
+
+            <div class="detail-value">
+
+                {{ passenger.full_name }}
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-box">
+
+            <div class="detail-label">
+
+                Email
+
+            </div>
+
+            <div class="detail-value">
+
+                {{ passenger.email }}
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-box">
+
+            <div class="detail-label">
+
+                Phone Number
+
+            </div>
+
+            <div class="detail-value">
+
+                {{ passenger.phone_number }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ===================================================== -->
+<!-- PASSENGER DETAILS -->
+<!-- ===================================================== -->
+
+<section class="section passenger-section">
+
+    <h2 class="section-title">
+
+        👥 Passenger Details
+
+    </h2>
+
+
+    <p class="passenger-note">
+
+        Enter the details of every passenger travelling on this ticket.
+        You can add yourself, your family members, or other passengers.
+        Aadhaar number is used as the passenger identification field.
+
+    </p>
+
+
+    <form method="POST"
+          action="{% url 'confirm_booking' %}"
+          id="booking-form">
+
+        {% csrf_token %}
+
+
+        <!-- PASSENGER CONTAINER -->
+
+        <div id="passenger-container">
+
+
+            <!-- PASSENGER 1 -->
+
+            <div class="passenger-card">
+
+                <div class="passenger-header">
+
+                    <div class="passenger-title">
+
+                        Passenger 1
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+
+                    <!-- FULL NAME -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="passenger_name[]"
+                            placeholder="Enter passenger name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- AGE -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Age
+                        </label>
+
+                        <input
+                            type="number"
+                            name="passenger_age[]"
+                            min="1"
+                            max="120"
+                            placeholder="Enter age"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- GENDER -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Gender
+                        </label>
+
+                        <select
+                            name="passenger_gender[]"
+                            required
+                        >
+
+                            <option value="">
+                                Select Gender
+                            </option>
+
+                            <option value="MALE">
+                                Male
+                            </option>
+
+                            <option value="FEMALE">
+                                Female
+                            </option>
+
+                            <option value="OTHER">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- AADHAAR -->
+
+                    <div class="form-group">
+
+                        <label>
+                            Aadhaar Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="passenger_aadhaar[]"
+                            maxlength="12"
+                            minlength="12"
+                            pattern="[0-9]{12}"
+                            placeholder="Enter 12-digit Aadhaar"
+                            required
+                        >
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ADD PASSENGER -->
+
+        <button
+            type="button"
+            class="add-passenger-button"
+            onclick="addPassenger()"
+        >
+
+            + Add Another Passenger
+
+        </button>
+
+
+        <p class="passenger-note">
+
+            Maximum 6 passengers can be added to one booking.
+
         </p>
 
-    </header>
+
+        <!-- ================================================= -->
+        <!-- HIDDEN BOOKING INFORMATION -->
+        <!-- ================================================= -->
 
 
-    <!-- ============================= -->
-    <!-- MAIN -->
-    <!-- ============================= -->
-
-    <main class="container">
-
-        <div class="summary-card">
+        <input
+            type="hidden"
+            name="train_id"
+            value="{{ train.id }}"
+        >
 
 
-            <!-- ============================= -->
-            <!-- TRAIN DETAILS -->
-            <!-- ============================= -->
-
-            <section class="section">
-
-                <h2 class="section-title">
-                    🚆 Train Details
-                </h2>
+        <input
+            type="hidden"
+            name="seat_id"
+            value="{{ seat.id }}"
+        >
 
 
-                <div class="train-header">
-
-                    <div>
-
-                        <div class="train-number">
-
-                            {{ train.train_number }}
-
-                        </div>
-
-                        <div class="train-name">
-
-                            {{ train.train_name }}
-
-                        </div>
-
-                    </div>
+        <input
+            type="hidden"
+            name="travel_date"
+            value="{{ travel_date }}"
+        >
 
 
-                    <div class="travel-date">
+        <!-- ================================================= -->
+        <!-- SEAT DETAILS -->
+        <!-- ================================================= -->
 
-                        📅 {{ travel_date }}
+        <section class="section">
 
-                    </div>
+            <h2 class="section-title">
 
-                </div>
+                🪑 Selected Seat
 
-
-                <!-- ROUTE -->
-
-                <div class="route">
-
-                    <div class="station">
-
-                        <div class="station-name">
-
-                            {{ source_station.station_name }}
-
-                        </div>
-
-                        <div class="station-label">
-
-                            Departure Station
-
-                        </div>
-
-                    </div>
+            </h2>
 
 
-                    <div class="route-line"></div>
-
-
-                    <div class="station">
-
-                        <div class="station-name">
-
-                            {{ destination_station.station_name }}
-
-                        </div>
-
-                        <div class="station-label">
-
-                            Arrival Station
-
-                        </div>
-
-                    </div>
-
-                </div>
-
+            <div class="seat-card">
 
                 <div class="details-grid">
 
-                    <div class="detail-box">
-
-                        <div class="detail-label">
-
-                            Journey Length
-
-                        </div>
-
-                        <div class="detail-value">
-
-                            {{ stop_count }} Stops
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="detail-box">
-
-                        <div class="detail-label">
-
-                            Journey Status
-
-                        </div>
-
-                        <div class="detail-value">
-
-                            Ready for Confirmation
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ============================= -->
-            <!-- PASSENGER DETAILS -->
-            <!-- ============================= -->
-
-            <section class="section">
-
-                <h2 class="section-title">
-
-                    👤 Passenger Details
-
-                </h2>
-
-
-                <div class="details-grid">
-
-                    <div class="detail-box">
-
-                        <div class="detail-label">
-
-                            Full Name
-
-                        </div>
-
-                        <div class="detail-value">
-
-                            {{ passenger.full_name }}
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="detail-box">
-
-                        <div class="detail-label">
-
-                            Email
-
-                        </div>
-
-                        <div class="detail-value">
-
-                            {{ passenger.email }}
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="detail-box">
-
-                        <div class="detail-label">
-
-                            Phone Number
-
-                        </div>
-
-                        <div class="detail-value">
-
-                            {{ passenger.phone_number }}
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <!-- ============================= -->
-            <!-- SEAT DETAILS -->
-            <!-- ============================= -->
-
-            <section class="section">
-
-                <h2 class="section-title">
-
-                    🪑 Seat Details
-
-                </h2>
-
-
-                <div class="details-grid">
 
                     <div class="detail-box">
 
@@ -684,107 +1138,347 @@
 
                     </div>
 
-                </div>
-
-            </section>
-
-
-            <!-- ============================= -->
-            <!-- FARE DETAILS -->
-            <!-- ============================= -->
-
-            <section class="section fare-section">
-
-                <h2 class="section-title">
-
-                    💰 Fare Details
-
-                </h2>
-
-
-                <div class="fare-card">
-
-                    <div class="fare-info">
-
-                        <h3>
-
-                            {{ seat.coach.get_coach_type_display }}
-
-                        </h3>
-
-                        <p>
-
-                            Fare calculated for
-                            {{ stop_count }} stops
-
-                        </p>
-
-                    </div>
-
-
-                    <div class="fare-amount">
-
-                        ₹{{ fare }}
-
-                    </div>
 
                 </div>
 
-            </section>
+            </div>
+
+        </section>
 
 
-            <!-- ============================= -->
-            <!-- CONFIRM BOOKING -->
-            <!-- ============================= -->
+        <!-- ================================================= -->
+        <!-- FARE DETAILS -->
+        <!-- ================================================= -->
 
-            <section class="action-section">
+        <section class="section fare-section">
 
-                <form method="POST"
-                      action="{% url 'confirm_booking' %}">
+            <h2 class="section-title">
 
-                    {% csrf_token %}
+                💰 Fare Details
 
+            </h2>
+
+
+            <div class="fare-card">
+
+                <div class="fare-info">
+
+                    <h3>
+
+                        {{ seat.coach.get_coach_type_display }}
+
+                    </h3>
+
+                    <p>
+
+                        Fare calculated for
+                        {{ stop_count }} stops
+
+                    </p>
+
+                </div>
+
+
+                <div class="fare-amount">
+
+                    ₹{{ fare }}
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================================================= -->
+        <!-- CONFIRM -->
+        <!-- ================================================= -->
+
+        <section class="action-section">
+
+            <button
+                type="submit"
+                class="confirm-button"
+            >
+
+                Confirm Booking & Continue to Payment →
+
+            </button>
+
+        </section>
+
+
+    </form>
+
+</section>
+
+
+</div>
+
+</main>
+
+
+<script>
+
+    let passengerCount = 1;
+
+    const MAX_PASSENGERS = 6;
+
+
+    function addPassenger() {
+
+        if (passengerCount >= MAX_PASSENGERS) {
+
+            alert(
+                "Maximum 6 passengers can be added to one booking."
+            );
+
+            return;
+
+        }
+
+
+        passengerCount++;
+
+
+        const container =
+            document.getElementById(
+                "passenger-container"
+            );
+
+
+        const passengerCard =
+            document.createElement(
+                "div"
+            );
+
+
+        passengerCard.className =
+            "passenger-card";
+
+
+        passengerCard.innerHTML = `
+
+            <div class="passenger-header">
+
+                <div class="passenger-title">
+
+                    Passenger ${passengerCount}
+
+                </div>
+
+                <button
+                    type="button"
+                    class="remove-button"
+                    onclick="removePassenger(this)"
+                >
+
+                    Remove
+
+                </button>
+
+            </div>
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Full Name
+                    </label>
 
                     <input
-                        type="hidden"
-                        name="train_id"
-                        value="{{ train.id }}"
+                        type="text"
+                        name="passenger_name[]"
+                        placeholder="Enter passenger name"
+                        required
                     >
 
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Age
+                    </label>
 
                     <input
-                        type="hidden"
-                        name="seat_id"
-                        value="{{ seat.id }}"
+                        type="number"
+                        name="passenger_age[]"
+                        min="1"
+                        max="120"
+                        placeholder="Enter age"
+                        required
                     >
 
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Gender
+                    </label>
+
+                    <select
+                        name="passenger_gender[]"
+                        required
+                    >
+
+                        <option value="">
+                            Select Gender
+                        </option>
+
+                        <option value="MALE">
+                            Male
+                        </option>
+
+                        <option value="FEMALE">
+                            Female
+                        </option>
+
+                        <option value="OTHER">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Aadhaar Number
+                    </label>
 
                     <input
-                        type="hidden"
-                        name="travel_date"
-                        value="{{ travel_date }}"
+                        type="text"
+                        name="passenger_aadhaar[]"
+                        maxlength="12"
+                        minlength="12"
+                        pattern="[0-9]{12}"
+                        placeholder="Enter 12-digit Aadhaar"
+                        required
                     >
 
-
-                    <button
-                        type="submit"
-                        class="confirm-button"
-                    >
-
-                        Confirm Booking & Continue to Payment →
-
-                    </button>
-
-                </form>
-
-            </section>
+                </div>
 
 
-        </div>
+            </div>
 
-    </main>
+        `;
+
+
+        container.appendChild(
+            passengerCard
+        );
+
+    }
+
+
+    function removePassenger(button) {
+
+        const card =
+            button.closest(
+                ".passenger-card"
+            );
+
+
+        card.remove();
+
+
+        passengerCount--;
+
+
+        updatePassengerNumbers();
+
+    }
+
+
+    function updatePassengerNumbers() {
+
+        const cards =
+            document.querySelectorAll(
+                ".passenger-card"
+            );
+
+
+        cards.forEach(
+            function(card, index) {
+
+                const title =
+                    card.querySelector(
+                        ".passenger-title"
+                    );
+
+
+                title.innerText =
+                    "Passenger "
+                    + (index + 1);
+
+            }
+        );
+
+    }
+
+
+    /* ============================= */
+    /* AADHAAR VALIDATION */
+    /* ============================= */
+
+    document
+        .getElementById("booking-form")
+        .addEventListener(
+            "submit",
+            function(event) {
+
+                const aadhaarInputs =
+                    document.querySelectorAll(
+                        'input[name="passenger_aadhaar[]"]'
+                    );
+
+
+                for (
+                    let i = 0;
+                    i < aadhaarInputs.length;
+                    i++
+                ) {
+
+                    const aadhaar =
+                        aadhaarInputs[i]
+                        .value
+                        .trim();
+
+
+                    if (
+                        !/^[0-9]{12}$/
+                        .test(aadhaar)
+                    ) {
+
+                        alert(
+                            "Please enter a valid 12-digit Aadhaar number for every passenger."
+                        );
+
+
+                        event.preventDefault();
+
+                        return;
+
+                    }
+
+                }
+
+            }
+        );
+
+</script>
 
 
 </body>
 
 </html>
+```

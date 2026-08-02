@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Passenger Details</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 850px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .journey-info {
+            background: #f0f6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .journey-info p {
+            margin: 6px 0;
+        }
+
+        .error {
+            background: #ffe5e5;
+            color: #b00020;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        .passenger-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            background: #fafafa;
+        }
+
+        .passenger-card h3 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            font-size: 17px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #0056b3;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Passenger Details</h1>
+
+    <div class="journey-info">
+
+        <p>
+            <strong>Train:</strong>
+            {{ train.train_name }}
+            ({{ train.train_number }})
+        </p>
+
+        <p>
+            <strong>From:</strong>
+            {{ source_station.station_name }}
+        </p>
+
+        <p>
+            <strong>To:</strong>
+            {{ destination_station.station_name }}
+        </p>
+
+        <p>
+            <strong>Travel Date:</strong>
+            {{ travel_date }}
+        </p>
+
+        <p>
+            <strong>Number of Passengers:</strong>
+            {{ passenger_count }}
+        </p>
+
+    </div>
+
+
+    {% if error %}
+
+        <div class="error">
+            {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+
+        {% for i in "123456" %}
+
+            {% if forloop.counter <= passenger_count %}
+
+                <div class="passenger-card">
+
+                    <h3>
+                        Passenger {{ forloop.counter }}
+                    </h3>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Full Name
+                        </label>
+
+                        <input
+                            type="text"
+                            name="full_name_{{ forloop.counter0 }}"
+                            placeholder="Enter passenger full name"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Age
+                        </label>
+
+                        <input
+                            type="number"
+                            name="age_{{ forloop.counter0 }}"
+                            min="1"
+                            max="120"
+                            placeholder="Enter age"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Gender
+                        </label>
+
+                        <select
+                            name="gender_{{ forloop.counter0 }}"
+                            required
+                        >
+
+                            <option value="">
+                                Select Gender
+                            </option>
+
+                            <option value="MALE">
+                                Male
+                            </option>
+
+                            <option value="FEMALE">
+                                Female
+                            </option>
+
+                            <option value="OTHER">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Aadhaar Number
+                        </label>
+
+                        <input
+                            type="text"
+                            name="aadhaar_number_{{ forloop.counter0 }}"
+                            maxlength="12"
+                            placeholder="Enter Aadhaar Number"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Berth Preference
+                        </label>
+
+                        <select
+                            name="berth_preference_{{ forloop.counter0 }}"
+                        >
+
+                            <option value="">
+                                No Preference
+                            </option>
+
+                            <option value="LOWER">
+                                Lower
+                            </option>
+
+                            <option value="MIDDLE">
+                                Middle
+                            </option>
+
+                            <option value="UPPER">
+                                Upper
+                            </option>
+
+                            <option value="SIDE_LOWER">
+                                Side Lower
+                            </option>
+
+                            <option value="SIDE_UPPER">
+                                Side Upper
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+            {% endif %}
+
+        {% endfor %}
+
+
+        <button
+            type="submit"
+            class="submit-btn"
+        >
+            Continue to Seat Allocation
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>

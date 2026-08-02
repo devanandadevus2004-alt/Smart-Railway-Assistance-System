@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Seat Recommendation</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .train-info {
+            background: #f0f6ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        .train-info p {
+            margin: 7px 0;
+        }
+
+        .success {
+            background: #e6f7e9;
+            color: #176b2c;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .error {
+            background: #ffe5e5;
+            color: #b00020;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .seat-card {
+            border: 1px solid #ddd;
+            background: #fafafa;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+        }
+
+        .seat-card h3 {
+            margin-top: 0;
+        }
+
+        .seat-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .info-item {
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        .button-container {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .continue-btn {
+            display: inline-block;
+            padding: 14px 30px;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .continue-btn:hover {
+            background: #0056b3;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-right: 10px;
+            padding: 14px 30px;
+            background: #6c757d;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+        }
+
+        @media (max-width: 600px) {
+
+            .seat-info {
+                grid-template-columns: 1fr;
+            }
+
+            .back-btn,
+            .continue-btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>Seat Recommendation</h1>
+
+
+    <div class="train-info">
+
+        <p>
+            <strong>Train:</strong>
+            {{ train.train_name }}
+        </p>
+
+        <p>
+            <strong>Train Number:</strong>
+            {{ train.train_number }}
+        </p>
+
+    </div>
+
+
+    {% if success %}
+
+        <div class="success">
+
+            <strong>
+                Seats have been successfully recommended!
+            </strong>
+
+            <p>
+                The following seats have been allocated based on
+                passenger requirements and availability.
+            </p>
+
+        </div>
+
+
+        {% for allocation in allocated_seats %}
+
+            <div class="seat-card">
+
+                <h3>
+                    Passenger {{ forloop.counter }}
+                </h3>
+
+
+                <div class="seat-info">
+
+                    <div class="info-item">
+
+                        <strong>
+                            Passenger Name:
+                        </strong>
+
+                        {{ allocation.passenger.full_name }}
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <strong>
+                            Age:
+                        </strong>
+
+                        {{ allocation.passenger.age }}
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <strong>
+                            Coach:
+                        </strong>
+
+                        {{ allocation.coach_number }}
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <strong>
+                            Coach Type:
+                        </strong>
+
+                        {{ allocation.coach_type }}
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <strong>
+                            Seat Number:
+                        </strong>
+
+                        {{ allocation.seat_number }}
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <strong>
+                            Seat Type:
+                        </strong>
+
+                        {{ allocation.seat_type }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+
+        <div class="button-container">
+
+            <a href="{% url 'passenger_details' train.id %}"
+               class="back-btn">
+
+                Back
+
+            </a>
+
+            <!--
+                For now, this button goes to booking summary.
+                The booking summary view currently expects
+                train_id and seat_id as GET parameters.
+            -->
+
+            {% if allocated_seats|length == 1 %}
+
+                {% for allocation in allocated_seats %}
+
+                    <a href="{% url 'booking_summary' %}?train_id={{ train.id }}&seat_id={{ allocation.seat_id }}&travel_date={{ request.session.travel_date }}"
+                       class="continue-btn">
+
+                        Continue to Booking Summary
+
+                    </a>
+
+                {% endfor %}
+
+            {% else %}
+
+                <span style="color:#666;">
+
+                    Multiple passenger booking summary will be
+                    connected in the next step.
+
+                </span>
+
+            {% endif %}
+
+        </div>
+
+
+    {% else %}
+
+        <div class="error">
+
+            <strong>
+                Seat Allocation Failed
+            </strong>
+
+            <p>
+                {{ message }}
+            </p>
+
+        </div>
+
+
+        <div class="button-container">
+
+            <a href="{% url 'passenger_details' train.id %}"
+               class="back-btn">
+
+                Go Back
+
+            </a>
+
+        </div>
+
+    {% endif %}
+
+
+</div>
+
+</body>
+
+</html>
