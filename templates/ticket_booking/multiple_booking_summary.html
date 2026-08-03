@@ -1,0 +1,579 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Multiple Passenger Booking Summary</title>
+
+    <style>
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                sans-serif;
+
+            background:
+                #f4f7fb;
+
+            color:
+                #222;
+
+        }
+
+        .container {
+
+            max-width:
+                1000px;
+
+            margin:
+                40px auto;
+
+            padding:
+                20px;
+
+        }
+
+        .header {
+
+            background:
+                #ffffff;
+
+            padding:
+                25px;
+
+            border-radius:
+                12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+
+            margin-bottom:
+                25px;
+
+        }
+
+        .header h1 {
+
+            margin-top:
+                0;
+
+            color:
+                #1f3c88;
+
+        }
+
+        .journey {
+
+            line-height:
+                1.8;
+
+        }
+
+        .passenger-card {
+
+            background:
+                #ffffff;
+
+            padding:
+                25px;
+
+            margin-bottom:
+                20px;
+
+            border-radius:
+                12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+
+        }
+
+        .passenger-card h2 {
+
+            margin-top:
+                0;
+
+            color:
+                #1f3c88;
+
+        }
+
+        .details {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap:
+                12px;
+
+        }
+
+        .detail {
+
+            padding:
+                12px;
+
+            background:
+                #f5f7fa;
+
+            border-radius:
+                8px;
+
+        }
+
+        .detail strong {
+
+            display:
+                inline-block;
+
+            margin-right:
+                5px;
+
+        }
+
+        .fare {
+
+            margin-top:
+                15px;
+
+            padding:
+                15px;
+
+            background:
+                #e8f5e9;
+
+            border-radius:
+                8px;
+
+            font-size:
+                18px;
+
+            font-weight:
+                bold;
+
+        }
+
+        .total-section {
+
+            background:
+                #ffffff;
+
+            padding:
+                25px;
+
+            border-radius:
+                12px;
+
+            box-shadow:
+                0 4px 12px
+                rgba(0, 0, 0, 0.08);
+
+            text-align:
+                right;
+
+            margin-top:
+                25px;
+
+        }
+
+        .total-fare {
+
+            font-size:
+                26px;
+
+            font-weight:
+                bold;
+
+            color:
+                #1b5e20;
+
+        }
+
+        .button-container {
+
+            margin-top:
+                25px;
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+        }
+
+        .btn {
+
+            display:
+                inline-block;
+
+            padding:
+                12px 25px;
+
+            border-radius:
+                8px;
+
+            text-decoration:
+                none;
+
+            font-weight:
+                bold;
+
+            border:
+                none;
+
+            cursor:
+                pointer;
+
+        }
+
+        .btn-back {
+
+            background:
+                #6c757d;
+
+            color:
+                white;
+
+        }
+
+        .btn-payment {
+
+            background:
+                #1f3c88;
+
+            color:
+                white;
+
+        }
+
+        @media (
+            max-width: 700px
+        ) {
+
+            .details {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .button-container {
+
+                flex-direction:
+                    column;
+
+                gap:
+                    10px;
+
+            }
+
+            .btn {
+
+                text-align:
+                    center;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- ================================================= -->
+    <!-- PAGE HEADER -->
+    <!-- ================================================= -->
+
+    <div class="header">
+
+        <h1>
+            Multiple Passenger Booking Summary
+        </h1>
+
+        <div class="journey">
+
+            <strong>
+                Train:
+            </strong>
+
+            {{ train.train_name }}
+
+            <br>
+
+            <strong>
+                Train Number:
+            </strong>
+
+            {{ train.train_number }}
+
+            <br>
+
+            <strong>
+                From:
+            </strong>
+
+            {{ source_station.station_name }}
+
+            <br>
+
+            <strong>
+                To:
+            </strong>
+
+            {{ destination_station.station_name }}
+
+            <br>
+
+            <strong>
+                Travel Date:
+            </strong>
+
+            {{ travel_date }}
+
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- PASSENGER ALLOCATION DETAILS -->
+    <!-- ================================================= -->
+
+    {% for item in passenger_data %}
+
+
+    <div class="passenger-card">
+
+        <h2>
+
+            Passenger {{ forloop.counter }}
+
+        </h2>
+
+
+        <div class="details">
+
+
+            <!-- Passenger Name -->
+
+            <div class="detail">
+
+                <strong>
+                    Passenger Name:
+                </strong>
+
+                {{ item.passenger.full_name }}
+
+            </div>
+
+
+            <!-- Age -->
+
+            <div class="detail">
+
+                <strong>
+                    Age:
+                </strong>
+
+                {{ item.passenger.age }}
+
+            </div>
+
+
+            <!-- Gender -->
+
+            <div class="detail">
+
+                <strong>
+                    Gender:
+                </strong>
+
+                {{ item.passenger.gender }}
+
+            </div>
+
+
+            <!-- Coach -->
+
+            <div class="detail">
+
+                <strong>
+                    Coach:
+                </strong>
+
+                {{ item.coach_number }}
+
+            </div>
+
+
+            <!-- Coach Type -->
+
+            <div class="detail">
+
+                <strong>
+                    Coach Type:
+                </strong>
+
+                {{ item.coach_type }}
+
+            </div>
+
+
+            <!-- Seat Number -->
+
+            <div class="detail">
+
+                <strong>
+                    Seat Number:
+                </strong>
+
+                {{ item.seat_number }}
+
+            </div>
+
+
+            <!-- Seat Type -->
+
+            <div class="detail">
+
+                <strong>
+                    Seat Type:
+                </strong>
+
+                {{ item.seat_type }}
+
+            </div>
+
+
+        </div>
+
+
+        <!-- Passenger Fare -->
+
+        <div class="fare">
+
+            Passenger Fare:
+
+            ₹{{ item.fare }}
+
+        </div>
+
+
+    </div>
+
+
+    {% empty %}
+
+
+    <div class="passenger-card">
+
+        <h2>
+            No passengers found.
+        </h2>
+
+    </div>
+
+
+    {% endfor %}
+
+
+    <!-- ================================================= -->
+    <!-- TOTAL FARE -->
+    <!-- ================================================= -->
+
+    <div class="total-section">
+
+        <div>
+
+            <span>
+                Total Booking Fare:
+            </span>
+
+        </div>
+
+
+        <div class="total-fare">
+
+            ₹{{ total_fare }}
+
+        </div>
+
+
+        <div>
+
+            Distance:
+
+            {{ distance }}
+
+            {% if distance_source %}
+
+                ({{ distance_source }})
+
+            {% endif %}
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- BUTTONS -->
+        <!-- ================================================= -->
+
+        <div class="button-container">
+
+
+            <a
+                href="{% url 'ticket_booking' %}"
+                class="btn btn-back"
+            >
+
+                Back
+
+            </a>
+
+
+            <a
+                href="#"
+                class="btn btn-payment"
+            >
+
+                Proceed to Payment
+
+            </a>
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
