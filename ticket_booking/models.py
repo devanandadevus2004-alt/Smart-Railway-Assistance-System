@@ -408,3 +408,168 @@ class SeatReservation(models.Model):
             f"{self.travel_date} - "
             f"{self.status}"
         )
+
+
+# ============================================================
+# ALGORITHM ALLOCATION EVALUATION
+# ============================================================
+
+class SeatAllocationEvaluation(models.Model):
+
+    # ========================================================
+    # BASIC ALLOCATION INFORMATION
+    # ========================================================
+
+    train = models.ForeignKey(
+        Train,
+        on_delete=models.CASCADE,
+        related_name='allocation_evaluations'
+    )
+
+    travel_date = models.DateField()
+
+    passenger_name = models.CharField(
+        max_length=100
+    )
+
+    passenger_age = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+
+    passenger_gender = models.CharField(
+        max_length=10,
+        blank=True
+    )
+
+    # ========================================================
+    # PASSENGER PREFERENCES
+    # ========================================================
+
+    preferred_coach_type = models.CharField(
+        max_length=20,
+        blank=True
+    )
+
+    preferred_berth_type = models.CharField(
+        max_length=30,
+        blank=True
+    )
+
+    is_senior = models.BooleanField(
+        default=False
+    )
+
+    is_lactating_mother = models.BooleanField(
+        default=False
+    )
+
+    # ========================================================
+    # ALLOCATED SEAT INFORMATION
+    #
+    # This stores the seat actually recommended by
+    # the intelligent allocation algorithm.
+    # ========================================================
+
+    allocated_seat = models.ForeignKey(
+        Seat,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='allocation_evaluations'
+    )
+
+    allocated_seat_number = models.PositiveIntegerField(
+        null=True,
+        blank=True
+    )
+
+    allocated_seat_type = models.CharField(
+        max_length=30,
+        blank=True
+    )
+
+    allocated_coach_number = models.CharField(
+        max_length=10,
+        blank=True
+    )
+
+    allocated_coach_type = models.CharField(
+        max_length=20,
+        blank=True
+    )
+
+    # ========================================================
+    # ALGORITHM SCORE
+    #
+    # This is the score calculated by the intelligent
+    # seat allocation algorithm.
+    # ========================================================
+
+    algorithm_score = models.IntegerField(
+        default=0
+    )
+
+    # ========================================================
+    # PREFERENCE SATISFACTION
+    #
+    # Stores whether the passenger's preference was
+    # successfully satisfied.
+    # ========================================================
+
+    coach_preference_satisfied = models.BooleanField(
+        default=False
+    )
+
+    berth_preference_satisfied = models.BooleanField(
+        default=False
+    )
+
+    comfort_requirement_satisfied = models.BooleanField(
+        default=False
+    )
+
+    family_proximity_satisfied = models.BooleanField(
+        default=False
+    )
+
+    # ========================================================
+    # OVERALL PREFERENCE SATISFACTION
+    #
+    # Example:
+    #
+    # 4 satisfied conditions out of 4
+    # = 100%
+    #
+    # 2 satisfied conditions out of 4
+    # = 50%
+    # ========================================================
+
+    preference_satisfaction_percentage = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
+    # ========================================================
+    # ALLOCATION TIMESTAMP
+    # ========================================================
+
+    evaluated_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    # ========================================================
+    # STRING REPRESENTATION
+    # ========================================================
+
+    def __str__(self):
+
+        return (
+            f"{self.train.train_number} - "
+            f"{self.passenger_name} - "
+            f"{self.allocated_coach_number} - "
+            f"Seat {self.allocated_seat_number} - "
+            f"{self.preference_satisfaction_percentage}%"
+        )
+        

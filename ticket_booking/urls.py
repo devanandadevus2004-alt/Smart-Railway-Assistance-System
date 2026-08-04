@@ -78,4 +78,10 @@ path(
         name='payment'
     ),
 
+    path(
+    'multiple-booking-summary/',
+    views.multiple_booking_summary,
+    name='multiple_booking_summary'
+    ),
+
 ]

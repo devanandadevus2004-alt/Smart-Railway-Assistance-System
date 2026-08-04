@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +10,7 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1.0">
 
-    <title>Seat Recommendation</title>
+    <title>Seat Allocation Result</title>
 
     <style>
 
@@ -17,122 +19,862 @@
         }
 
         body {
+
             margin: 0;
+
             padding: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #222;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #f8fafc
+                );
+
+            color:
+                #1e293b;
+
         }
+
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
 
         .container {
+
             width: 90%;
-            max-width: 900px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+
+            max-width: 1000px;
+
+            margin:
+                40px auto;
+
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 10px;
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+
+            background:
+                white;
+
+            padding:
+                30px;
+
+            border-radius:
+                16px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.08
+                );
+
+            margin-bottom:
+                25px;
+
+            text-align:
+                center;
+
         }
 
-        .train-info {
-            background: #f0f6ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
+
+        .header h1 {
+
+            margin:
+                0 0 10px;
+
+            color:
+                #1e3a8a;
+
         }
 
-        .train-info p {
-            margin: 7px 0;
+
+        .header p {
+
+            margin:
+                6px 0;
+
+            color:
+                #64748b;
+
         }
 
-        .success {
-            background: #e6f7e9;
-            color: #176b2c;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+
+        /* =====================================================
+           SUCCESS MESSAGE
+        ===================================================== */
+
+        .success-message {
+
+            background:
+                #ecfdf5;
+
+            border-left:
+                5px solid
+                #10b981;
+
+            padding:
+                18px;
+
+            border-radius:
+                10px;
+
+            color:
+                #065f46;
+
+            margin-bottom:
+                25px;
+
+            font-weight:
+                bold;
+
         }
 
-        .error {
-            background: #ffe5e5;
-            color: #b00020;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+
+        /* =====================================================
+           ERROR MESSAGE
+        ===================================================== */
+
+        .error-message {
+
+            background:
+                #fef2f2;
+
+            border-left:
+                5px solid
+                #ef4444;
+
+            padding:
+                18px;
+
+            border-radius:
+                10px;
+
+            color:
+                #991b1b;
+
+            margin-bottom:
+                25px;
+
+            font-weight:
+                bold;
+
         }
 
-        .seat-card {
-            border: 1px solid #ddd;
-            background: #fafafa;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 10px;
+
+        /* =====================================================
+           JOURNEY DETAILS
+        ===================================================== */
+
+        .journey-details {
+
+            background:
+                white;
+
+            padding:
+                25px;
+
+            border-radius:
+                16px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.06
+                );
+
+            margin-bottom:
+                25px;
+
         }
 
-        .seat-card h3 {
-            margin-top: 0;
+
+        .journey-details h2 {
+
+            margin-top:
+                0;
+
+            color:
+                #1e3a8a;
+
         }
 
-        .seat-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+
+        .journey-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(
+                        200px,
+                        1fr
+                    )
+                );
+
+            gap:
+                15px;
+
         }
 
-        .info-item {
-            padding: 10px;
-            background: white;
-            border-radius: 6px;
-            border: 1px solid #eee;
+
+        .journey-item {
+
+            background:
+                #f8fafc;
+
+            padding:
+                15px;
+
+            border-radius:
+                10px;
+
         }
+
+
+        .journey-item strong {
+
+            display:
+                block;
+
+            color:
+                #64748b;
+
+            font-size:
+                13px;
+
+            margin-bottom:
+                5px;
+
+        }
+
+
+        /* =====================================================
+           ALLOCATION CARD
+        ===================================================== */
+
+        .allocation-card {
+
+            background:
+                white;
+
+            padding:
+                25px;
+
+            margin-bottom:
+                25px;
+
+            border-radius:
+                16px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.08
+                );
+
+            border-top:
+                5px solid
+                #2563eb;
+
+        }
+
+
+        /* =====================================================
+           PASSENGER HEADER
+        ===================================================== */
+
+        .passenger-title {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            flex-wrap:
+                wrap;
+
+            gap:
+                10px;
+
+            margin-bottom:
+                20px;
+
+        }
+
+
+        .passenger-title h2 {
+
+            margin:
+                0;
+
+            color:
+                #1e3a8a;
+
+        }
+
+
+        .seat-badge {
+
+            background:
+                #dbeafe;
+
+            color:
+                #1e40af;
+
+            padding:
+                8px 14px;
+
+            border-radius:
+                20px;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        /* =====================================================
+           ALLOCATION DETAILS
+        ===================================================== */
+
+        .allocation-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(
+                        180px,
+                        1fr
+                    )
+                );
+
+            gap:
+                15px;
+
+            margin-bottom:
+                25px;
+
+        }
+
+
+        .allocation-item {
+
+            background:
+                #f8fafc;
+
+            padding:
+                15px;
+
+            border-radius:
+                10px;
+
+        }
+
+
+        .allocation-item strong {
+
+            display:
+                block;
+
+            color:
+                #64748b;
+
+            font-size:
+                13px;
+
+            margin-bottom:
+                5px;
+
+        }
+
+
+        /* =====================================================
+           PRIORITY BADGE
+        ===================================================== */
+
+        .priority-badge {
+
+            display:
+                inline-block;
+
+            background:
+                #fef3c7;
+
+            color:
+                #92400e;
+
+            padding:
+                6px 12px;
+
+            border-radius:
+                20px;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        /* =====================================================
+           EVALUATION SECTION
+        ===================================================== */
+
+        .evaluation-section {
+
+            background:
+                #f8fafc;
+
+            padding:
+                20px;
+
+            border-radius:
+                12px;
+
+            margin-top:
+                20px;
+
+        }
+
+
+        .evaluation-section h3 {
+
+            margin-top:
+                0;
+
+            color:
+                #334155;
+
+        }
+
+
+        .evaluation-row {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            padding:
+                12px 0;
+
+            border-bottom:
+                1px solid
+                #e2e8f0;
+
+            gap:
+                15px;
+
+        }
+
+
+        .evaluation-row:last-child {
+
+            border-bottom:
+                none;
+
+        }
+
+
+        /* =====================================================
+           STATUS STYLES
+        ===================================================== */
+
+        .status-yes {
+
+            color:
+                #047857;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .status-no {
+
+            color:
+                #dc2626;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        .status-na {
+
+            color:
+                #64748b;
+
+            font-weight:
+                bold;
+
+        }
+
+
+        /* =====================================================
+           MATCHING PERCENTAGE
+        ===================================================== */
+
+        .matching-section {
+
+            margin-top:
+                25px;
+
+            padding:
+                20px;
+
+            background:
+                #eff6ff;
+
+            border-radius:
+                12px;
+
+            border-left:
+                5px solid
+                #2563eb;
+
+        }
+
+
+        .matching-title {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            margin-bottom:
+                12px;
+
+        }
+
+
+        .matching-title strong {
+
+            color:
+                #1e3a8a;
+
+        }
+
+
+        .matching-percentage {
+
+            font-size:
+                24px;
+
+            font-weight:
+                bold;
+
+            color:
+                #2563eb;
+
+        }
+
+
+        .progress-bar {
+
+            width:
+                100%;
+
+            height:
+                12px;
+
+            background:
+                #dbeafe;
+
+            border-radius:
+                10px;
+
+            overflow:
+                hidden;
+
+        }
+
+
+        .progress-fill {
+
+            height:
+                100%;
+
+            background:
+                #2563eb;
+
+            border-radius:
+                10px;
+
+        }
+
+
+        .matching-description {
+
+            margin:
+                12px 0 0;
+
+            color:
+                #475569;
+
+            font-size:
+                14px;
+
+            line-height:
+                1.5;
+
+        }
+
+
+        /* =====================================================
+           REASONS
+        ===================================================== */
+
+        .reasons {
+
+            margin-top:
+                20px;
+
+        }
+
+
+        .reasons h4 {
+
+            color:
+                #334155;
+
+        }
+
+
+        .reasons ul {
+
+            padding-left:
+                20px;
+
+        }
+
+
+        .reasons li {
+
+            margin-bottom:
+                8px;
+
+            color:
+                #475569;
+
+        }
+
+
+        /* =====================================================
+           NO ALLOCATION
+        ===================================================== */
+
+        .no-allocation {
+
+            background:
+                white;
+
+            padding:
+                30px;
+
+            text-align:
+                center;
+
+            border-radius:
+                16px;
+
+            box-shadow:
+                0 8px 25px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.08
+                );
+
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
 
         .button-container {
-            margin-top: 25px;
-            text-align: center;
+
+            display:
+                flex;
+
+            justify-content:
+                center;
+
+            gap:
+                15px;
+
+            flex-wrap:
+                wrap;
+
+            margin-top:
+                30px;
+
+            margin-bottom:
+                40px;
+
         }
 
-        .continue-btn {
-            display: inline-block;
-            padding: 14px 30px;
-            background: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 7px;
-            font-size: 16px;
-            border: none;
-            cursor: pointer;
+
+        .button {
+
+            display:
+                inline-block;
+
+            padding:
+                13px 25px;
+
+            border-radius:
+                8px;
+
+            text-decoration:
+                none;
+
+            font-weight:
+                bold;
+
+            transition:
+                0.2s;
+
         }
 
-        .continue-btn:hover {
-            background: #0056b3;
+
+        .primary-button {
+
+            background:
+                #2563eb;
+
+            color:
+                white;
+
         }
 
-        .back-btn {
-            display: inline-block;
-            margin-right: 10px;
-            padding: 14px 30px;
-            background: #6c757d;
-            color: white;
-            text-decoration: none;
-            border-radius: 7px;
+
+        .primary-button:hover {
+
+            background:
+                #1d4ed8;
+
         }
 
-        @media (max-width: 600px) {
 
-            .seat-info {
-                grid-template-columns: 1fr;
+        .secondary-button {
+
+            background:
+                #e2e8f0;
+
+            color:
+                #334155;
+
+        }
+
+
+        .secondary-button:hover {
+
+            background:
+                #cbd5e1;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE DESIGN
+        ===================================================== */
+
+        @media (
+            max-width:
+            600px
+        ) {
+
+            .container {
+
+                width:
+                    95%;
+
+                margin-top:
+                    20px;
+
             }
 
-            .back-btn,
-            .continue-btn {
-                display: block;
-                width: 100%;
-                margin: 10px 0;
+
+            .header {
+
+                padding:
+                    20px;
+
+            }
+
+
+            .allocation-card {
+
+                padding:
+                    20px;
+
+            }
+
+
+            .evaluation-row {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    flex-start;
+
+            }
+
+
+            .matching-title {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    flex-start;
+
+                gap:
+                    8px;
+
             }
 
         }
@@ -144,197 +886,631 @@
 
 <body>
 
+
 <div class="container">
 
-    <h1>Seat Recommendation</h1>
 
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
 
-    <div class="train-info">
+    <div class="header">
+
+        <h1>
+            Intelligent Seat Allocation Result
+        </h1>
 
         <p>
-            <strong>Train:</strong>
-            {{ train.train_name }}
+            Your seats have been allocated using
+            the intelligent seat allocation algorithm.
         </p>
 
-        <p>
-            <strong>Train Number:</strong>
-            {{ train.train_number }}
-        </p>
+        {% if train %}
+
+            <p>
+
+                <strong>
+                    Train:
+                </strong>
+
+                {{ train.train_number }}
+                -
+                {{ train.train_name }}
+
+            </p>
+
+        {% endif %}
 
     </div>
 
 
+    <!-- =====================================================
+         SUCCESS / ERROR MESSAGE
+    ====================================================== -->
+
     {% if success %}
 
-        <div class="success">
+        <div class="success-message">
 
-            <strong>
-                Seats have been successfully recommended!
-            </strong>
-
-            <p>
-                The following seats have been allocated based on
-                passenger requirements and availability.
-            </p>
+            {{ message }}
 
         </div>
-
-
-        {% for allocation in allocated_seats %}
-
-            <div class="seat-card">
-
-                <h3>
-                    Passenger {{ forloop.counter }}
-                </h3>
-
-
-                <div class="seat-info">
-
-                    <div class="info-item">
-
-                        <strong>
-                            Passenger Name:
-                        </strong>
-
-                        {{ allocation.passenger.full_name }}
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <strong>
-                            Age:
-                        </strong>
-
-                        {{ allocation.passenger.age }}
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <strong>
-                            Coach:
-                        </strong>
-
-                        {{ allocation.coach_number }}
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <strong>
-                            Coach Type:
-                        </strong>
-
-                        {{ allocation.coach_type }}
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <strong>
-                            Seat Number:
-                        </strong>
-
-                        {{ allocation.seat_number }}
-
-                    </div>
-
-
-                    <div class="info-item">
-
-                        <strong>
-                            Seat Type:
-                        </strong>
-
-                        {{ allocation.seat_type }}
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        {% endfor %}
-
-
-        <div class="button-container">
-
-            <a href="{% url 'passenger_details' train.id %}"
-               class="back-btn">
-
-                Back
-
-            </a>
-
-            <!--
-                For now, this button goes to booking summary.
-                The booking summary view currently expects
-                train_id and seat_id as GET parameters.
-            -->
-
-            {% if allocated_seats|length == 1 %}
-
-                {% for allocation in allocated_seats %}
-
-                    <a href="{% url 'booking_summary' %}?train_id={{ train.id }}&seat_id={{ allocation.seat_id }}&travel_date={{ request.session.travel_date }}"
-                       class="continue-btn">
-
-                        Continue to Booking Summary
-
-                    </a>
-
-                {% endfor %}
-
-            {% else %}
-
-                <span style="color:#666;">
-
-                    Multiple passenger booking summary will be
-                    connected in the next step.
-
-                </span>
-
-            {% endif %}
-
-        </div>
-
 
     {% else %}
 
-        <div class="error">
+        <div class="error-message">
 
-            <strong>
-                Seat Allocation Failed
-            </strong>
-
-            <p>
-                {{ message }}
-            </p>
-
-        </div>
-
-
-        <div class="button-container">
-
-            <a href="{% url 'passenger_details' train.id %}"
-               class="back-btn">
-
-                Go Back
-
-            </a>
+            {{ message }}
 
         </div>
 
     {% endif %}
 
 
+    <!-- =====================================================
+         JOURNEY INFORMATION
+    ====================================================== -->
+
+    {% if success %}
+
+        <div class="journey-details">
+
+            <h2>
+                Journey Information
+            </h2>
+
+            <div class="journey-grid">
+
+
+                {% if source_station %}
+
+                    <div class="journey-item">
+
+                        <strong>
+                            From
+                        </strong>
+
+                        {{ source_station.station_name }}
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if destination_station %}
+
+                    <div class="journey-item">
+
+                        <strong>
+                            To
+                        </strong>
+
+                        {{ destination_station.station_name }}
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if travel_date %}
+
+                    <div class="journey-item">
+
+                        <strong>
+                            Travel Date
+                        </strong>
+
+                        {{ travel_date }}
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if selected_coach_type %}
+
+                    <div class="journey-item">
+
+                        <strong>
+                            Selected Coach Type
+                        </strong>
+
+                        {{ selected_coach_type }}
+
+                    </div>
+
+                {% endif %}
+
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             ALLOCATED SEATS
+        ================================================== -->
+
+        {% if allocated_seats %}
+
+
+            {% for allocation in allocated_seats %}
+
+
+                <div class="allocation-card">
+
+
+                    <!-- =====================================
+                         PASSENGER TITLE
+                    ====================================== -->
+
+                    <div class="passenger-title">
+
+                        <h2>
+
+                            Passenger
+                            {{ allocation.passenger_index|add:"1" }}
+
+                            {% if allocation.passenger.full_name %}
+
+                                -
+                                {{ allocation.passenger.full_name }}
+
+                            {% endif %}
+
+                        </h2>
+
+
+                        <div class="seat-badge">
+
+                            Seat
+                            {{ allocation.seat_number }}
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- =====================================
+                         BASIC ALLOCATION DETAILS
+                    ====================================== -->
+
+                    <div class="allocation-grid">
+
+
+                        <div class="allocation-item">
+
+                            <strong>
+                                Passenger Name
+                            </strong>
+
+                            {% if allocation.passenger.full_name %}
+
+                                {{ allocation.passenger.full_name }}
+
+                            {% else %}
+
+                                Passenger
+                                {{ allocation.passenger_index|add:"1" }}
+
+                            {% endif %}
+
+                        </div>
+
+
+                        {% if allocation.passenger.age %}
+
+                            <div class="allocation-item">
+
+                                <strong>
+                                    Age
+                                </strong>
+
+                                {{ allocation.passenger.age }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="allocation-item">
+
+                            <strong>
+                                Priority
+                            </strong>
+
+                            <span class="priority-badge">
+
+                                {{ allocation.priority_display }}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="allocation-item">
+
+                            <strong>
+                                Coach
+                            </strong>
+
+                            {{ allocation.coach_number }}
+
+                        </div>
+
+
+                        <div class="allocation-item">
+
+                            <strong>
+                                Coach Type
+                            </strong>
+
+                            {{ allocation.coach_type }}
+
+                        </div>
+
+
+                        <div class="allocation-item">
+
+                            <strong>
+                                Seat Number
+                            </strong>
+
+                            {{ allocation.seat_number }}
+
+                        </div>
+
+
+                        <div class="allocation-item">
+
+                            <strong>
+                                Allocated Berth
+                            </strong>
+
+                            {{ allocation.seat_type }}
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- =====================================
+                         PREFERENCE EVALUATION
+                    ====================================== -->
+
+                    <div class="evaluation-section">
+
+
+                        <h3>
+                            Seat Preference Evaluation
+                        </h3>
+
+
+                        <!-- REQUESTED BERTH -->
+
+                        <div class="evaluation-row">
+
+                            <span>
+
+                                <strong>
+                                    Requested Berth
+                                </strong>
+
+                            </span>
+
+                            <span>
+
+                                {{ allocation.berth_preference }}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- BERTH PREFERENCE FULFILLED -->
+
+                        <div class="evaluation-row">
+
+                            <span>
+
+                                <strong>
+                                    Berth Preference Fulfilled
+                                </strong>
+
+                            </span>
+
+                            <span>
+
+                                {% if allocation.berth_preference_fulfilled %}
+
+                                    <span class="status-yes">
+                                        Yes
+                                    </span>
+
+                                {% elif allocation.berth_preference != "No specific preference" %}
+
+                                    <span class="status-no">
+                                        No
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-na">
+                                        Not Applicable
+                                    </span>
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- PRIORITY COMFORT -->
+
+                        <div class="evaluation-row">
+
+                            <span>
+
+                                <strong>
+                                    Suitable Comfortable Seat
+                                </strong>
+
+                            </span>
+
+                            <span>
+
+                                {% if allocation.comfort_seat_allocated %}
+
+                                    <span class="status-yes">
+                                        Yes
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-no">
+                                        No
+                                    </span>
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- SAME COACH -->
+
+                        <div class="evaluation-row">
+
+                            <span>
+
+                                <strong>
+                                    Same Coach as Group Member
+                                </strong>
+
+                            </span>
+
+                            <span>
+
+                                {% if allocation.same_coach_as_group %}
+
+                                    <span class="status-yes">
+                                        Yes
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="status-na">
+                                        No / Not Applicable
+                                    </span>
+
+                                {% endif %}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- EXPLICIT SEAT -->
+
+                        {% if allocation.was_explicitly_selected %}
+
+                            <div class="evaluation-row">
+
+                                <span>
+
+                                    <strong>
+                                        Explicit Seat Preference
+                                    </strong>
+
+                                </span>
+
+                                <span>
+
+                                    {% if allocation.explicit_seat_fulfilled %}
+
+                                        <span class="status-yes">
+                                            Fulfilled
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status-no">
+                                            Not Fulfilled
+                                        </span>
+
+                                    {% endif %}
+
+                                </span>
+
+                            </div>
+
+                        {% endif %}
+
+
+                    </div>
+
+
+                    <!-- =====================================
+                         PREFERENCE MATCHING PERCENTAGE
+                    ====================================== -->
+
+                    <div class="matching-section">
+
+
+                        <div class="matching-title">
+
+                            <strong>
+                                Overall Preference Matching
+                            </strong>
+
+                            <span class="matching-percentage">
+
+                                {{ allocation.preference_matching_percentage }}%
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="progress-bar">
+
+
+                            <div
+                                class="progress-fill"
+                                style="width: {{ allocation.preference_matching_percentage }}%;"
+                            >
+                            </div>
+
+
+                        </div>
+
+
+                        <p class="matching-description">
+
+                            This percentage represents how well the
+                            allocated seat matches the passenger's
+                            stated berth preference, priority-related
+                            comfort requirements, explicit seat request,
+                            and group seating preference.
+
+                        </p>
+
+
+                    </div>
+
+
+                    <!-- =====================================
+                         ALLOCATION REASONS
+                    ====================================== -->
+
+                    <div class="reasons">
+
+                        <h4>
+                            Why Was This Seat Allocated?
+                        </h4>
+
+
+                        {% if allocation.allocation_reasons %}
+
+                            <ul>
+
+                                {% for reason in allocation.allocation_reasons %}
+
+                                    <li>
+
+                                        {{ reason }}
+
+                                    </li>
+
+                                {% endfor %}
+
+                            </ul>
+
+                        {% else %}
+
+                            <p>
+
+                                The seat was selected as the
+                                best available option based on
+                                the passenger's requirements.
+
+                            </p>
+
+                        {% endif %}
+
+                    </div>
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="no-allocation">
+
+                <h2>
+                    No Seats Allocated
+                </h2>
+
+                <p>
+
+                    The system could not find suitable seats
+                    for the selected passengers.
+
+                </p>
+
+            </div>
+
+
+        {% endif %}
+
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         BUTTONS
+    ====================================================== -->
+
+    <div class="button-container">
+
+
+        <a
+            href="{% url 'ticket_booking' %}"
+            class="button secondary-button"
+        >
+
+            Back to Ticket Booking
+
+        </a>
+
+
+        {% if success %}
+
+            <a
+                href="{% url 'ticket_booking' %}"
+                class="button primary-button"
+            >
+
+                Continue
+
+            </a>
+
+        {% endif %}
+
+
+    </div>
+
+
 </div>
+
 
 </body>
 

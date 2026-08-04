@@ -1,3 +1,6 @@
+from .seat_allocation_algorithm import (
+    allocate_seats_for_passengers
+)
 import json
 from datetime import timedelta
 
@@ -705,45 +708,49 @@ def passenger_requirements(
 # ============================================================
 # PASSENGER DETAILS AND PREFERENCES
 # ============================================================
+def passenger_details(request, train_id):
 
-def passenger_details(
-    request,
-    train_id
-):
+    # --------------------------------------------------------
+    # GET SELECTED TRAIN
+    # --------------------------------------------------------
 
     train = get_object_or_404(
         Train,
         id=train_id
     )
 
-    source_id = request.session.get(
-        'source_station_id'
-    )
+    # --------------------------------------------------------
+    # GET JOURNEY DETAILS FROM SESSION
+    # --------------------------------------------------------
 
-    destination_id = request.session.get(
-        'destination_station_id'
-    )
+    source_id = request.session.get('source_station_id')
+    destination_id = request.session.get('destination_station_id')
+    travel_date = request.session.get('travel_date')
+    passenger_count = request.session.get('passenger_count')
 
-    travel_date = request.session.get(
-        'travel_date'
-    )
-
-    passenger_count = request.session.get(
-        'passenger_count'
-    )
+    # --------------------------------------------------------
+    # VALIDATE SOURCE AND DESTINATION
+    # --------------------------------------------------------
 
     if not source_id or not destination_id:
+        return redirect('ticket_booking')
 
-        return redirect(
-            'ticket_booking'
-        )
+    # --------------------------------------------------------
+    # VALIDATE PASSENGER COUNT
+    # --------------------------------------------------------
 
     if not passenger_count:
-
         return redirect(
             'passenger_requirements',
             train_id=train.id
         )
+
+    # Convert passenger_count to integer
+    passenger_count = int(passenger_count)
+
+    # --------------------------------------------------------
+    # GET STATIONS
+    # --------------------------------------------------------
 
     source_station = get_object_or_404(
         Station,
@@ -755,203 +762,141 @@ def passenger_details(
         id=destination_id
     )
 
+    # --------------------------------------------------------
+    # COMMON CONTEXT
+    # --------------------------------------------------------
+
+    context = {
+        'train': train,
+        'source_station': source_station,
+        'destination_station': destination_station,
+        'travel_date': travel_date,
+        'passenger_count': passenger_count,
+        'passenger_range': range(passenger_count),
+    }
+
+    # ========================================================
+    # PROCESS PASSENGER DETAILS
+    # ========================================================
+
     if request.method == 'POST':
 
         passengers = []
 
-        for i in range(
-            passenger_count
-        ):
+        for i in range(passenger_count):
 
-            full_name = request.POST.get(
-                f'full_name_{i}'
-            )
+            full_name = request.POST.get(f'full_name_{i}')
+            age = request.POST.get(f'age_{i}')
+            gender = request.POST.get(f'gender_{i}')
+            aadhaar_number = request.POST.get(f'aadhaar_number_{i}')
+            berth_preference = request.POST.get(f'berth_preference_{i}')
+            priority = request.POST.get(
+                f'priority_{i}',
+                'normal'
+            ).strip().lower()
 
-            age = request.POST.get(
-                f'age_{i}'
-            )
-
-            gender = request.POST.get(
-                f'gender_{i}'
-            )
-
-            aadhaar_number = request.POST.get(
-                f'aadhaar_number_{i}'
-            )
-
-            berth_preference = request.POST.get(
-                f'berth_preference_{i}'
-            )
+            # ------------------------------------------------
+            # VALIDATE REQUIRED FIELDS
+            # ------------------------------------------------
 
             if not full_name or not age or not gender:
 
-                return render(
-
-                    request,
-
-                    'ticket_booking/passenger_details.html',
-
-                    {
-                        'train':
-                            train,
-
-                        'source_station':
-                            source_station,
-
-                        'destination_station':
-                            destination_station,
-
-                        'travel_date':
-                            travel_date,
-
-                        'passenger_count':
-                            passenger_count,
-
-                        'error':
-                            f'Please complete the details for Passenger {i + 1}.'
-                    }
-
+                context['error'] = (
+                    f'Please complete the details for Passenger {i + 1}.'
                 )
+
+                return render(
+                    request,
+                    'ticket_booking/passenger_details.html',
+                    context
+                )
+
+            # ------------------------------------------------
+            # VALIDATE AGE
+            # ------------------------------------------------
 
             try:
+                age = int(age)
 
-                age = int(
-                    age
+            except (TypeError, ValueError):
+
+                context['error'] = (
+                    f'Invalid age for Passenger {i + 1}.'
                 )
-
-            except (
-                TypeError,
-                ValueError
-            ):
 
                 return render(
-
                     request,
-
                     'ticket_booking/passenger_details.html',
-
-                    {
-                        'train':
-                            train,
-
-                        'source_station':
-                            source_station,
-
-                        'destination_station':
-                            destination_station,
-
-                        'travel_date':
-                            travel_date,
-
-                        'passenger_count':
-                            passenger_count,
-
-                        'error':
-                            f'Invalid age for Passenger {i + 1}.'
-                    }
-
+                    context
                 )
+
+            # ------------------------------------------------
+            # SENIOR CITIZEN CHECK
+            # ------------------------------------------------
 
             is_senior = age >= 60
 
+            if is_senior:
+                priority = 'senior_citizen'
+
+            # ------------------------------------------------
+            # STORE PASSENGER
+            # ------------------------------------------------
+
             passengers.append({
 
-                'full_name':
-                    full_name,
-
-                'age':
-                    age,
-
-                'gender':
-                    gender,
-
-                'aadhaar_number':
-                    aadhaar_number or '',
-
-                'berth_preference':
-                    berth_preference or '',
-
-                'is_senior':
-                    is_senior,
+                'full_name': full_name.strip(),
+                'age': age,
+                'gender': gender,
+                'aadhaar_number': aadhaar_number or '',
+                'berth_preference': berth_preference or '',
+                'priority': priority,
+                'is_senior': is_senior,
+                'is_lactating_mother': priority == 'lactating_mother',
+                'is_pregnant': priority == 'pregnant_woman',
+                'is_disabled': priority == 'person_with_disability',
+                'requires_priority_seat': priority != 'normal',
 
             })
 
-        request.session[
-            'passengers'
-        ] = passengers
+        # ----------------------------------------------------
+        # STORE PASSENGERS IN SESSION
+        # ----------------------------------------------------
 
-        # ----------------------------------------------------
-        # IMPORTANT:
-        # URL configuration contains seat_recommendation.
-        # Therefore redirect to seat_recommendation.
-        # ----------------------------------------------------
+        request.session['passengers'] = passengers
 
         return redirect(
-
             'seat_recommendation',
-
             train_id=train.id
-
         )
 
+    # ========================================================
+    # DISPLAY PAGE
+    # ========================================================
+
     return render(
-
         request,
-
         'ticket_booking/passenger_details.html',
-
-        {
-            'train':
-                train,
-
-            'source_station':
-                source_station,
-
-            'destination_station':
-                destination_station,
-
-            'travel_date':
-                travel_date,
-
-            'passenger_count':
-                passenger_count,
-
-        }
-
+        context
     )
-
-
-# ============================================================
-# SEAT RECOMMENDATION
-#
-# Passenger selects coach type first.
-#
-# GEN:
-#   - General coach only
-#   - Preferred berth selection disabled
-#
-# SL / 3A / 2A / 1A:
-#   - Only selected coach type is considered
-#   - Berth preference is used by the algorithm
-# ============================================================
-
 def seat_recommendation(
     request,
     train_id
 ):
 
-    # --------------------------------------------------------
-    # Get selected train
-    # --------------------------------------------------------
+    # ========================================================
+    # GET SELECTED TRAIN
+    # ========================================================
 
     train = get_object_or_404(
         Train,
         id=train_id
     )
 
-    # --------------------------------------------------------
-    # Get journey details from session
-    # --------------------------------------------------------
+
+    # ========================================================
+    # GET JOURNEY DETAILS FROM SESSION
+    # ========================================================
 
     source_id = request.session.get(
         'source_station_id'
@@ -965,28 +910,28 @@ def seat_recommendation(
         'travel_date'
     )
 
-    # --------------------------------------------------------
-    # Get selected coach type
-    #
-    # This was selected by the passenger on the
-    # Passenger Requirements page.
-    # --------------------------------------------------------
+
+    # ========================================================
+    # GET SELECTED COACH TYPE
+    # ========================================================
 
     selected_coach_type = request.session.get(
         'selected_coach_type'
     )
 
-    # --------------------------------------------------------
-    # Get passenger details
-    # --------------------------------------------------------
+
+    # ========================================================
+    # GET PASSENGER DETAILS
+    # ========================================================
 
     passengers = request.session.get(
         'passengers'
     )
 
-    # --------------------------------------------------------
-    # Validate journey details
-    # --------------------------------------------------------
+
+    # ========================================================
+    # VALIDATE JOURNEY DETAILS
+    # ========================================================
 
     if not source_id or not destination_id:
 
@@ -994,9 +939,10 @@ def seat_recommendation(
             'ticket_booking'
         )
 
-    # --------------------------------------------------------
-    # Validate coach type
-    # --------------------------------------------------------
+
+    # ========================================================
+    # VALIDATE COACH TYPE
+    # ========================================================
 
     if not selected_coach_type:
 
@@ -1008,9 +954,10 @@ def seat_recommendation(
 
         )
 
-    # --------------------------------------------------------
-    # Validate passenger details
-    # --------------------------------------------------------
+
+    # ========================================================
+    # VALIDATE PASSENGER DETAILS
+    # ========================================================
 
     if not passengers:
 
@@ -1022,18 +969,16 @@ def seat_recommendation(
 
         )
 
-    # --------------------------------------------------------
-    # Release expired seat locks
-    # --------------------------------------------------------
+
+    # ========================================================
+    # RELEASE EXPIRED SEAT LOCKS
+    # ========================================================
 
     release_expired_seat_locks()
 
+
     # ========================================================
-    # GET COACHES
-    #
-    # IMPORTANT:
-    # Only coaches belonging to the passenger-selected
-    # coach type will be considered.
+    # GET COACHES OF SELECTED COACH TYPE
     # ========================================================
 
     coaches = (
@@ -1051,18 +996,23 @@ def seat_recommendation(
         )
 
         .prefetch_related(
+
             'seats'
+
         )
 
         .order_by(
+
             'id'
+
         )
 
     )
 
-    # --------------------------------------------------------
-    # Check whether selected coach type exists
-    # --------------------------------------------------------
+
+    # ========================================================
+    # CHECK WHETHER SELECTED COACH TYPE EXISTS
+    # ========================================================
 
     if not coaches.exists():
 
@@ -1084,12 +1034,15 @@ def seat_recommendation(
                     selected_coach_type,
 
                 'message':
-                    'The selected coach type is not available '
-                    'for this train.'
+                    (
+                        'The selected coach type is not available '
+                        'for this train.'
+                    )
 
             }
 
         )
+
 
     # ========================================================
     # FIND AVAILABLE SEATS
@@ -1097,21 +1050,24 @@ def seat_recommendation(
 
     available_seats = []
 
+
     for coach in coaches:
+
 
         for seat in coach.seats.all():
 
+
             # ------------------------------------------------
-            # Ignore inactive seats
+            # IGNORE INACTIVE SEATS
             # ------------------------------------------------
 
             if not seat.is_active:
 
                 continue
 
+
             # ------------------------------------------------
-            # Check whether seat is unavailable for the
-            # selected journey
+            # CHECK WHETHER SEAT IS UNAVAILABLE
             # ------------------------------------------------
 
             if is_seat_unavailable(
@@ -1128,8 +1084,9 @@ def seat_recommendation(
 
                 continue
 
+
             # ------------------------------------------------
-            # Add available seat
+            # ADD AVAILABLE SEAT
             # ------------------------------------------------
 
             available_seats.append({
@@ -1142,8 +1099,9 @@ def seat_recommendation(
 
             })
 
+
     # ========================================================
-    # CHECK SEAT AVAILABILITY
+    # CHECK WHETHER ENOUGH SEATS ARE AVAILABLE
     # ========================================================
 
     if len(
@@ -1170,183 +1128,421 @@ def seat_recommendation(
                     selected_coach_type,
 
                 'message':
-                    'Sorry, enough seats are not available '
-                    'in the selected coach type for all passengers.'
+                    (
+                        'Sorry, enough seats are not available '
+                        'in the selected coach type for all '
+                        'passengers.'
+                    )
 
             }
 
         )
 
+
     # ========================================================
-    # CREATE WORKING COPY
+    # CALL INTELLIGENT SEAT ALLOCATION ALGORITHM
     # ========================================================
 
-    remaining_seats = list(
-        available_seats
+    allocation_result = (
+
+        allocate_seats_for_passengers(
+
+            passengers=
+                passengers,
+
+            available_seats=
+                available_seats
+
+        )
+
     )
 
-    allocated_seats = []
 
     # ========================================================
-    # ALLOCATE SEATS FOR EACH PASSENGER
+    # CHECK WHETHER ALLOCATION WAS SUCCESSFUL
     # ========================================================
 
-    for passenger in passengers:
+    if not allocation_result.get(
 
-        preferred_seat = None
+        'success'
+
+    ):
+
+        return render(
+
+            request,
+
+            'ticket_booking/allocation_result.html',
+
+            {
+
+                'train':
+                    train,
+
+                'success':
+                    False,
+
+                'selected_coach_type':
+                    selected_coach_type,
+
+                'message':
+                    allocation_result.get(
+
+                        'message',
+
+                        'Unable to allocate suitable seats.'
+
+                    ),
+
+                'allocated_seats':
+                    allocation_result.get(
+
+                        'allocated_seats',
+
+                        []
+
+                    ),
+
+            }
+
+        )
+
+
+    # ========================================================
+    # GET SUCCESSFULLY ALLOCATED SEATS
+    # ========================================================
+
+    allocated_seats = (
+
+        allocation_result.get(
+
+            'allocated_seats',
+
+            []
+
+        )
+
+    )
+
+
+    # ========================================================
+    # ADD EVALUATION INFORMATION
+    #
+    # This information is used by allocation_result.html.
+    # ========================================================
+
+    for allocation in allocated_seats:
+
+
+        passenger = allocation.get(
+
+            'passenger',
+
+            {}
+
+        )
+
 
         # ----------------------------------------------------
-        # GENERAL COACH
-        #
-        # Preferred berth selection is disabled for GEN.
-        # Therefore, the algorithm simply selects the first
-        # available seat.
+        # GET REQUESTED BERTH PREFERENCE
         # ----------------------------------------------------
 
-        if selected_coach_type == 'GEN':
+        requested_berth = passenger.get(
 
-            preferred_seat = (
-                remaining_seats[0]
+            'berth_preference'
+
+        )
+
+
+        allocation[
+
+            'berth_preference'
+
+        ] = requested_berth
+
+
+        # ----------------------------------------------------
+        # CHECK BERTH PREFERENCE FULFILLED
+        # ----------------------------------------------------
+
+        if requested_berth:
+
+            requested_berth_normalized = str(
+
+                requested_berth
+
+            ).strip().lower()
+
+
+            actual_seat_type = str(
+
+                allocation.get(
+
+                    'seat_type',
+
+                    ''
+
+                )
+
+            ).strip().lower()
+
+
+            allocation[
+
+                'berth_preference_fulfilled'
+
+            ] = (
+
+                requested_berth_normalized
+
+                in
+
+                actual_seat_type
+
             )
-
-        # ----------------------------------------------------
-        # RESERVED COACHES
-        #
-        # SL / 3A / 2A / 1A
-        #
-        # Try to satisfy passenger's berth preference.
-        # ----------------------------------------------------
 
         else:
 
-            berth_preference = (
+            allocation[
 
-                passenger.get(
-                    'berth_preference'
-                )
+                'berth_preference_fulfilled'
 
-            )
+            ] = False
 
-            # ------------------------------------------------
-            # Try to find preferred berth
-            # ------------------------------------------------
 
-            if berth_preference:
+        # ----------------------------------------------------
+        # EXPLICIT SEAT PREFERENCE
+        # ----------------------------------------------------
 
-                for item in remaining_seats:
+        preferred_seat_id = passenger.get(
 
-                    seat = item[
-                        'seat'
-                    ]
+            'preferred_seat_id'
 
-                    seat_type = (
+        )
 
-                        seat.get_seat_type_display()
+
+        allocation[
+
+            'was_explicitly_selected'
+
+        ] = bool(
+
+            preferred_seat_id
+
+        )
+
+
+        # ----------------------------------------------------
+        # CHECK EXPLICIT SEAT FULFILLED
+        # ----------------------------------------------------
+
+        if preferred_seat_id:
+
+            try:
+
+                allocation[
+
+                    'explicit_seat_fulfilled'
+
+                ] = (
+
+                    int(
+
+                        preferred_seat_id
 
                     )
 
-                    if (
+                    ==
 
-                        berth_preference.lower()
+                    int(
 
-                        in
+                        allocation.get(
 
-                        seat_type.lower()
+                            'seat_id'
 
-                    ):
+                        )
 
-                        preferred_seat = item
-
-                        break
-
-            # ------------------------------------------------
-            # If preferred berth is unavailable,
-            # use first available seat.
-            # ------------------------------------------------
-
-            if preferred_seat is None:
-
-                preferred_seat = (
-
-                    remaining_seats[0]
+                    )
 
                 )
 
-        # ====================================================
-        # REMOVE SELECTED SEAT FROM WORKING LIST
-        # ====================================================
+            except (
 
-        remaining_seats.remove(
+                TypeError,
 
-            preferred_seat
+                ValueError
+
+            ):
+
+                allocation[
+
+                    'explicit_seat_fulfilled'
+
+                ] = False
+
+        else:
+
+            allocation[
+
+                'explicit_seat_fulfilled'
+
+            ] = False
+
+
+        # ----------------------------------------------------
+        # CHECK COMFORT SEAT
+        #
+        # Lower and Side Lower are considered comfortable.
+        # ----------------------------------------------------
+
+        seat_type = str(
+
+            allocation.get(
+
+                'seat_type',
+
+                ''
+
+            )
+
+        ).strip().lower()
+
+
+        allocation[
+
+            'comfort_seat_allocated'
+
+        ] = (
+
+            'lower berth'
+
+            in
+
+            seat_type
+
+            or
+
+            'side lower'
+
+            in
+
+            seat_type
 
         )
 
+
         # ----------------------------------------------------
-        # Get selected seat
+        # GET PRIORITY
         # ----------------------------------------------------
 
-        selected_seat = (
+        allocation[
 
-            preferred_seat[
-                'seat'
-            ]
+            'priority'
+
+        ] = passenger.get(
+
+            'priority',
+
+            'normal'
 
         )
 
+
         # ----------------------------------------------------
-        # Get selected coach
+        # CHECK SAME COACH AS GROUP MEMBER
+        #
+        # Count how many allocated passengers have the same
+        # coach. If more than one passenger is in the coach,
+        # they are considered part of the same group.
         # ----------------------------------------------------
 
-        selected_coach = (
+        current_coach_id = allocation.get(
 
-            preferred_seat[
-                'coach'
-            ]
+            'coach_id'
 
         )
 
-        # ====================================================
-        # STORE ALLOCATION
-        # ====================================================
 
-        allocated_seats.append({
+        same_coach_count = 0
 
-            'passenger':
-                passenger,
 
-            'seat_id':
-                selected_seat.id,
+        for other_allocation in allocated_seats:
 
-            'seat_number':
-                selected_seat.seat_number,
+            if (
 
-            'seat_type':
-                selected_seat.get_seat_type_display(),
+                other_allocation.get(
 
-            'coach_number':
-                selected_coach.coach_number,
+                    'coach_id'
 
-            'coach_type':
-                selected_coach.get_coach_type_display(),
+                )
 
-        })
+                ==
+
+                current_coach_id
+
+            ):
+
+                same_coach_count += 1
+
+
+        allocation[
+
+            'same_coach_as_group'
+
+        ] = (
+
+            same_coach_count > 1
+
+        )
+
 
     # ========================================================
     # STORE ALLOCATION IN SESSION
     # ========================================================
 
     request.session[
+
         'allocated_seats'
+
     ] = allocated_seats
 
-    # --------------------------------------------------------
-    # Store selected coach type as well
-    # --------------------------------------------------------
+
+    # ========================================================
+    # STORE ALLOCATED COACH TYPE
+    # ========================================================
 
     request.session[
+
         'allocated_coach_type'
+
     ] = selected_coach_type
+
+
+    # ========================================================
+    # GET SOURCE STATION
+    # ========================================================
+
+    source_station = get_object_or_404(
+
+        Station,
+
+        id=source_id
+
+    )
+
+
+    # ========================================================
+    # GET DESTINATION STATION
+    # ========================================================
+
+    destination_station = get_object_or_404(
+
+        Station,
+
+        id=destination_id
+
+    )
+
 
     # ========================================================
     # DISPLAY ALLOCATION RESULT
@@ -1369,15 +1565,37 @@ def seat_recommendation(
             'selected_coach_type':
                 selected_coach_type,
 
+            'source_station':
+                source_station,
+
+            'destination_station':
+                destination_station,
+
+            'travel_date':
+                travel_date,
+
             'success':
                 True,
+
+            'message':
+                allocation_result.get(
+
+                    'message',
+
+                    (
+                        'Seats successfully allocated '
+                        'using the intelligent seat allocation '
+                        'algorithm.'
+                    )
+
+                ),
 
         }
 
     )
-
-
-# ============================================================
+  
+  
+  # ============================================================
 # ALLOCATE SEATS
 #
 # COMPATIBILITY FUNCTION
@@ -1926,6 +2144,268 @@ def payment(
 
             'booking':
                 booking,
+
+        }
+
+    )
+
+
+# ============================================================
+# MULTIPLE PASSENGER BOOKING SUMMARY
+#
+# Displays all passengers and their intelligently
+# allocated seats before proceeding to payment.
+# ============================================================
+
+def multiple_booking_summary(
+    request
+):
+
+    # --------------------------------------------------------
+    # Get allocation data from session
+    # --------------------------------------------------------
+
+    allocated_seats = request.session.get(
+        'allocated_seats'
+    )
+
+    # --------------------------------------------------------
+    # Get selected train
+    # --------------------------------------------------------
+
+    train_id = request.session.get(
+        'selected_train_id'
+    )
+
+    # --------------------------------------------------------
+    # Validate allocation data
+    # --------------------------------------------------------
+
+    if not allocated_seats:
+
+        return redirect(
+            'ticket_booking'
+        )
+
+    # --------------------------------------------------------
+    # If train ID is not stored in session,
+    # try to get it from the first allocated seat.
+    #
+    # The allocation currently stores seat information,
+    # so the train is better retrieved from the request URL
+    # in the next update if necessary.
+    # --------------------------------------------------------
+
+    if not train_id:
+
+        return redirect(
+            'ticket_booking'
+        )
+
+    train = get_object_or_404(
+
+        Train,
+
+        id=train_id
+
+    )
+
+    # --------------------------------------------------------
+    # Get journey details
+    # --------------------------------------------------------
+
+    source_id = request.session.get(
+        'source_station_id'
+    )
+
+    destination_id = request.session.get(
+        'destination_station_id'
+    )
+
+    travel_date = request.session.get(
+        'travel_date'
+    )
+
+    # --------------------------------------------------------
+    # Get stations
+    # --------------------------------------------------------
+
+    source_station = get_object_or_404(
+
+        Station,
+
+        id=source_id
+
+    )
+
+    destination_station = get_object_or_404(
+
+        Station,
+
+        id=destination_id
+
+    )
+
+    # --------------------------------------------------------
+    # Calculate journey distance
+    # --------------------------------------------------------
+
+    journey_data = get_journey_distance(
+
+        train=train,
+
+        source_id=source_id,
+
+        destination_id=destination_id
+
+    )
+
+    # --------------------------------------------------------
+    # Calculate fare for each passenger
+    # --------------------------------------------------------
+
+    total_fare = 0
+
+    passenger_data = []
+
+    for allocation in allocated_seats:
+
+        coach_type = allocation.get(
+            'coach_type'
+        )
+
+        # ----------------------------------------------------
+        # Convert displayed coach type into fare-compatible
+        # coach type where necessary.
+        # ----------------------------------------------------
+
+        if coach_type == 'Sleeper':
+
+            fare_coach_type = 'SL'
+
+        elif coach_type == 'AC 3 Tier':
+
+            fare_coach_type = '3A'
+
+        elif coach_type == 'AC 2 Tier':
+
+            fare_coach_type = '2A'
+
+        elif coach_type == 'First AC':
+
+            fare_coach_type = '1A'
+
+        else:
+
+            fare_coach_type = 'GEN'
+
+        # ----------------------------------------------------
+        # Calculate passenger fare
+        # ----------------------------------------------------
+
+        fare_data = calculate_fare(
+
+            distance=
+                journey_data[
+                    'distance'
+                ],
+
+            stop_segments=
+                journey_data[
+                    'stop_segments'
+                ],
+
+            coach_type=
+                fare_coach_type
+
+        )
+
+        passenger_fare = fare_data[
+            'total_fare'
+        ]
+
+        total_fare += passenger_fare
+
+        # ----------------------------------------------------
+        # Create passenger summary data
+        # ----------------------------------------------------
+
+        passenger_data.append({
+
+            'passenger':
+                allocation.get(
+                    'passenger'
+                ),
+
+            'seat_id':
+                allocation.get(
+                    'seat_id'
+                ),
+
+            'seat_number':
+                allocation.get(
+                    'seat_number'
+                ),
+
+            'seat_type':
+                allocation.get(
+                    'seat_type'
+                ),
+
+            'coach_number':
+                allocation.get(
+                    'coach_number'
+                ),
+
+            'coach_type':
+                allocation.get(
+                    'coach_type'
+                ),
+
+            'fare':
+                passenger_fare,
+
+        })
+
+    # --------------------------------------------------------
+    # Render multiple passenger booking summary
+    # --------------------------------------------------------
+
+    return render(
+
+        request,
+
+        'ticket_booking/multiple_booking_summary.html',
+
+        {
+
+            'train':
+                train,
+
+            'source_station':
+                source_station,
+
+            'destination_station':
+                destination_station,
+
+            'travel_date':
+                travel_date,
+
+            'passenger_data':
+                passenger_data,
+
+            'total_fare':
+                total_fare,
+
+            'distance':
+                journey_data[
+                    'distance'
+                ],
+
+            'distance_source':
+                journey_data[
+                    'distance_source'
+                ],
 
         }
 

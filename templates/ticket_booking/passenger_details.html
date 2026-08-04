@@ -1,6 +1,10 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta name="viewport"
@@ -15,302 +19,919 @@
         }
 
         body {
+
             margin: 0;
+
             padding: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            color: #222;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                #f3f6fa;
+
+            color:
+                #1f2937;
+
         }
+
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
 
         .container {
+
             width: 90%;
-            max-width: 850px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+
+            max-width: 1100px;
+
+            margin:
+                40px auto;
+
         }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 10px;
+
+        /* =====================================================
+           PAGE HEADER
+        ===================================================== */
+
+        .page-header {
+
+            background:
+                white;
+
+            padding:
+                25px 30px;
+
+            border-radius:
+                12px;
+
+            margin-bottom:
+                25px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.08
+                );
+
         }
 
-        .journey-info {
-            background: #f0f6ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
+        .page-header h1 {
+
+            margin:
+                0 0 10px 0;
+
+            color:
+                #123b66;
+
+            font-size:
+                28px;
+
         }
 
-        .journey-info p {
-            margin: 6px 0;
+        .page-header p {
+
+            margin:
+                5px 0;
+
+            color:
+                #555;
+
+            font-size:
+                15px;
+
         }
 
-        .error {
-            background: #ffe5e5;
-            color: #b00020;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
+
+        /* =====================================================
+           ERROR MESSAGE
+        ===================================================== */
+
+        .error-message {
+
+            background:
+                #fee2e2;
+
+            color:
+                #991b1b;
+
+            padding:
+                15px 20px;
+
+            border-left:
+                5px solid #dc2626;
+
+            border-radius:
+                8px;
+
+            margin-bottom:
+                20px;
+
+            font-weight:
+                bold;
+
         }
+
+
+        /* =====================================================
+           JOURNEY INFORMATION
+        ===================================================== */
+
+        .journey-card {
+
+            background:
+                white;
+
+            padding:
+                20px 25px;
+
+            border-radius:
+                12px;
+
+            margin-bottom:
+                25px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.08
+                );
+
+        }
+
+        .journey-card h2 {
+
+            margin-top:
+                0;
+
+            color:
+                #123b66;
+
+            font-size:
+                20px;
+
+        }
+
+        .journey-details {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    1fr
+                );
+
+            gap:
+                15px;
+
+        }
+
+        .journey-item {
+
+            background:
+                #f5f8fc;
+
+            padding:
+                12px 15px;
+
+            border-radius:
+                8px;
+
+        }
+
+        .journey-item strong {
+
+            color:
+                #123b66;
+
+        }
+
+
+        /* =====================================================
+           PASSENGER CARD
+        ===================================================== */
 
         .passenger-card {
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            background: #fafafa;
+
+            background:
+                white;
+
+            padding:
+                25px 30px;
+
+            border-radius:
+                12px;
+
+            margin-bottom:
+                25px;
+
+            box-shadow:
+                0 4px 15px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.08
+                );
+
         }
 
-        .passenger-card h3 {
-            margin-top: 0;
-            color: #333;
+        .passenger-title {
+
+            color:
+                #123b66;
+
+            font-size:
+                22px;
+
+            margin-top:
+                0;
+
+            margin-bottom:
+                20px;
+
+            padding-bottom:
+                12px;
+
+            border-bottom:
+                2px solid
+                #e5e7eb;
+
         }
+
+
+        /* =====================================================
+           FORM GRID
+        ===================================================== */
 
         .form-group {
-            margin-bottom: 15px;
+
+            margin-bottom:
+                18px;
+
+        }
+
+        .form-row {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(
+                    2,
+                    1fr
+                );
+
+            gap:
+                24px;
+
         }
 
         label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
+
+            display:
+                block;
+
+            font-weight:
+                bold;
+
+            margin-bottom:
+                8px;
+
+            color:
+                #374151;
+
+            font-size:
+                16px;
+
         }
 
         input,
         select {
-            width: 100%;
-            padding: 11px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 15px;
+
+            width:
+                100%;
+
+            padding:
+                14px 15px;
+
+            border:
+                1px solid
+                #cbd5e1;
+
+            border-radius:
+                8px;
+
+            font-size:
+                16px;
+
+            background:
+                white;
+
+            color:
+                #111827;
+
+            outline:
+                none;
+
+            transition:
+                border-color
+                0.2s;
+
         }
 
         input:focus,
         select:focus {
-            outline: none;
-            border-color: #007bff;
+
+            border-color:
+                #2563eb;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(
+                    37,
+                    99,
+                    235,
+                    0.12
+                );
+
         }
 
-        .submit-btn {
-            width: 100%;
-            padding: 14px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 7px;
-            font-size: 17px;
-            cursor: pointer;
+
+        /* =====================================================
+           SMART ALLOCATION INFORMATION
+        ===================================================== */
+
+        .smart-allocation-info {
+
+            background:
+                #eef5ff;
+
+            border-left:
+                5px solid
+                #123b66;
+
+            padding:
+                15px 18px;
+
+            border-radius:
+                8px;
+
+            margin-top:
+                5px;
+
+            margin-bottom:
+                10px;
+
+            line-height:
+                1.6;
+
+            color:
+                #1f2937;
+
         }
 
-        .submit-btn:hover {
-            background: #0056b3;
+        .smart-allocation-info strong {
+
+            color:
+                #123b66;
+
+        }
+
+
+        /* =====================================================
+           BUTTON SECTION
+        ===================================================== */
+
+        .button-section {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            margin-top:
+                30px;
+
+            padding:
+                20px 0;
+
+        }
+
+        .btn {
+
+            display:
+                inline-block;
+
+            padding:
+                14px 28px;
+
+            border:
+                none;
+
+            border-radius:
+                8px;
+
+            font-size:
+                16px;
+
+            font-weight:
+                bold;
+
+            cursor:
+                pointer;
+
+            text-decoration:
+                none;
+
+            transition:
+                0.2s;
+
+        }
+
+        .btn-back {
+
+            background:
+                #6b7280;
+
+            color:
+                white;
+
+        }
+
+        .btn-back:hover {
+
+            background:
+                #4b5563;
+
+        }
+
+        .btn-continue {
+
+            background:
+                #123b66;
+
+            color:
+                white;
+
+        }
+
+        .btn-continue:hover {
+
+            background:
+                #0d2d4d;
+
+        }
+
+
+        /* =====================================================
+           RESPONSIVE DESIGN
+        ===================================================== */
+
+        @media (
+            max-width:
+            700px
+        ) {
+
+            .container {
+
+                width:
+                    95%;
+
+                margin:
+                    20px auto;
+
+            }
+
+            .form-row {
+
+                grid-template-columns:
+                    1fr;
+
+                gap:
+                    0;
+
+            }
+
+            .journey-details {
+
+                grid-template-columns:
+                    1fr;
+
+            }
+
+            .passenger-card {
+
+                padding:
+                    20px;
+
+            }
+
+            .button-section {
+
+                flex-direction:
+                    column;
+
+                gap:
+                    15px;
+
+            }
+
+            .btn {
+
+                width:
+                    100%;
+
+                text-align:
+                    center;
+
+            }
+
         }
 
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="container">
 
-    <h1>Passenger Details</h1>
 
-    <div class="journey-info">
+    <!-- =====================================================
+         PAGE HEADER
+    ====================================================== -->
+
+    <div class="page-header">
+
+        <h1>
+            Passenger Details
+        </h1>
 
         <p>
-            <strong>Train:</strong>
-            {{ train.train_name }}
-            ({{ train.train_number }})
+            Please enter the details of all passengers
+            travelling on this journey.
         </p>
 
         <p>
-            <strong>From:</strong>
-            {{ source_station.station_name }}
-        </p>
-
-        <p>
-            <strong>To:</strong>
-            {{ destination_station.station_name }}
-        </p>
-
-        <p>
-            <strong>Travel Date:</strong>
-            {{ travel_date }}
-        </p>
-
-        <p>
-            <strong>Number of Passengers:</strong>
-            {{ passenger_count }}
+            The information provided will be used by the
+            intelligent seat allocation algorithm to recommend
+            suitable seats.
         </p>
 
     </div>
 
 
+    <!-- =====================================================
+         ERROR MESSAGE
+    ====================================================== -->
+
     {% if error %}
 
-        <div class="error">
+        <div class="error-message">
+
             {{ error }}
+
         </div>
 
     {% endif %}
 
 
+    <!-- =====================================================
+         JOURNEY DETAILS
+    ====================================================== -->
+
+    <div class="journey-card">
+
+        <h2>
+            Journey Details
+        </h2>
+
+        <div class="journey-details">
+
+
+            <div class="journey-item">
+
+                <strong>
+                    Train:
+                </strong>
+
+                {{ train.train_number }}
+                -
+                {{ train.train_name }}
+
+            </div>
+
+
+            <div class="journey-item">
+
+                <strong>
+                    From:
+                </strong>
+
+                {{ source_station.station_name }}
+
+            </div>
+
+
+            <div class="journey-item">
+
+                <strong>
+                    To:
+                </strong>
+
+                {{ destination_station.station_name }}
+
+            </div>
+
+
+            <div class="journey-item">
+
+                <strong>
+                    Travel Date:
+                </strong>
+
+                {{ travel_date }}
+
+            </div>
+
+
+            <div class="journey-item">
+
+                <strong>
+                    Number of Passengers:
+                </strong>
+
+                {{ passenger_count }}
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         PASSENGER FORM
+    ====================================================== -->
+
     <form method="POST">
 
-        {% csrf_token %}
+    {% csrf_token %}
+
+    {% for i in passenger_range %}
+
+        <div class="passenger-card">
+
+            <h2 class="passenger-title">
+                Passenger {{ forloop.counter }}
+            </h2>
+
+            <!-- Full Name -->
+            <div class="form-group">
+
+                <label for="full_name_{{ i }}">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="full_name_{{ i }}"
+                    name="full_name_{{ i }}"
+                    placeholder="Enter passenger full name"
+                    required
+                >
+
+            </div>
 
 
-        {% for i in "123456" %}
+            <!-- Age + Gender -->
+            <div class="form-row">
 
-            {% if forloop.counter <= passenger_count %}
+                <div class="form-group">
 
-                <div class="passenger-card">
+                    <label for="age_{{ i }}">
+                        Age
+                    </label>
 
-                    <h3>
-                        Passenger {{ forloop.counter }}
-                    </h3>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Full Name
-                        </label>
-
-                        <input
-                            type="text"
-                            name="full_name_{{ forloop.counter0 }}"
-                            placeholder="Enter passenger full name"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Age
-                        </label>
-
-                        <input
-                            type="number"
-                            name="age_{{ forloop.counter0 }}"
-                            min="1"
-                            max="120"
-                            placeholder="Enter age"
-                            required
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Gender
-                        </label>
-
-                        <select
-                            name="gender_{{ forloop.counter0 }}"
-                            required
-                        >
-
-                            <option value="">
-                                Select Gender
-                            </option>
-
-                            <option value="MALE">
-                                Male
-                            </option>
-
-                            <option value="FEMALE">
-                                Female
-                            </option>
-
-                            <option value="OTHER">
-                                Other
-                            </option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Aadhaar Number
-                        </label>
-
-                        <input
-                            type="text"
-                            name="aadhaar_number_{{ forloop.counter0 }}"
-                            maxlength="12"
-                            placeholder="Enter Aadhaar Number"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Berth Preference
-                        </label>
-
-                        <select
-                            name="berth_preference_{{ forloop.counter0 }}"
-                        >
-
-                            <option value="">
-                                No Preference
-                            </option>
-
-                            <option value="LOWER">
-                                Lower
-                            </option>
-
-                            <option value="MIDDLE">
-                                Middle
-                            </option>
-
-                            <option value="UPPER">
-                                Upper
-                            </option>
-
-                            <option value="SIDE_LOWER">
-                                Side Lower
-                            </option>
-
-                            <option value="SIDE_UPPER">
-                                Side Upper
-                            </option>
-
-                        </select>
-
-                    </div>
+                    <input
+                        type="number"
+                        id="age_{{ i }}"
+                        name="age_{{ i }}"
+                        min="1"
+                        max="120"
+                        placeholder="Enter age"
+                        required
+                    >
 
                 </div>
 
-            {% endif %}
 
-        {% endfor %}
+                <div class="form-group">
 
+                    <label for="gender_{{ i }}">
+                        Gender
+                    </label>
+
+                    <select
+                        id="gender_{{ i }}"
+                        name="gender_{{ i }}"
+                        required
+                    >
+
+                        <option value="">
+                            Select Gender
+                        </option>
+
+                        <option value="MALE">
+                            Male
+                        </option>
+
+                        <option value="FEMALE">
+                            Female
+                        </option>
+
+                        <option value="OTHER">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Aadhaar -->
+            <div class="form-group">
+
+                <label for="aadhaar_number_{{ i }}">
+                    Aadhaar Number
+                </label>
+
+                <input
+                    type="text"
+                    id="aadhaar_number_{{ i }}"
+                    name="aadhaar_number_{{ i }}"
+                    maxlength="12"
+                    minlength="12"
+                    placeholder="Enter 12-digit Aadhaar number"
+                    required
+                >
+
+            </div>
+
+
+            <!-- Berth Preference + Priority -->
+            <div class="form-row">
+
+                <div class="form-group">
+
+                    <label for="berth_preference_{{ i }}">
+                        Berth Preference
+                    </label>
+
+                    <select
+                        id="berth_preference_{{ i }}"
+                        name="berth_preference_{{ i }}"
+                    >
+
+                        <option value="">
+                            No Preference
+                        </option>
+
+                        <option value="LOWER">
+                            Lower Berth
+                        </option>
+
+                        <option value="MIDDLE">
+                            Middle Berth
+                        </option>
+
+                        <option value="UPPER">
+                            Upper Berth
+                        </option>
+
+                        <option value="SIDE_LOWER">
+                            Side Lower Berth
+                        </option>
+
+                        <option value="SIDE_UPPER">
+                            Side Upper Berth
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="priority_{{ i }}">
+                        Priority / Special Assistance
+                    </label>
+
+                    <select
+                        id="priority_{{ i }}"
+                        name="priority_{{ i }}"
+                    >
+
+                        <option value="NONE">
+                            None
+                        </option>
+
+                        <option value="PREGNANT">
+                            Pregnant Woman
+                        </option>
+
+                        <option value="LACTATING">
+                            Lactating Mother
+                        </option>
+
+                        <option value="DISABILITY">
+                            Person with Disability
+                        </option>
+
+                        <option value="MEDICAL">
+                            Medical / Accessibility Requirement
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="smart-allocation-info">
+
+                <strong>
+                    Smart Seat Allocation:
+                </strong>
+
+                The intelligent seat allocation algorithm considers
+                passenger age, priority requirements, berth
+                preferences, and group booking requirements.
+
+                Senior citizens are automatically identified
+                based on age.
+
+                Passengers with special priority requirements may
+                receive suitable seats when available.
+
+                The system also attempts to keep passengers from
+                the same booking closer together.
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+
+    <div class="button-section">
+
+        <a
+            href="javascript:history.back()"
+            class="btn btn-back"
+        >
+            Back
+        </a>
 
         <button
             type="submit"
-            class="submit-btn"
+            class="btn btn-continue"
         >
-            Continue to Seat Allocation
+            Continue to Smart Seat Allocation
         </button>
 
-    </form>
+    </div>
+
+</form>
+
 
 </div>
 
+
 </body>
+
 </html>
