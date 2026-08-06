@@ -529,13 +529,16 @@
                 <label>
                     Contact Number
                 </label>
-
-                <input
-                    type="tel"
-                    name="contact_number"
-                    placeholder="Enter your contact number"
-                    required
-                >
+                    <input
+    type="tel"
+    name="contact_number"
+    placeholder="Enter your 10 digit contact number"
+    pattern="[6-9][0-9]{9}"
+    maxlength="10"
+    minlength="10"
+    oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+    required
+>
 
             </div>
 

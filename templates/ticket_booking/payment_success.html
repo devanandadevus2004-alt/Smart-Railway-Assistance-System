@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Payment Successful</title>
+
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+
+        body{
+
+            background:#f3f6fb;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            min-height:100vh;
+
+            padding:20px;
+
+        }
+
+
+        .success-card{
+
+            width:450px;
+
+            background:white;
+
+            border-radius:18px;
+
+            padding:35px;
+
+            text-align:center;
+
+            box-shadow:0 10px 25px rgba(0,0,0,0.12);
+
+        }
+
+
+        .icon{
+
+            font-size:60px;
+
+            margin-bottom:15px;
+
+        }
+
+
+        h1{
+
+            color:#0a8a2a;
+
+            margin-bottom:15px;
+
+        }
+
+
+        p{
+
+            color:#555;
+
+            font-size:16px;
+
+            margin:10px 0;
+
+        }
+
+
+        .details{
+
+            margin-top:25px;
+
+            text-align:left;
+
+            border:1px solid #ddd;
+
+            border-radius:10px;
+
+            padding:15px;
+
+        }
+
+
+        .details div{
+
+            padding:10px 0;
+
+            border-bottom:1px solid #eee;
+
+        }
+
+
+        .details div:last-child{
+
+            border-bottom:none;
+
+        }
+
+
+        .label{
+
+            font-weight:bold;
+
+            color:#444;
+
+        }
+
+
+        .home-btn{
+
+            display:inline-block;
+
+            margin-top:25px;
+
+            padding:12px 25px;
+
+            background:#005bea;
+
+            color:white;
+
+            text-decoration:none;
+
+            border-radius:10px;
+
+            font-weight:bold;
+
+            transition:.3s;
+
+        }
+
+
+        .home-btn:hover{
+
+            background:#0047b3;
+
+        }
+
+
+    </style>
+
+
+</head>
+
+
+<body>
+
+
+<div class="success-card">
+
+
+    <div class="icon">
+        ✅
+    </div>
+
+
+    <h1>
+        Payment Successful
+    </h1>
+
+
+    <p>
+        Your railway ticket booking has been confirmed.
+    </p>
+
+
+
+    <div class="details">
+
+
+        <div>
+
+            <span class="label">
+                Booking ID:
+            </span>
+
+            {{ booking.id }}
+
+        </div>
+
+
+
+        <div>
+
+            <span class="label">
+                Train:
+            </span>
+
+            {{ booking.train.train_number }}
+            -
+            {{ booking.train.train_name }}
+
+        </div>
+
+
+
+        <div>
+
+            <span class="label">
+                Travel Date:
+            </span>
+
+            {{ booking.travel_date }}
+
+        </div>
+
+
+
+        <div>
+
+            <span class="label">
+                Payment Method:
+            </span>
+
+            {{ payment_method }}
+
+        </div>
+
+
+
+        <div>
+
+            <span class="label">
+                Amount Paid:
+            </span>
+
+            ₹{{ booking.fare }}
+
+        </div>
+
+
+    </div>
+
+
+    <a href="{% url 'ticket_booking' %}" class="home-btn">
+    Go To Home
+</a>
+
+
+</div>
+
+
+</body>
+
+</html>

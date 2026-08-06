@@ -2641,17 +2641,15 @@ def confirm_booking(
 # PAYMENT
 # ============================================================
 
-def payment(
-    request,
-    booking_id
-):
+def payment(request, booking_id):
 
     booking = get_object_or_404(
-
         TicketBooking,
-
         id=booking_id
+    )
 
+    booking_passengers = BookingPassenger.objects.filter(
+        booking=booking
     )
 
     return render(
@@ -2661,14 +2659,11 @@ def payment(
         'ticket_booking/payment.html',
 
         {
-
-            'booking':
-                booking,
-
+            'booking': booking,
+            'booking_passengers': booking_passengers,
         }
 
     )
-
 
 # ============================================================
 # MULTIPLE PASSENGER BOOKING SUMMARY
@@ -3678,3 +3673,30 @@ def prioritize_lower_berths(request):
         "allocate_seats",
         train_id=request.session["selected_train_id"]
     )
+
+def process_payment(request, booking_id):
+
+    if request.method == "POST":
+
+        booking = get_object_or_404(
+            TicketBooking,
+            id=booking_id
+        )
+
+        payment_method = request.POST.get(
+            "payment_method"
+        )
+
+        # temporary payment success simulation
+
+        booking.status = "CONFIRMED"
+        booking.save()
+
+        return render(
+            request,
+            "ticket_booking/payment_success.html",
+            {
+                "booking": booking,
+                "payment_method": payment_method
+            }
+        )

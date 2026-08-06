@@ -5,9 +5,74 @@
 
     <title>Seat Preference Conflict</title>
 
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            width: 450px;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        h2 {
+            color: #d9534f;
+            margin-bottom: 25px;
+        }
+
+        p {
+            color: #444;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        button {
+            background: #0066cc;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #004c99;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+    </style>
+
 </head>
 
 <body>
+
+<div class="container">
 
     <h2>
         Lower Berth Preference Not Fully Available
@@ -40,6 +105,8 @@
     <a href="{% url 'passenger_requirements' train_id=request.session.selected_train_id %}">
         Go Back and Change Preferences
     </a>
+
+</div>
 
 </body>
 

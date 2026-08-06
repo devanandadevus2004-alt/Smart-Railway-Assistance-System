@@ -126,4 +126,11 @@ path(
     name="prioritize_lower_berths",
 ),
 
+
+path(
+    'payment/process/<int:booking_id>/',
+    views.process_payment,
+    name='process_payment'
+),
+
 ]

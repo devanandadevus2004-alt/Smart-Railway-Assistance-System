@@ -10,50 +10,287 @@
 
     <title>Payment</title>
 
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, Helvetica, sans-serif;
+        }
+
+        body{
+            background:#f3f6fb;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            min-height:100vh;
+            padding:20px;
+        }
+
+        .payment-card{
+            width:500px;
+            background:#fff;
+            border-radius:16px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.12);
+            overflow:hidden;
+        }
+
+        .header{
+            background:linear-gradient(135deg,#005bea,#00c6fb);
+            color:white;
+            padding:25px;
+            text-align:center;
+        }
+
+        .header h1{
+            font-size:30px;
+            margin-bottom:5px;
+        }
+
+        .header p{
+            opacity:.9;
+            font-size:15px;
+        }
+
+        .content{
+            padding:30px;
+        }
+
+        h2{
+            color:#333;
+            margin-bottom:18px;
+        }
+
+        .details{
+            border:1px solid #e5e5e5;
+            border-radius:10px;
+            overflow:hidden;
+            margin-bottom:25px;
+        }
+
+        .row{
+            display:flex;
+            justify-content:space-between;
+            padding:14px 18px;
+            border-bottom:1px solid #eeeeee;
+            gap:15px;
+        }
+
+        .row:last-child{
+            border-bottom:none;
+        }
+
+        .label{
+            color:#666;
+            font-weight:bold;
+            min-width:100px;
+        }
+
+        .value{
+            color:#222;
+            text-align:right;
+        }
+
+        .amount{
+            color:#0a8a2a;
+            font-size:22px;
+            font-weight:bold;
+        }
+
+        .seat-list{
+            text-align:right;
+            line-height:1.6;
+        }
+
+        .payment-buttons{
+            display:flex;
+            flex-direction:column;
+            gap:15px;
+            margin-top:20px;
+        }
+
+        .payment-buttons button{
+            padding:15px;
+            border:none;
+            border-radius:10px;
+            background:#005bea;
+            color:white;
+            font-size:16px;
+            font-weight:bold;
+            cursor:pointer;
+            transition:.3s;
+        }
+
+        .payment-buttons button:hover{
+            background:#0047b3;
+            transform:translateY(-2px);
+        }
+
+    </style>
+
 </head>
+
 
 <body>
 
-    <h1>💳 Payment</h1>
 
-    <h2>Booking Details</h2>
+<div class="payment-card">
 
-    <p>
-        Train:
-        {{ booking.train.train_number }}
-        -
-        {{ booking.train.train_name }}
-    </p>
 
-    <p>
-        Coach:
-        {{ booking.seat.coach.coach_number }}
-    </p>
+    <div class="header">
 
-    <p>
-        Seat:
-        {{ booking.seat.seat_number }}
-    </p>
+        <h1>💳 Payment</h1>
 
-    <p>
-        Travel Date:
-        {{ booking.travel_date }}
-    </p>
+        <p>Complete your booking securely</p>
 
-    <p>
-        Amount:
-        ₹{{ booking.fare }}
-    </p>
+    </div>
 
-    <hr>
 
-    <h2>Select Payment Method</h2>
+    <div class="content">
 
-    <button>UPI</button>
 
-    <button>Credit / Debit Card</button>
+        <h2>Booking Details</h2>
 
-    <button>Net Banking</button>
+
+        <div class="details">
+
+
+            <div class="row">
+
+                <span class="label">
+                    Train
+                </span>
+
+                <span class="value">
+                    {{ booking.train.train_number }}
+                    -
+                    {{ booking.train.train_name }}
+                </span>
+
+            </div>
+
+
+
+            <div class="row">
+
+                <span class="label">
+                    Coach
+                </span>
+
+                <span class="value">
+
+                    {% for passenger in booking_passengers %}
+
+                        {{ passenger.seat.coach.coach_number }}
+
+                        {% if not forloop.last %}
+                            ,
+                        {% endif %}
+
+                    {% endfor %}
+
+                </span>
+
+            </div>
+
+
+
+            <div class="row">
+
+                <span class="label">
+                    Seats
+                </span>
+
+                <span class="value seat-list">
+
+                    {% for passenger in booking_passengers %}
+
+                        {{ passenger.seat.seat_number }}
+                        ({{ passenger.seat.get_seat_type_display }})
+
+                        <br>
+
+                    {% endfor %}
+
+                </span>
+
+            </div>
+
+
+
+            <div class="row">
+
+                <span class="label">
+                    Travel Date
+                </span>
+
+                <span class="value">
+                    {{ booking.travel_date }}
+                </span>
+
+            </div>
+
+
+
+            <div class="row">
+
+                <span class="label">
+                    Amount
+                </span>
+
+                <span class="amount">
+                    ₹{{ booking.fare }}
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <h2>
+            Select Payment Method
+        </h2>
+
+
+
+        <div class="payment-buttons">
+
+    <form action="{% url 'process_payment' booking.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="payment_method" value="UPI">
+        <button type="submit">
+            📱 UPI
+        </button>
+    </form>
+
+
+    <form action="{% url 'process_payment' booking.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="payment_method" value="CARD">
+        <button type="submit">
+            💳 Credit / Debit Card
+        </button>
+    </form>
+
+
+    <form action="{% url 'process_payment' booking.id %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="payment_method" value="NET_BANKING">
+        <button type="submit">
+            🏦 Net Banking
+        </button>
+    </form>
+
+</div>
+
+    </div>
+
+
+</div>
+
 
 </body>
 
