@@ -445,7 +445,8 @@ def calculate_seat_score(
     passenger,
     seat,
     coach,
-    allocated_seats
+    allocated_seats,
+    allocation_mode="group"
 ):
 
     score = 0
@@ -717,6 +718,132 @@ def calculate_seat_score(
         )
 
 
+        # ========================================================
+    # 8A. ALLOCATION MODE
+    # ========================================================
+
+    if allocation_mode == "group":
+
+        # Strongly prefer nearby family seats
+
+        seat_distance = calculate_seat_distance(
+
+            seat,
+
+            coach,
+
+            allocated_seats
+
+        )
+
+        if seat_distance is not None:
+
+            if seat_distance <= 2:
+
+                score += 150
+
+                reasons.append(
+
+                    'Seat selected to keep family together.'
+
+                )
+
+            elif seat_distance <= 4:
+
+                score += 80
+
+                reasons.append(
+
+                    'Seat selected close to family members.'
+
+                )
+
+
+    elif allocation_mode == "lower":
+
+        # Strongly prefer lower berth
+
+        if seat_type == "lower berth":
+
+            score += 250
+
+            reasons.append(
+
+                'Lower berth prioritized as requested.'
+
+            )
+
+
+        # ========================================================
+    # 8B. COMPANION SEAT PRIORITY
+    # ========================================================
+
+    if allocated_seats:
+
+        for allocated in allocated_seats:
+
+            family_priority = get_passenger_priority(
+
+                allocated["passenger"]
+
+            )
+
+            if family_priority in [
+
+                "person with disability",
+
+                "pregnant woman",
+
+                "senior citizen",
+
+                "lactating mother"
+
+            ]:
+
+                # Same coach
+                if allocated["coach_id"] == coach.id:
+
+                    distance = abs(
+
+                        allocated["seat_number"]
+
+                        -
+
+                        seat.seat_number
+
+                    )
+
+                    if distance == 1:
+
+                        score += 180
+
+                        reasons.append(
+
+                            "Reserved immediately beside a priority family member."
+
+                        )
+
+                    elif distance <= 2:
+
+                        score += 140
+
+                        reasons.append(
+
+                            "Reserved very close to a priority family member."
+
+                        )
+
+                    elif distance <= 4:
+
+                        score += 90
+
+                        reasons.append(
+
+                            "Reserved near a priority family member."
+
+                        )
+
+
     # ========================================================
     # 9. NEARBY SEAT PRIORITY
     # ========================================================
@@ -858,7 +985,8 @@ def get_eligible_seats(
 def find_best_seat(
     passenger,
     available_seats,
-    allocated_seats
+    allocated_seats,
+    allocation_mode="group"
 ):
 
     eligible_seats = get_eligible_seats(
@@ -891,23 +1019,27 @@ def find_best_seat(
 
         score_data = calculate_seat_score(
 
-            passenger=
+                passenger=
 
-                passenger,
+                    passenger,
 
-            seat=
+                seat=
 
-                seat,
+                    seat,
 
-            coach=
+                coach=
 
-                coach,
+                    coach,
 
-            allocated_seats=
+                allocated_seats=
 
-                allocated_seats
+                    allocated_seats,
 
-        )
+                allocation_mode=
+
+                    allocation_mode
+
+            )
 
         scored_seats.append({
 
@@ -1080,7 +1212,8 @@ def calculate_matching_percentage(
 
 def allocate_seats_for_passengers(
     passengers,
-    available_seats
+    available_seats,
+    allocation_mode="group"
 ):
 
     remaining_seats = list(
@@ -1090,6 +1223,13 @@ def allocate_seats_for_passengers(
     )
 
     allocated_seats = []
+
+
+    # ========================================================
+    # RESERVED FAMILY MEMBERS
+    # ========================================================
+
+    reserved_family_members = set()
 
 
     # ========================================================
@@ -1166,23 +1306,31 @@ def allocate_seats_for_passengers(
 
     for original_index, passenger in sorted_passengers:
 
+        # Skip passengers already allocated as companions
+       # if original_index in reserved_family_members:
+           # continue
+
+
         best_option = find_best_seat(
 
-            passenger=
+                passenger=
 
-                passenger,
+                    passenger,
 
-            available_seats=
+                available_seats=
 
-                remaining_seats,
+                    remaining_seats,
 
-            allocated_seats=
+                allocated_seats=
 
-                allocated_seats
+                    allocated_seats,
 
-        )
+                allocation_mode=
 
+                    allocation_mode
 
+            )
+    
         if best_option is None:
 
             return {
@@ -1487,6 +1635,37 @@ def allocate_seats_for_passengers(
         })
 
 
+         # ========================================================
+        # RESERVE NEAREST FAMILY MEMBER
+        # ========================================================
+
+        priority = get_passenger_priority(passenger)
+
+        if priority in [
+            "senior citizen",
+            "pregnant woman",
+            "person with disability"
+        ]:
+
+            # Find first normal passenger not yet allocated
+            for next_index, next_passenger in sorted_passengers:
+
+                already_allocated = any(
+                    x["passenger_index"] == next_index
+                    for x in allocated_seats
+                )
+
+                if already_allocated:
+                    continue
+
+                if next_index in reserved_family_members:
+                    continue
+
+                if get_passenger_priority(next_passenger) == "normal":
+
+                    reserved_family_members.add(next_index)
+
+                    break
     # ========================================================
     # RESTORE ORIGINAL PASSENGER ORDER
     # ========================================================
@@ -1502,6 +1681,10 @@ def allocate_seats_for_passengers(
             ]
 
     )
+
+
+
+
 
 
     # ========================================================

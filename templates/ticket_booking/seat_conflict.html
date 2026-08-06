@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Seat Preference Conflict</title>
+
+</head>
+
+<body>
+
+    <h2>
+        Lower Berth Preference Not Fully Available
+    </h2>
+
+    <p>
+        {{ conflict.requested_lower }} passengers requested Lower Berths.
+    </p>
+
+    <p>
+        Only {{ conflict.allocated_lower }} Lower Berths are currently available.
+    </p>
+
+    <p>
+        To keep your group together, some passengers will receive nearby non-Lower Berths.
+    </p>
+
+    <form action="{% url 'continue_group_booking' %}" method="post">
+
+        {% csrf_token %}
+
+        <button type="submit">
+            Keep My Group Together
+        </button>
+
+    </form>
+
+    <br>
+
+    <a href="{% url 'passenger_requirements' train_id=request.session.selected_train_id %}">
+        Go Back and Change Preferences
+    </a>
+
+</body>
+
+</html>

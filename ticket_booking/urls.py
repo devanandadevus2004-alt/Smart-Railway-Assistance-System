@@ -84,4 +84,46 @@ path(
     name='multiple_booking_summary'
     ),
 
+    path(
+    'create-multiple-booking/',
+    views.create_multiple_booking,
+    name='create_multiple_booking'
+),
+
+path(
+    "seat-conflict/",
+    views.seat_conflict,
+    name="seat_conflict"
+),
+
+path(
+    "allocation-strategy/",
+    views.save_allocation_strategy,
+    name="save_allocation_strategy"
+),
+
+path(
+    "continue-group-booking/",
+    views.continue_group_booking,
+    name="continue_group_booking"
+),
+
+path(
+    "allocation-result/",
+    views.allocation_result,
+    name="allocation_result"
+),
+
+path(
+    "keep-group-together/",
+    views.keep_group_together,
+    name="keep_group_together",
+),
+
+path(
+    "prioritize-lower-berths/",
+    views.prioritize_lower_berths,
+    name="prioritize_lower_berths",
+),
+
 ]

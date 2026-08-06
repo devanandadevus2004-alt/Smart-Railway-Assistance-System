@@ -12,7 +12,9 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Multiple Passenger Booking Summary</title>
+    <title>
+        Multiple Passenger Booking Summary
+    </title>
 
     <style>
 
@@ -32,6 +34,7 @@
 
         }
 
+
         .container {
 
             max-width:
@@ -44,6 +47,7 @@
                 20px;
 
         }
+
 
         .header {
 
@@ -65,6 +69,7 @@
 
         }
 
+
         .header h1 {
 
             margin-top:
@@ -75,12 +80,14 @@
 
         }
 
+
         .journey {
 
             line-height:
                 1.8;
 
         }
+
 
         .passenger-card {
 
@@ -102,6 +109,7 @@
 
         }
 
+
         .passenger-card h2 {
 
             margin-top:
@@ -111,6 +119,7 @@
                 #1f3c88;
 
         }
+
 
         .details {
 
@@ -125,6 +134,7 @@
 
         }
 
+
         .detail {
 
             padding:
@@ -138,6 +148,7 @@
 
         }
 
+
         .detail strong {
 
             display:
@@ -147,6 +158,7 @@
                 5px;
 
         }
+
 
         .fare {
 
@@ -169,6 +181,7 @@
                 bold;
 
         }
+
 
         .total-section {
 
@@ -193,6 +206,7 @@
 
         }
 
+
         .total-fare {
 
             font-size:
@@ -206,6 +220,7 @@
 
         }
 
+
         .button-container {
 
             margin-top:
@@ -217,7 +232,11 @@
             justify-content:
                 space-between;
 
+            align-items:
+                center;
+
         }
+
 
         .btn {
 
@@ -242,7 +261,11 @@
             cursor:
                 pointer;
 
+            font-size:
+                15px;
+
         }
+
 
         .btn-back {
 
@@ -254,6 +277,15 @@
 
         }
 
+
+        .btn-back:hover {
+
+            background:
+                #5a6268;
+
+        }
+
+
         .btn-payment {
 
             background:
@@ -263,6 +295,26 @@
                 white;
 
         }
+
+
+        .btn-payment:hover {
+
+            background:
+                #162d68;
+
+        }
+
+
+        .payment-form {
+
+            display:
+                inline-block;
+
+            margin:
+                0;
+
+        }
+
 
         @media (
             max-width: 700px
@@ -275,6 +327,7 @@
 
             }
 
+
             .button-container {
 
                 flex-direction:
@@ -283,12 +336,30 @@
                 gap:
                     10px;
 
+                align-items:
+                    stretch;
+
             }
+
 
             .btn {
 
                 text-align:
                     center;
+
+                width:
+                    100%;
+
+                box-sizing:
+                    border-box;
+
+            }
+
+
+            .payment-form {
+
+                width:
+                    100%;
 
             }
 
@@ -315,6 +386,7 @@
             Multiple Passenger Booking Summary
         </h1>
 
+
         <div class="journey">
 
             <strong>
@@ -325,6 +397,7 @@
 
             <br>
 
+
             <strong>
                 Train Number:
             </strong>
@@ -332,6 +405,7 @@
             {{ train.train_number }}
 
             <br>
+
 
             <strong>
                 From:
@@ -341,6 +415,7 @@
 
             <br>
 
+
             <strong>
                 To:
             </strong>
@@ -348,6 +423,7 @@
             {{ destination_station.station_name }}
 
             <br>
+
 
             <strong>
                 Travel Date:
@@ -369,6 +445,7 @@
 
     <div class="passenger-card">
 
+
         <h2>
 
             Passenger {{ forloop.counter }}
@@ -379,7 +456,9 @@
         <div class="details">
 
 
-            <!-- Passenger Name -->
+            <!-- ========================================= -->
+            <!-- PASSENGER NAME -->
+            <!-- ========================================= -->
 
             <div class="detail">
 
@@ -392,7 +471,9 @@
             </div>
 
 
-            <!-- Age -->
+            <!-- ========================================= -->
+            <!-- AGE -->
+            <!-- ========================================= -->
 
             <div class="detail">
 
@@ -405,7 +486,9 @@
             </div>
 
 
-            <!-- Gender -->
+            <!-- ========================================= -->
+            <!-- GENDER -->
+            <!-- ========================================= -->
 
             <div class="detail">
 
@@ -418,7 +501,9 @@
             </div>
 
 
-            <!-- Coach -->
+            <!-- ========================================= -->
+            <!-- COACH -->
+            <!-- ========================================= -->
 
             <div class="detail">
 
@@ -431,7 +516,9 @@
             </div>
 
 
-            <!-- Coach Type -->
+            <!-- ========================================= -->
+            <!-- COACH TYPE -->
+            <!-- ========================================= -->
 
             <div class="detail">
 
@@ -444,7 +531,9 @@
             </div>
 
 
-            <!-- Seat Number -->
+            <!-- ========================================= -->
+            <!-- SEAT NUMBER -->
+            <!-- ========================================= -->
 
             <div class="detail">
 
@@ -457,7 +546,9 @@
             </div>
 
 
-            <!-- Seat Type -->
+            <!-- ========================================= -->
+            <!-- SEAT TYPE -->
+            <!-- ========================================= -->
 
             <div class="detail">
 
@@ -473,7 +564,9 @@
         </div>
 
 
-        <!-- Passenger Fare -->
+        <!-- ============================================= -->
+        <!-- PASSENGER FARE -->
+        <!-- ============================================= -->
 
         <div class="fare">
 
@@ -490,10 +583,16 @@
     {% empty %}
 
 
+    <!-- ================================================= -->
+    <!-- NO PASSENGERS -->
+    <!-- ================================================= -->
+
     <div class="passenger-card">
 
         <h2>
+
             No passengers found.
+
         </h2>
 
     </div>
@@ -503,15 +602,20 @@
 
 
     <!-- ================================================= -->
-    <!-- TOTAL FARE -->
+    <!-- TOTAL FARE SECTION -->
     <!-- ================================================= -->
 
     <div class="total-section">
 
+
         <div>
 
             <span>
-                Total Booking Fare:
+
+                <strong>
+                    Total Booking Fare:
+                </strong>
+
             </span>
 
         </div>
@@ -526,7 +630,9 @@
 
         <div>
 
-            Distance:
+            <strong>
+                Distance:
+            </strong>
 
             {{ distance }}
 
@@ -546,6 +652,10 @@
         <div class="button-container">
 
 
+            <!-- ============================================= -->
+            <!-- BACK BUTTON -->
+            <!-- ============================================= -->
+
             <a
                 href="{% url 'ticket_booking' %}"
                 class="btn btn-back"
@@ -556,17 +666,46 @@
             </a>
 
 
-            <a
-                href="#"
-                class="btn btn-payment"
+            <!-- ============================================= -->
+            <!-- PROCEED TO PAYMENT -->
+            <!--
+            This sends a POST request to:
+            create_multiple_booking
+
+            The view will:
+            1. Check final seat availability
+            2. Create TicketBooking
+            3. Create BookingPassenger records
+            4. Create BOOKED SeatReservation records
+            5. Store travel date
+            6. Store source station
+            7. Store destination station
+            8. Redirect to payment
+            -->
+            <!-- ============================================= -->
+
+            <form
+                method="POST"
+                action="{% url 'create_multiple_booking' %}"
+                class="payment-form"
             >
 
-                Proceed to Payment
+                {% csrf_token %}
 
-            </a>
+                <button
+                    type="submit"
+                    class="btn btn-payment"
+                >
+
+                    Proceed to Payment
+
+                </button>
+
+            </form>
 
 
         </div>
+
 
     </div>
 
