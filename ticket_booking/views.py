@@ -7,6 +7,11 @@ from datetime import timedelta
 from django.utils import timezone
 from django.db import transaction
 
+
+
+from .models import TicketBooking
+from home.models import Passenger
+
 from django.shortcuts import (
     render,
     redirect,
@@ -3700,3 +3705,64 @@ def process_payment(request, booking_id):
                 "payment_method": payment_method
             }
         )
+
+
+
+
+def my_ticket_bookings(request):
+
+    if "passenger_id" not in request.session:
+        return redirect("login")
+
+    passenger = Passenger.objects.get(
+        id=request.session["passenger_id"]
+    )
+
+    bookings = TicketBooking.objects.filter(
+        passenger=passenger
+    ).order_by("-booking_date")
+
+    return render(
+        request,
+        "ticket_booking/my_ticket_bookings.html",
+        {
+            "bookings": bookings
+        }
+    )
+
+from .models import TicketBooking, BookingPassenger, SeatReservation
+
+def ticket_booking_details(request, booking_id):
+
+    if "passenger_id" not in request.session:
+        return redirect("login")
+
+    booking = get_object_or_404(
+        TicketBooking,
+        id=booking_id,
+        passenger_id=request.session["passenger_id"]
+    )
+
+    passengers = BookingPassenger.objects.filter(
+        booking=booking
+    ).select_related(
+        "seat",
+        "seat__coach"
+    )
+
+    reservation = SeatReservation.objects.filter(
+        booking=booking
+    ).select_related(
+        "source_station",
+        "destination_station"
+    ).first()
+
+    return render(
+        request,
+        "ticket_booking/ticket_booking_details.html",
+        {
+            "booking": booking,
+            "passengers": passengers,
+            "reservation": reservation,
+        }
+    )

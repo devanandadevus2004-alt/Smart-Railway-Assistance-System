@@ -133,4 +133,16 @@ path(
     name='process_payment'
 ),
 
+path(
+    "my-ticket-bookings/",
+    views.my_ticket_bookings,
+    name="my_ticket_bookings",
+),
+
+
+path(
+    "ticket-booking-details/<int:booking_id>/",
+    views.ticket_booking_details,
+    name="ticket_booking_details",
+),
 ]
