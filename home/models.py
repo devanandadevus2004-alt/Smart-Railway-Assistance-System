@@ -79,3 +79,32 @@ class Officer(models.Model):
 
     def __str__(self):
         return f"{self.full_name} - {self.station.station_name}"
+
+class Hospital(models.Model):
+
+    station = models.ForeignKey(
+        Station,
+        on_delete=models.CASCADE,
+        related_name="hospitals"
+    )
+
+    hospital_name = models.CharField(
+        max_length=200
+    )
+
+    address = models.TextField()
+
+    contact_number = models.CharField(
+        max_length=15
+    )
+
+    distance_km = models.DecimalField(
+        max_digits=4,
+        decimal_places=1
+    )
+
+    def __str__(self):
+        return (
+            f"{self.hospital_name} - "
+            f"{self.station.station_name}"
+        )

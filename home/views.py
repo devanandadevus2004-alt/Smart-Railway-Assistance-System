@@ -268,3 +268,65 @@ def cancel_booking(request, booking_id):
         booking.delete()
 
     return redirect("my_bookings")
+
+
+from .models import Hospital
+
+
+def emergency_assistance(request):
+
+    stations = Station.objects.all().order_by("station_name")
+
+    hospitals = None
+
+    selected_station = None
+
+    selected_distance = None
+
+    if request.method == "POST":
+
+        station_id = request.POST.get("station")
+
+        selected_distance = request.POST.get("distance")
+
+        if station_id:
+
+            selected_station = Station.objects.get(id=station_id)
+
+            hospitals = Hospital.objects.filter(
+                station=selected_station
+            )
+
+            if (
+                selected_distance
+                and
+                selected_distance != "all"
+            ):
+
+                hospitals = hospitals.filter(
+                    distance_km__lte=selected_distance
+                )
+
+            hospitals = hospitals.order_by(
+                "distance_km"
+            )
+
+    return render(
+
+        request,
+
+        "home/emergency_assistance.html",
+
+        {
+
+            "stations": stations,
+
+            "hospitals": hospitals,
+
+            "selected_station": selected_station,
+
+            "selected_distance": selected_distance,
+
+        }
+
+    )

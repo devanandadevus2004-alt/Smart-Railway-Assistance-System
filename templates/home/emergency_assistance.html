@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Emergency Assistance</title>
+
+    <style>
+
+        body{
+            font-family:Arial,sans-serif;
+            background:#f4f7fb;
+            margin:0;
+        }
+
+        .container{
+            width:90%;
+            max-width:1100px;
+            margin:40px auto;
+        }
+
+        h1{
+            text-align:center;
+            color:#003366;
+        }
+
+        .search-box{
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            box-shadow:0 4px 10px rgba(0,0,0,.15);
+            margin-bottom:30px;
+        }
+
+        select{
+
+            width:100%;
+            padding:12px;
+            margin:10px 0;
+            border-radius:6px;
+            border:1px solid #ccc;
+
+        }
+
+        button{
+
+            width:100%;
+            padding:12px;
+            background:#0052cc;
+            color:white;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:16px;
+
+        }
+
+        button:hover{
+
+            background:#003d99;
+
+        }
+
+        .emergency{
+
+            background:white;
+            padding:20px;
+            border-radius:10px;
+            margin-bottom:25px;
+            box-shadow:0 4px 10px rgba(0,0,0,.15);
+
+        }
+
+        .emergency h2{
+
+            color:#c62828;
+
+        }
+
+        .number{
+
+            margin:10px 0;
+            font-size:18px;
+
+        }
+
+        .hospital-card{
+
+            background:white;
+            padding:20px;
+            margin-bottom:20px;
+            border-radius:10px;
+            box-shadow:0 4px 10px rgba(0,0,0,.15);
+
+        }
+
+        .call-btn{
+
+            display:inline-block;
+            margin-top:10px;
+            background:#28a745;
+            color:white;
+            padding:10px 18px;
+            border-radius:5px;
+            text-decoration:none;
+
+        }
+
+        .call-btn:hover{
+
+            background:#218838;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🚑 Emergency Assistance</h1>
+
+<div class="search-box">
+
+<form method="POST">
+
+{% csrf_token %}
+
+<label>Select Railway Station</label>
+
+<select name="station" required>
+
+<option value="">Select Station</option>
+
+{% for station in stations %}
+
+<option
+value="{{ station.id }}"
+{% if selected_station.id == station.id %}selected{% endif %}
+>
+
+{{ station.station_name }}
+
+</option>
+
+{% endfor %}
+
+</select>
+
+<label>Maximum Distance</label>
+
+<select name="distance">
+
+<option value="all">All Hospitals</option>
+<option value="1">Within 1 km</option>
+<option value="2">Within 2 km</option>
+<option value="5">Within 5 km</option>
+<option value="10">Within 10 km</option>
+
+</select>
+
+<button type="submit">
+
+Search
+
+</button>
+
+</form>
+
+</div>
+
+
+<div class="emergency">
+
+<h2>Emergency Contacts</h2>
+
+<div class="number">🚆 Railway Helpline : <b>139</b></div>
+
+<div class="number">👮 RPF Helpline : <b>182</b></div>
+
+<div class="number">🚑 Ambulance : <b>108</b></div>
+
+<div class="number">🚓 Police : <b>112</b></div>
+
+<div class="number">👩 Women Helpline : <b>181</b></div>
+
+</div>
+
+{% if hospitals %}
+
+<h2>Nearby Hospitals</h2>
+
+{% for hospital in hospitals %}
+
+<div class="hospital-card">
+
+<h3>
+
+🏥 {{ hospital.hospital_name }}
+
+</h3>
+
+<p>
+
+📍 {{ hospital.distance_km }} km
+
+</p>
+
+<p>
+
+{{ hospital.address }}
+
+</p>
+
+<p>
+
+📞 {{ hospital.contact_number }}
+
+</p>
+
+<a
+
+href="tel:{{ hospital.contact_number }}"
+
+class="call-btn"
+
+>
+
+☎ Call Hospital
+
+</a>
+
+</div>
+
+{% endfor %}
+
+{% elif selected_station %}
+
+<div class="hospital-card">
+
+No nearby hospital information is available for this station.
+
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+</html>
