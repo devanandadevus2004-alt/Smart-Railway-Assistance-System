@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Hospital Details</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 50px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+        }
+
+        h1 {
+            color: #003366;
+            margin-bottom: 25px;
+        }
+
+        .detail {
+            margin: 18px 0;
+            font-size: 17px;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .call-btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 12px 22px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .call-btn:hover {
+            background: #218838;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 15px;
+            margin-left: 10px;
+            padding: 12px 22px;
+            background: #555;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        .back-btn:hover {
+            background: #333;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>🏥 {{ hospital.hospital_name }}</h1>
+
+        <div class="detail">
+            <span class="label">📍 Address:</span>
+            {{ hospital.address }}
+        </div>
+
+        <div class="detail">
+            <span class="label">📏 Distance:</span>
+            {{ hospital.distance_km }} km
+        </div>
+
+        <div class="detail">
+            <span class="label">📞 Contact Number:</span>
+            {{ hospital.contact_number }}
+        </div>
+
+        <a
+            href="tel:{{ hospital.contact_number }}"
+            class="call-btn"
+        >
+            ☎ Call Hospital
+        </a>
+
+        <a
+            href="{% url 'emergency_assistance' %}"
+            class="back-btn"
+        >
+            ← Back
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

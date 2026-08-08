@@ -330,3 +330,18 @@ def emergency_assistance(request):
         }
 
     )
+
+def hospital_details(request, hospital_id):
+
+    hospital = get_object_or_404(
+        Hospital,
+        id=hospital_id
+    )
+
+    return render(
+        request,
+        "home/hospital_details.html",
+        {
+            "hospital": hospital
+        }
+    )

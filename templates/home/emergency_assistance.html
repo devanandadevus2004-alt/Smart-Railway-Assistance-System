@@ -6,109 +6,191 @@
 
     <style>
 
-        body{
-            font-family:Arial,sans-serif;
-            background:#f4f7fb;
-            margin:0;
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
         }
 
-        .container{
-            width:90%;
-            max-width:1100px;
-            margin:40px auto;
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 40px auto;
         }
 
-        h1{
-            text-align:center;
-            color:#003366;
+        h1 {
+            text-align: center;
+            color: #003366;
+            margin-bottom: 30px;
         }
 
-        .search-box{
-            background:white;
-            padding:20px;
-            border-radius:10px;
-            box-shadow:0 4px 10px rgba(0,0,0,.15);
-            margin-bottom:30px;
+        /* Search Box */
+
+        .search-box {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,.15);
+            margin-bottom: 30px;
         }
 
-        select{
-
-            width:100%;
-            padding:12px;
-            margin:10px 0;
-            border-radius:6px;
-            border:1px solid #ccc;
-
+        .search-box label {
+            font-weight: bold;
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
         }
 
-        button{
+        /* Station Search */
 
-            width:100%;
-            padding:12px;
-            background:#0052cc;
-            color:white;
-            border:none;
-            border-radius:6px;
-            cursor:pointer;
-            font-size:16px;
-
+        .station-search {
+            position: relative;
+            margin-bottom: 15px;
         }
 
-        button:hover{
-
-            background:#003d99;
-
+        #station_search {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
         }
 
-        .emergency{
-
-            background:white;
-            padding:20px;
-            border-radius:10px;
-            margin-bottom:25px;
-            box-shadow:0 4px 10px rgba(0,0,0,.15);
-
+        #station_search:focus {
+            outline: none;
+            border-color: #0052cc;
         }
 
-        .emergency h2{
+        /* Suggestions */
 
-            color:#c62828;
-
+        #station_suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ccc;
+            border-top: none;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
         }
 
-        .number{
-
-            margin:10px 0;
-            font-size:18px;
-
+        .station-option {
+            padding: 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
         }
 
-        .hospital-card{
-
-            background:white;
-            padding:20px;
-            margin-bottom:20px;
-            border-radius:10px;
-            box-shadow:0 4px 10px rgba(0,0,0,.15);
-
+        .station-option:hover {
+            background: #f0f4ff;
         }
 
-        .call-btn{
-
-            display:inline-block;
-            margin-top:10px;
-            background:#28a745;
-            color:white;
-            padding:10px 18px;
-            border-radius:5px;
-            text-decoration:none;
-
+        .no-station {
+            padding: 12px;
+            color: #777;
         }
 
-        .call-btn:hover{
+        /* Distance */
 
-            background:#218838;
+        select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
 
+        /* Search Button */
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #0052cc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: #003d99;
+        }
+
+        /* Emergency Contacts */
+
+        .emergency {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,.15);
+        }
+
+        .emergency h2 {
+            color: #c62828;
+        }
+
+        .number {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+
+        /* Hospital */
+
+        .hospital-card {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,.15);
+        }
+
+        .hospital-card h2 {
+            color: #003366;
+        }
+
+        .call-btn {
+            display: inline-block;
+            margin-top: 10px;
+            margin-right: 8px;
+            background: #28a745;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .call-btn:hover {
+            background: #218838;
+        }
+
+        .details-btn {
+            display: inline-block;
+            margin-top: 10px;
+            background: #0052cc;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        .details-btn:hover {
+            background: #003d99;
+        }
+
+        .no-hospital {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,.15);
+            color: #555;
+            text-align: center;
         }
 
     </style>
@@ -119,133 +201,384 @@
 
 <div class="container">
 
-<h1>🚑 Emergency Assistance</h1>
+    <h1>🚨 Emergency Assistance</h1>
 
-<div class="search-box">
 
-<form method="POST">
+    <!-- ================================================= -->
+    <!-- EMERGENCY CONTACTS -->
+    <!-- ================================================= -->
 
-{% csrf_token %}
+    <div class="emergency">
 
-<label>Select Railway Station</label>
+        <h2>Emergency Contacts</h2>
 
-<select name="station" required>
+        <div class="number">
+            🚆 Railway Helpline: <strong>139</strong>
+        </div>
 
-<option value="">Select Station</option>
+        <div class="number">
+            👮 RPF Helpline: <strong>182</strong>
+        </div>
 
-{% for station in stations %}
+        <div class="number">
+            🚑 Ambulance: <strong>108</strong>
+        </div>
 
-<option
-value="{{ station.id }}"
-{% if selected_station.id == station.id %}selected{% endif %}
+        <div class="number">
+            🚔 Police: <strong>112</strong>
+        </div>
+
+        <div class="number">
+            👩 Women Helpline: <strong>181</strong>
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- STATION & DISTANCE SEARCH -->
+    <!-- ================================================= -->
+
+    <div class="search-box">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- Station -->
+
+            <label>
+                Select Railway Station
+            </label>
+
+            <div class="station-search">
+
+                <input
+                    type="text"
+                    id="station_search"
+                    placeholder="🔍 Search railway station..."
+                    autocomplete="off"
+                    required
+                >
+
+                <!-- Hidden station ID -->
+
+                <input
+    type="hidden"
+    name="station"
+    id="station_id"
 >
 
-{{ station.station_name }}
 
-</option>
+                <!-- Suggestions -->
 
-{% endfor %}
+                <div id="station_suggestions">
 
-</select>
+                    {% for station in stations %}
 
-<label>Maximum Distance</label>
+                        <div
+                            class="station-option"
+                            data-id="{{ station.id }}"
+                            data-name="{{ station.station_name|escapejs }}"
+                        >
+                            {{ station.station_name }}
+                        </div>
 
-<select name="distance">
+                    {% endfor %}
 
-<option value="all">All Hospitals</option>
-<option value="1">Within 1 km</option>
-<option value="2">Within 2 km</option>
-<option value="5">Within 5 km</option>
-<option value="10">Within 10 km</option>
+                </div>
 
-</select>
+            </div>
 
-<button type="submit">
 
-Search
+            <!-- Maximum Distance -->
 
-</button>
+            <label>
+                Maximum Distance
+            </label>
 
-</form>
+            <select name="distance">
+
+                <option value="1">
+                    Within 1 km
+                </option>
+
+                <option value="2">
+                    Within 2 km
+                </option>
+
+                <option value="5" selected>
+                    Within 5 km
+                </option>
+
+                <option value="10">
+                    Within 10 km
+                </option>
+
+                <option value="all">
+                    All Hospitals
+                </option>
+
+            </select>
+
+
+            <!-- Search -->
+
+            <button type="submit">
+                🔍 Search Hospitals
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- HOSPITAL RESULTS -->
+    <!-- ================================================= -->
+
+    {% if hospitals %}
+
+        <h2>
+            Nearby Hospitals
+        </h2>
+
+
+        {% for hospital in hospitals %}
+
+            <div class="hospital-card">
+
+                <h2>
+                    🏥 {{ hospital.hospital_name }}
+                </h2>
+
+                <p>
+                    📍
+                    <strong>
+                        {{ hospital.distance_km }} km
+                    </strong>
+                </p>
+
+                <p>
+                    {{ hospital.address }}
+                </p>
+
+                <p>
+                    📞 {{ hospital.contact_number }}
+                </p>
+
+
+                <!-- Call Hospital -->
+
+                <a
+                    href="tel:{{ hospital.contact_number }}"
+                    class="call-btn"
+                >
+                    ☎ Call Hospital
+                </a>
+
+
+                <!-- View Details -->
+
+                <a
+                    href="{% url 'hospital_details' hospital.id %}"
+                    class="details-btn"
+                >
+                    View Details
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+
+    {% elif selected_station %}
+
+        <div class="no-hospital">
+
+            <p>
+                No nearby hospital information is available
+                for this station.
+            </p>
+
+        </div>
+
+    {% endif %}
 
 </div>
 
 
-<div class="emergency">
+<!-- ===================================================== -->
+<!-- STATION SEARCH JAVASCRIPT -->
+<!-- ===================================================== -->
 
-<h2>Emergency Contacts</h2>
+<script>
 
-<div class="number">🚆 Railway Helpline : <b>139</b></div>
+    const searchInput =
+        document.getElementById("station_search");
 
-<div class="number">👮 RPF Helpline : <b>182</b></div>
+    const stationIdInput =
+        document.getElementById("station_id");
 
-<div class="number">🚑 Ambulance : <b>108</b></div>
+    const suggestions =
+        document.getElementById("station_suggestions");
 
-<div class="number">🚓 Police : <b>112</b></div>
+    const stationOptions =
+        document.querySelectorAll(".station-option");
 
-<div class="number">👩 Women Helpline : <b>181</b></div>
 
-</div>
+    /* ==============================================
+       Show matching stations while typing
+       ============================================== */
 
-{% if hospitals %}
+    searchInput.addEventListener("input", function () {
 
-<h2>Nearby Hospitals</h2>
+        const searchText =
+            this.value.toLowerCase().trim();
 
-{% for hospital in hospitals %}
+        suggestions.innerHTML = "";
 
-<div class="hospital-card">
+        if (searchText === "") {
 
-<h3>
+            suggestions.style.display = "none";
 
-🏥 {{ hospital.hospital_name }}
+            stationIdInput.value = "";
 
-</h3>
+            return;
 
-<p>
+        }
 
-📍 {{ hospital.distance_km }} km
 
-</p>
+        let found = false;
 
-<p>
 
-{{ hospital.address }}
+        stationOptions.forEach(function (option) {
 
-</p>
+            const stationName =
+                option.dataset.name.toLowerCase();
 
-<p>
 
-📞 {{ hospital.contact_number }}
+            if (stationName.includes(searchText)) {
 
-</p>
+                const newOption =
+                    document.createElement("div");
 
-<a
+                newOption.className =
+                    "station-option";
 
-href="tel:{{ hospital.contact_number }}"
+                newOption.textContent =
+                    option.dataset.name;
 
-class="call-btn"
+                newOption.dataset.id =
+                    option.dataset.id;
 
->
 
-☎ Call Hospital
+                newOption.addEventListener(
+                    "click",
+                    function () {
 
-</a>
+                        searchInput.value =
+                            this.textContent;
 
-</div>
+                        stationIdInput.value =
+                            this.dataset.id;
 
-{% endfor %}
+                        suggestions.style.display =
+                            "none";
 
-{% elif selected_station %}
+                    }
+                );
 
-<div class="hospital-card">
 
-No nearby hospital information is available for this station.
+                suggestions.appendChild(
+                    newOption
+                );
 
-</div>
+                found = true;
 
-{% endif %}
+            }
 
-</div>
+        });
+
+
+        if (found) {
+
+            suggestions.style.display =
+                "block";
+
+        }
+        else {
+
+            const noResult =
+                document.createElement("div");
+
+            noResult.className =
+                "no-station";
+
+            noResult.textContent =
+                "No station found";
+
+            suggestions.appendChild(
+                noResult
+            );
+
+            suggestions.style.display =
+                "block";
+
+        }
+
+    });
+
+
+    /* ==============================================
+       Hide suggestions when clicking outside
+       ============================================== */
+
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                !event.target.closest(
+                    ".station-search"
+                )
+            ) {
+
+                suggestions.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+
+    /* ==============================================
+       Prevent submitting without selecting station
+       ============================================== */
+
+    document.querySelector("form")
+        .addEventListener(
+            "submit",
+            function (event) {
+
+                if (!stationIdInput.value) {
+
+                    event.preventDefault();
+
+                    alert(
+                        "Please search and select a railway station."
+                    );
+
+                    searchInput.focus();
+
+                }
+
+            }
+        );
+
+</script>
 
 </body>
 </html>
