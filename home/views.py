@@ -345,3 +345,54 @@ def hospital_details(request, hospital_id):
             "hospital": hospital
         }
     )
+
+
+def update_profile(request):
+
+    passenger_id = request.session.get("passenger_id")
+
+    if not passenger_id:
+        return redirect("login")
+
+    passenger = get_object_or_404(
+        Passenger,
+        id=passenger_id
+    )
+
+    if request.method == "POST":
+
+        passenger.full_name = request.POST.get(
+            "full_name"
+        )
+
+        passenger.email = request.POST.get(
+            "email"
+        )
+
+        passenger.phone_number = request.POST.get(
+            "phone_number"
+        )
+
+        passenger.gender = request.POST.get(
+            "gender"
+        )
+
+        passenger.address = request.POST.get(
+            "address"
+        )
+        passenger.save()
+
+        messages.success(
+                request,
+                "Your profile has been updated successfully."
+                )
+
+        return redirect("update_profile")
+
+    return render(
+        request,
+        "home/update_profile.html",
+        {
+            "passenger": passenger
+        }
+    )

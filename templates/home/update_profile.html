@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Update Profile</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 650px;
+            margin: 40px auto;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,.15);
+        }
+
+        h1 {
+            text-align: center;
+            color: #003366;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 11px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:disabled {
+            background: #eee;
+            color: #666;
+        }
+
+        .button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 25px;
+            background: #0052cc;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #003d99;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #0052cc;
+            text-decoration: none;
+        }
+
+        .info {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+
+        .success-message {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="card">
+
+
+        {% if messages %}
+
+    {% for message in messages %}
+
+        <div class="success-message">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
+        <h1>My Profile</h1>
+
+        <div class="info">
+            Update your personal information below.
+        </div>
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                name="full_name"
+                value="{{ passenger.full_name }}"
+                required
+            >
+
+
+            <label>Email</label>
+
+            <input
+                type="email"
+                name="email"
+                value="{{ passenger.email }}"
+                required
+            >
+
+
+            <label>Username</label>
+
+            <input
+                type="text"
+                value="{{ passenger.username }}"
+                disabled
+            >
+
+
+            <label>Aadhaar Number</label>
+
+            <input
+                type="text"
+                value="{{ passenger.aadhaar_number }}"
+                disabled
+            >
+
+
+            <label>Phone Number</label>
+
+            <input
+                type="text"
+                name="phone_number"
+                value="{{ passenger.phone_number }}"
+                required
+            >
+
+
+            <label>Gender</label>
+
+            <select name="gender" required>
+
+                <option value="MALE"
+                    {% if passenger.gender == "MALE" %}selected{% endif %}>
+                    Male
+                </option>
+
+                <option value="FEMALE"
+                    {% if passenger.gender == "FEMALE" %}selected{% endif %}>
+                    Female
+                </option>
+
+                <option value="OTHER"
+                    {% if passenger.gender == "OTHER" %}selected{% endif %}>
+                    Other
+                </option>
+
+            </select>
+
+
+            <label>Address</label>
+
+            <textarea
+                name="address"
+                required
+            >{{ passenger.address }}</textarea>
+
+
+            <button
+                type="submit"
+                class="button"
+            >
+                Update Profile
+            </button>
+
+        </form>
+
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="back"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>
