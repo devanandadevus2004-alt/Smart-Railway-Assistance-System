@@ -4,7 +4,227 @@ from .models import Passenger
 from .models import Passenger, LuggageBooking
 from .models import Passenger, LuggageBooking, Station
 from .models import Officer
-from django.shortcuts import get_object_or_404, redirect
+from datetime import datetime, time
+from django.utils import timezone
+from django.shortcuts import get_object_or_404, redirect, render
+from datetime import timedelta
+
+
+def booking_details(request, booking_id):
+
+    booking = get_object_or_404(
+        LuggageBooking,
+        id=booking_id
+    )
+
+    today = timezone.localdate()
+
+    # Verification must be completed at least
+    # 2 days before the passenger's travel date.
+    latest_verification_date = (
+        booking.travel_date - timedelta(days=2)
+    )
+
+    # Verification cannot be scheduled in the past.
+    verification_min_date = today
+
+    # If the calculated latest date is before today,
+    # there is no valid verification window.
+    verification_max_date = latest_verification_date
+
+    return render(
+        request,
+        "home/booking_details.html",
+        {
+            "booking": booking,
+            "verification_min_date":
+                verification_min_date,
+            "verification_max_date":
+                verification_max_date,
+        }
+    )
+
+
+def update_booking(request, booking_id):
+
+    booking = get_object_or_404(
+        LuggageBooking,
+        id=booking_id
+    )
+
+    if request.method == "POST":
+
+        action = request.POST.get("action")
+
+        if action == "accept":
+
+            verification_date = request.POST.get(
+                "verification_date"
+            )
+
+            verification_time = request.POST.get(
+                "verification_time"
+            )
+
+            instructions = request.POST.get(
+                "instructions"
+            )
+
+            # Make sure both date and time are provided
+            if not verification_date or not verification_time:
+
+                return render(
+                    request,
+                    "home/booking_details.html",
+                    {
+                        "booking": booking,
+                        "error":
+                            "Please select verification date and time."
+                    }
+                )
+
+            # Convert submitted values
+            verification_date_obj = datetime.strptime(
+                verification_date,
+                "%Y-%m-%d"
+            ).date()
+
+            verification_time_obj = datetime.strptime(
+                verification_time,
+                "%H:%M"
+            ).time()
+
+            today = timezone.localdate()
+
+            # Verification cannot be in the past
+            if verification_date_obj < today:
+
+                return render(
+                    request,
+                    "home/booking_details.html",
+                    {
+                        "booking": booking,
+                        "error":
+                            "Verification date cannot be in the past."
+                    }
+                )
+
+            # Verification must be before travel date
+            if verification_date_obj >= booking.travel_date:
+
+                return render(
+                    request,
+                    "home/booking_details.html",
+                    {
+                        "booking": booking,
+                        "error":
+                            "Verification must be scheduled "
+                            "before the passenger's travel date."
+                    }
+                )
+
+            # Officer duty hours: 9 AM - 5 PM
+            duty_start = time(9, 0)
+            duty_end = time(17, 0)
+
+            if not (
+                duty_start
+                <= verification_time_obj
+                < duty_end
+            ):
+
+                return render(
+                    request,
+                    "home/booking_details.html",
+                    {
+                        "booking": booking,
+                        "error":
+                            "Verification time must be "
+                            "within officer duty hours "
+                            "(9:00 AM - 5:00 PM)."
+                    }
+                )
+
+            # Check whether this officer already has
+            # another booking at the same date and time.
+            officer = Officer.objects.get(
+                id=request.session["officer_id"]
+            )
+
+            existing_booking = LuggageBooking.objects.filter(
+                source_station=officer.station,
+                verification_date=verification_date_obj,
+                verification_time=verification_time_obj,
+                status="Verification Scheduled"
+            ).exclude(
+                id=booking.id
+            ).first()
+
+            # Existing allocation found
+            if existing_booking:
+
+                # Officer has not yet confirmed that
+                # they want to handle multiple passengers.
+                proceed = request.POST.get(
+                    "proceed_multiple"
+                )
+
+                if proceed != "yes":
+
+                    return render(
+                        request,
+                        "home/booking_details.html",
+                        {
+                            "booking": booking,
+                            "error":
+                                "This verification time is "
+                                "already allocated to another "
+                                "passenger.",
+                            "existing_booking":
+                                existing_booking,
+                            "verification_date":
+                                verification_date,
+                            "verification_time":
+                                verification_time,
+                            "instructions":
+                                instructions,
+                            "show_multiple_warning":
+                                True,
+                        }
+                    )
+
+            # Schedule the verification
+            booking.status = "Verification Scheduled"
+
+            booking.verification_date = (
+                verification_date_obj
+            )
+
+            booking.verification_time = (
+                verification_time_obj
+            )
+
+            booking.instructions = instructions
+
+            booking.rejection_reason = ""
+
+        elif action == "reject":
+
+            booking.status = "Rejected"
+
+            booking.rejection_reason = request.POST.get(
+                "rejection_reason"
+            )
+
+            booking.verification_date = None
+
+            booking.verification_time = None
+
+            booking.instructions = ""
+
+        booking.save()
+
+    return redirect("officer_dashboard")
 
 
 def home(request):
@@ -141,20 +361,64 @@ def dashboard(request):
     })
 
 def luggage_booking(request):
+
     stations = Station.objects.all()
 
+    today = timezone.localdate()
+
+    # Passenger must request luggage transfer
+    # at least 2 days before the travel date.
+    minimum_travel_date = today + timedelta(days=2)
+
     if request.method == "POST":
-        source_station = Station.objects.get(id=request.POST["source_station"])
-        destination_station = Station.objects.get(id=request.POST["destination_station"])
+
+        source_station = Station.objects.get(
+            id=request.POST["source_station"]
+        )
+
+        destination_station = Station.objects.get(
+            id=request.POST["destination_station"]
+        )
 
         luggage_type = request.POST["luggage_type"]
+
         number_of_bags = request.POST["number_of_bags"]
+
         weight = request.POST["weight"]
-        travel_date = request.POST["travel_date"]
+
+        travel_date_string = request.POST["travel_date"]
+
         contact_number = request.POST["contact_number"]
 
-        passenger = Passenger.objects.get(id=request.session["passenger_id"])
+        passenger = Passenger.objects.get(
+            id=request.session["passenger_id"]
+        )
 
+        # Convert submitted travel date to Python date
+        travel_date = datetime.strptime(
+            travel_date_string,
+            "%Y-%m-%d"
+        ).date()
+
+        # Check minimum advance period
+        if travel_date < minimum_travel_date:
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        "Luggage transfer requests must be "
+                        "submitted at least 2 days before "
+                        "the travel date."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
+            )
+
+        # Create booking only after validation succeeds
         LuggageBooking.objects.create(
             passenger=passenger,
             source_station=source_station,
@@ -166,14 +430,27 @@ def luggage_booking(request):
             contact_number=contact_number,
         )
 
-        return render(request, "home/luggage_booking.html", {
-            "stations": stations,
-            "success": "Luggage booking submitted successfully!"
-        })
+        return render(
+            request,
+            "home/luggage_booking.html",
+            {
+                "stations": stations,
+                "success":
+                    "Luggage booking submitted successfully!",
+                "minimum_travel_date":
+                    minimum_travel_date,
+            }
+        )
 
-    return render(request, "home/luggage_booking.html", {
-        "stations": stations
-    })
+    return render(
+        request,
+        "home/luggage_booking.html",
+        {
+            "stations": stations,
+            "minimum_travel_date":
+                minimum_travel_date,
+        }
+    )
 def my_bookings(request):
     passenger = Passenger.objects.get(id=request.session["passenger_id"])
 
@@ -223,42 +500,226 @@ def officer_dashboard(request):
 
 
 
-def booking_details(request, booking_id):
-    booking = LuggageBooking.objects.get(id=booking_id)
 
-    return render(request, "home/booking_details.html", {
-        "booking": booking
-    })
+
+def booking_details(request, booking_id):
+
+    booking = get_object_or_404(
+        LuggageBooking,
+        id=booking_id
+    )
+
+    today = timezone.localdate()
+
+    # Verification must be completed at least
+    # 2 days before the passenger's travel date.
+    latest_verification_date = (
+        booking.travel_date - timedelta(days=2)
+    )
+
+    # Verification cannot be scheduled in the past.
+    verification_min_date = today
+
+    # If the calculated latest date is before today,
+    # there is no valid verification window.
+    verification_max_date = latest_verification_date
+
+    return render(
+        request,
+        "home/booking_details.html",
+        {
+            "booking": booking,
+            "verification_min_date":
+                verification_min_date,
+            "verification_max_date":
+                verification_max_date,
+        }
+    )
+
 
 
 
 
 def update_booking(request, booking_id):
-    booking = get_object_or_404(LuggageBooking, id=booking_id)
+
+    booking = get_object_or_404(
+        LuggageBooking,
+        id=booking_id
+    )
 
     if request.method == "POST":
 
         action = request.POST.get("action")
 
         if action == "accept":
+
+            verification_date = request.POST.get(
+                "verification_date"
+            )
+
+            verification_time = request.POST.get(
+                "verification_time"
+            )
+
+            instructions = request.POST.get(
+                "instructions"
+            )
+
+            # Make sure both date and time are provided
+            if not verification_date or not verification_time:
+
+                return render(
+                    request,
+                    "home/booking_details.html",
+                    {
+                        "booking": booking,
+                        "error":
+                            "Please select verification date and time."
+                    }
+                )
+
+            # Convert submitted values
+            verification_date_obj = datetime.strptime(
+                verification_date,
+                "%Y-%m-%d"
+            ).date()
+
+            verification_time_obj = datetime.strptime(
+                verification_time,
+                "%H:%M"
+            ).time()
+
+            today = timezone.localdate()
+
+            # Verification cannot be in the past
+            if verification_date_obj < today:
+
+                return render(
+                    request,
+                    "home/booking_details.html",
+                    {
+                        "booking": booking,
+                        "error":
+                            "Verification date cannot be in the past."
+                    }
+                )
+
+            # Verification must be before travel date
+            if verification_date_obj >= booking.travel_date:
+
+                return render(
+                    request,
+                    "home/booking_details.html",
+                    {
+                        "booking": booking,
+                        "error":
+                            "Verification must be scheduled "
+                            "before the passenger's travel date."
+                    }
+                )
+
+            # Officer duty hours: 9 AM - 5 PM
+            duty_start = time(9, 0)
+            duty_end = time(17, 0)
+
+            if not (
+                duty_start
+                <= verification_time_obj
+                < duty_end
+            ):
+
+                return render(
+                    request,
+                    "home/booking_details.html",
+                    {
+                        "booking": booking,
+                        "error":
+                            "Verification time must be "
+                            "within officer duty hours "
+                            "(9:00 AM - 5:00 PM)."
+                    }
+                )
+
+            # Check whether this officer already has
+            # another booking at the same date and time.
+            officer = Officer.objects.get(
+                id=request.session["officer_id"]
+            )
+
+            existing_booking = LuggageBooking.objects.filter(
+                source_station=officer.station,
+                verification_date=verification_date_obj,
+                verification_time=verification_time_obj,
+                status="Verification Scheduled"
+            ).exclude(
+                id=booking.id
+            ).first()
+
+            # Existing allocation found
+            if existing_booking:
+
+                # Officer has not yet confirmed that
+                # they want to handle multiple passengers.
+                proceed = request.POST.get(
+                    "proceed_multiple"
+                )
+
+                if proceed != "yes":
+
+                    return render(
+                        request,
+                        "home/booking_details.html",
+                        {
+                            "booking": booking,
+                            "error":
+                                "This verification time is "
+                                "already allocated to another "
+                                "passenger.",
+                            "existing_booking":
+                                existing_booking,
+                            "verification_date":
+                                verification_date,
+                            "verification_time":
+                                verification_time,
+                            "instructions":
+                                instructions,
+                            "show_multiple_warning":
+                                True,
+                        }
+                    )
+
+            # Schedule the verification
             booking.status = "Verification Scheduled"
-            booking.verification_date = request.POST.get("verification_date")
-            booking.verification_time = request.POST.get("verification_time")
-            booking.instructions = request.POST.get("instructions")
+
+            booking.verification_date = (
+                verification_date_obj
+            )
+
+            booking.verification_time = (
+                verification_time_obj
+            )
+
+            booking.instructions = instructions
+
             booking.rejection_reason = ""
 
         elif action == "reject":
+
             booking.status = "Rejected"
-            booking.rejection_reason = request.POST.get("rejection_reason")
+
+            booking.rejection_reason = request.POST.get(
+                "rejection_reason"
+            )
 
             booking.verification_date = None
+
             booking.verification_time = None
+
             booking.instructions = ""
 
         booking.save()
 
     return redirect("officer_dashboard")
-
 
 
 def cancel_booking(request, booking_id):

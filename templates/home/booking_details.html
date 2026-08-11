@@ -87,24 +87,143 @@
 
 <div id="acceptForm" style="display:none;">
 
-<form method="POST" action="/booking/update/{{ booking.id }}/">
-
+    <form method="POST" action="{% url 'update_booking' booking.id %}">
     {% csrf_token %}
 
     <input type="hidden" name="action" value="accept">
 
+    <h3 style="color:#003366;">
+        Verification Scheduling
+    </h3>
+
+    <p>
+        <strong>Passenger Travel Date:</strong>
+        {{ booking.travel_date|date:"d M Y" }}
+    </p>
+
     <label>Verification Date</label>
-    <input type="date" name="verification_date" required>
 
-    <label>Verification Time</label>
-    <input type="time" name="verification_time" required>
+    <input
+        type="date"
+        name="verification_date"
+        id="verification_date"
+        min="{{ verification_min_date|date:'Y-m-d' }}"
+        max="{{ verification_max_date|date:'Y-m-d' }}"
+        value="{{ verification_date|default:'' }}"
+        required
+    >
 
-    <label>Instructions</label>
-    <textarea name="instructions" rows="4"></textarea>
+    <small style="color:#555;">
+        Select a date before the passenger's travel date.
+    </small>
 
-    <button type="submit">
-        Schedule Verification
-    </button>
+    <label style="margin-top:15px; display:block;">
+        Verification Time
+    </label>
+
+    <input
+        type="time"
+        name="verification_time"
+        id="verification_time"
+        min="09:00"
+        max="16:59"
+        value="{{ verification_time|default:'' }}"
+        required
+    >
+
+    <small style="color:#555;">
+        Officer duty hours: 9:00 AM – 5:00 PM
+    </small>
+
+    <label style="margin-top:15px; display:block;">
+        Instructions
+    </label>
+
+    <textarea
+        name="instructions"
+        rows="4"
+    >{{ instructions|default:'' }}</textarea>
+
+    {% if error %}
+
+        <div style="
+            background:#f8d7da;
+            color:#721c24;
+            padding:12px;
+            border-radius:6px;
+            margin:15px 0;
+        ">
+            ⚠️ {{ error }}
+        </div>
+
+    {% endif %}
+
+
+    {% if show_multiple_warning %}
+
+        <div style="
+            background:#fff3cd;
+            color:#856404;
+            padding:15px;
+            border:1px solid #ffeeba;
+            border-radius:6px;
+            margin:15px 0;
+        ">
+
+            <strong>
+                ⚠️ This verification slot is already allocated.
+            </strong>
+
+            <p>
+                Another passenger is already scheduled
+                with you at this date and time.
+            </p>
+
+            {% if existing_booking %}
+
+                <p>
+                    <strong>Passenger:</strong>
+                    {{ existing_booking.passenger.full_name }}
+                </p>
+
+                <p>
+                    <strong>Travel Date:</strong>
+                    {{ existing_booking.travel_date|date:"d M Y" }}
+                </p>
+
+            {% endif %}
+
+            <p>
+                If you are able to handle multiple passengers
+                during this time slot, you can proceed.
+            </p>
+
+            <button
+                type="submit"
+                name="proceed_multiple"
+                value="yes"
+                style="background:#28a745; margin-bottom:10px;"
+            >
+                Proceed With Multiple Passengers
+            </button>
+
+            <button
+                type="button"
+                onclick="window.location.reload();"
+                style="background:#6c757d;"
+            >
+                Choose Another Slot
+            </button>
+
+        </div>
+
+    {% else %}
+
+        <button type="submit">
+            Schedule Verification
+        </button>
+
+    {% endif %}
 
 </form>
 

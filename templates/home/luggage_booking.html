@@ -512,12 +512,12 @@
                 <label>
                     Travel Date
                 </label>
-
-                <input
-                    type="date"
-                    name="travel_date"
-                    required
-                >
+                    <input
+    type="date"
+    name="travel_date"
+    min="{{ minimum_travel_date|date:'Y-m-d' }}"
+    required
+>
 
             </div>
 
