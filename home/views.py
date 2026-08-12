@@ -502,6 +502,11 @@ def officer_dashboard(request):
 
 
 
+from datetime import timedelta
+from django.utils import timezone
+from django.shortcuts import get_object_or_404, render
+
+
 def booking_details(request, booking_id):
 
     booking = get_object_or_404(
@@ -509,20 +514,16 @@ def booking_details(request, booking_id):
         id=booking_id
     )
 
+    # Current date
     today = timezone.localdate()
 
-    # Verification must be completed at least
-    # 2 days before the passenger's travel date.
-    latest_verification_date = (
-        booking.travel_date - timedelta(days=2)
-    )
-
-    # Verification cannot be scheduled in the past.
+    # Officer can schedule verification from today
+    # until one day before the passenger's travel date.
     verification_min_date = today
 
-    # If the calculated latest date is before today,
-    # there is no valid verification window.
-    verification_max_date = latest_verification_date
+    verification_max_date = (
+        booking.travel_date - timedelta(days=1)
+    )
 
     return render(
         request,
@@ -535,9 +536,6 @@ def booking_details(request, booking_id):
                 verification_max_date,
         }
     )
-
-
-
 
 
 def update_booking(request, booking_id):
