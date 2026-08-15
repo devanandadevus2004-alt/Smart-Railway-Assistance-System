@@ -154,11 +154,26 @@
         }
 
 
-        /* Status */
+        /* Status - Default Blue */
 
         .status{
             font-weight:bold;
             color:#0052cc;
+        }
+
+        .status{
+    font-weight:bold;
+    color:#0052cc !important;
+}
+
+.status.pending{
+    color:#e53935 !important;
+}
+
+        /* PENDING Status - Red */
+
+        .status.pending{
+            color:#e53935;
         }
 
 
@@ -330,9 +345,28 @@
                         {{ booking.travel_date }}
                     </td>
 
-                    <td class="status">
-                        {{ booking.status }}
-                    </td>
+
+                    <!-- STATUS -->
+<td>
+
+    {% if booking.status|upper|cut:" " == "PENDING" %}
+
+        <span class="status pending">
+            {{ booking.status }}
+        </span>
+
+    {% else %}
+
+        <span class="status">
+            {{ booking.status }}
+        </span>
+
+    {% endif %}
+
+</td>
+
+
+                    <!-- ACTION -->
 
                     <td>
 
