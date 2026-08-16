@@ -47,6 +47,25 @@
             font-size:16px;
         }
 
+        .back-btn{
+    display:block;
+    width:100%;
+    padding:12px;
+    margin-top:15px;
+    background:#0052cc;
+    color:white;
+    text-align:center;
+    text-decoration:none;
+    border-radius:5px;
+    box-sizing:border-box;
+    font-size:16px;
+    font-weight:bold;
+}
+
+.back-btn:hover{
+    background:#003d99;
+}
+
     </style>
 
 </head>
@@ -252,7 +271,12 @@
 
 </form>
 
+
 </div>
+
+<a href="{% url 'officer_dashboard' %}" class="back-btn">
+    ← Back to Officer Dashboard
+</a>
 
 <script>
 
