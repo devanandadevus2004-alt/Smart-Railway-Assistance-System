@@ -1,4 +1,5 @@
 from django.db import models
+from ticket_booking.models import TicketBooking
 
 
 class Station(models.Model):
@@ -32,6 +33,23 @@ class Passenger(models.Model):
         return self.full_name
 class LuggageBooking(models.Model):
     passenger = models.ForeignKey(Passenger, on_delete=models.CASCADE)
+
+    transfer_type = models.CharField(
+    max_length=20,
+    choices=[
+        ('WITH_TICKET', 'Passenger Luggage - With Ticket'),
+        ('WITHOUT_TICKET', 'Parcel / Unaccompanied Transfer - Without Passenger Ticket'),
+    ],
+        default='WITH_TICKET'
+    )
+
+    ticket_booking = models.ForeignKey(
+    'ticket_booking.TicketBooking',
+    on_delete=models.SET_NULL,
+    null=True,
+    blank=True,
+    related_name='luggage_bookings'
+)
     source_station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="source_bookings")
     destination_station = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="destination_bookings")
     
@@ -107,4 +125,28 @@ class Hospital(models.Model):
         return (
             f"{self.hospital_name} - "
             f"{self.station.station_name}"
+        )
+
+
+class LuggageItem(models.Model):
+
+    booking = models.ForeignKey(
+        LuggageBooking,
+        on_delete=models.CASCADE,
+        related_name="items"
+    )
+
+    item_number = models.PositiveIntegerField()
+
+    luggage_type = models.CharField(
+        max_length=100
+    )
+
+    weight = models.FloatField()
+
+    def __str__(self):
+        return (
+            f"Item {self.item_number} - "
+            f"{self.luggage_type} - "
+            f"{self.weight} kg"
         )

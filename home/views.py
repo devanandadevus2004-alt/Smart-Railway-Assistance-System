@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Passenger
 from .models import Passenger, LuggageBooking
-from .models import Passenger, LuggageBooking, Station
+from .models import Passenger, LuggageBooking, Station,LuggageItem
 from .models import Officer
 from datetime import datetime, time
 from django.utils import timezone
@@ -366,41 +366,81 @@ def luggage_booking(request):
 
     today = timezone.localdate()
 
-    # Passenger must request luggage transfer
-    # at least 2 days before the travel date.
     minimum_travel_date = today + timedelta(days=2)
+
+    STANDARD_PARCEL_MAX_WEIGHT = 150
 
     if request.method == "POST":
 
-        source_station = Station.objects.get(
-            id=request.POST["source_station"]
+        try:
+
+            source_station = Station.objects.get(
+                id=request.POST["source_station"]
+            )
+
+            destination_station = Station.objects.get(
+                id=request.POST["destination_station"]
+            )
+
+        except Station.DoesNotExist:
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": "Invalid source or destination station.",
+                    "minimum_travel_date": minimum_travel_date,
+                }
+            )
+
+        # ----------------------------------------------------
+        # BASIC FORM DATA
+        # ----------------------------------------------------
+
+        transfer_type = request.POST.get(
+            "transfer_type"
         )
 
-        destination_station = Station.objects.get(
-            id=request.POST["destination_station"]
+        travel_date_string = request.POST.get(
+            "travel_date"
         )
 
-        luggage_type = request.POST["luggage_type"]
-
-        number_of_bags = request.POST["number_of_bags"]
-
-        weight = request.POST["weight"]
-
-        travel_date_string = request.POST["travel_date"]
-
-        contact_number = request.POST["contact_number"]
+        contact_number = request.POST.get(
+            "contact_number"
+        )
 
         passenger = Passenger.objects.get(
             id=request.session["passenger_id"]
         )
 
-        # Convert submitted travel date to Python date
-        travel_date = datetime.strptime(
-            travel_date_string,
-            "%Y-%m-%d"
-        ).date()
+        # ----------------------------------------------------
+        # TRAVEL DATE
+        # ----------------------------------------------------
 
-        # Check minimum advance period
+        try:
+
+            travel_date = datetime.strptime(
+                travel_date_string,
+                "%Y-%m-%d"
+            ).date()
+
+        except (TypeError, ValueError):
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": "Please enter a valid travel date.",
+                    "minimum_travel_date": minimum_travel_date,
+                }
+            )
+
+        # ----------------------------------------------------
+        # MINIMUM ADVANCE PERIOD
+        # ----------------------------------------------------
+
         if travel_date < minimum_travel_date:
 
             return render(
@@ -418,39 +458,309 @@ def luggage_booking(request):
                 }
             )
 
-        # Create booking only after validation succeeds
-        LuggageBooking.objects.create(
+        # ----------------------------------------------------
+        # NUMBER OF ITEMS
+        # ----------------------------------------------------
+
+        try:
+
+            number_of_items = int(
+                request.POST.get("number_of_items", 0)
+            )
+
+        except (TypeError, ValueError):
+
+            number_of_items = 0
+
+        if number_of_items <= 0:
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": "Please enter at least one luggage item.",
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
+            )
+
+        # ----------------------------------------------------
+        # COLLECT INDIVIDUAL ITEMS
+        # ----------------------------------------------------
+
+        luggage_items = []
+
+        total_weight = 0
+
+        for i in range(1, number_of_items + 1):
+
+            luggage_type = request.POST.get(
+                f"item_type_{i}"
+            )
+
+            weight_value = request.POST.get(
+                f"item_weight_{i}"
+            )
+
+            if not luggage_type or not weight_value:
+
+                return render(
+                    request,
+                    "home/luggage_booking.html",
+                    {
+                        "stations": stations,
+                        "error": (
+                            f"Please enter the type and weight "
+                            f"for Item {i}."
+                        ),
+                        "minimum_travel_date":
+                            minimum_travel_date,
+                    }
+                )
+
+            try:
+
+                item_weight = float(
+                    weight_value
+                )
+
+            except (TypeError, ValueError):
+
+                return render(
+                    request,
+                    "home/luggage_booking.html",
+                    {
+                        "stations": stations,
+                        "error": (
+                            f"Please enter a valid weight "
+                            f"for Item {i}."
+                        ),
+                        "minimum_travel_date":
+                            minimum_travel_date,
+                    }
+                )
+
+            if item_weight <= 0:
+
+                return render(
+                    request,
+                    "home/luggage_booking.html",
+                    {
+                        "stations": stations,
+                        "error": (
+                            f"Weight for Item {i} "
+                            f"must be greater than zero."
+                        ),
+                        "minimum_travel_date":
+                            minimum_travel_date,
+                    }
+                )
+
+            # ------------------------------------------------
+            # 150 KG CHECK
+            # ONLY FOR WITHOUT-TICKET PARCEL TRANSFER
+            # ------------------------------------------------
+
+            if (
+                transfer_type == "WITHOUT_TICKET"
+                and
+                item_weight > STANDARD_PARCEL_MAX_WEIGHT
+            ):
+
+                return render(
+                    request,
+                    "home/luggage_booking.html",
+                    {
+                        "stations": stations,
+                        "error": (
+                            f"Item {i} weighs {item_weight} kg. "
+                            f"The normal maximum for a single "
+                            f"parcel package is "
+                            f"{STANDARD_PARCEL_MAX_WEIGHT} kg. "
+                            "Packages exceeding this limit "
+                            "require applicable railway "
+                            "permission."
+                        ),
+                        "minimum_travel_date":
+                            minimum_travel_date,
+                    }
+                )
+
+            luggage_items.append({
+
+                "item_number": i,
+
+                "luggage_type":
+                    luggage_type,
+
+                "weight":
+                    item_weight,
+
+            })
+
+            total_weight += item_weight
+
+        # ----------------------------------------------------
+        # TICKET VERIFICATION
+        # ----------------------------------------------------
+
+        ticket_booking = None
+
+        if transfer_type == "WITH_TICKET":
+
+            ticket_booking_id = request.POST.get(
+                "ticket_booking_id"
+            )
+
+            if not ticket_booking_id:
+
+                return render(
+                    request,
+                    "home/luggage_booking.html",
+                    {
+                        "stations": stations,
+                        "error": (
+                            "Please select or enter a valid "
+                            "ticket booking."
+                        ),
+                        "minimum_travel_date":
+                            minimum_travel_date,
+                    }
+                )
+
+            try:
+
+                ticket_booking = TicketBooking.objects.get(
+                    id=ticket_booking_id,
+                    passenger=passenger,
+                    status="CONFIRMED"
+                )
+
+            except TicketBooking.DoesNotExist:
+
+                return render(
+                    request,
+                    "home/luggage_booking.html",
+                    {
+                        "stations": stations,
+                        "error": (
+                            "The selected ticket is not a "
+                            "valid confirmed ticket belonging "
+                            "to this account."
+                        ),
+                        "minimum_travel_date":
+                            minimum_travel_date,
+                    }
+                )
+
+            # Ticket travel date should match luggage travel date
+
+            if ticket_booking.travel_date != travel_date:
+
+                return render(
+                    request,
+                    "home/luggage_booking.html",
+                    {
+                        "stations": stations,
+                        "error": (
+                            "The luggage travel date must "
+                            "match the ticket travel date."
+                        ),
+                        "minimum_travel_date":
+                            minimum_travel_date,
+                    }
+                )
+
+        # ----------------------------------------------------
+        # SAVE MAIN BOOKING
+        # ----------------------------------------------------
+
+        main_luggage_type = luggage_items[0][
+            "luggage_type"
+        ]
+
+        booking = LuggageBooking.objects.create(
+
             passenger=passenger,
+
+            transfer_type=transfer_type,
+
+            ticket_booking=ticket_booking,
+
             source_station=source_station,
+
             destination_station=destination_station,
-            luggage_type=luggage_type,
-            number_of_bags=number_of_bags,
-            weight=weight,
+
+            luggage_type=main_luggage_type,
+
+            number_of_bags=number_of_items,
+
+            weight=total_weight,
+
             travel_date=travel_date,
+
             contact_number=contact_number,
+
         )
+
+        # ----------------------------------------------------
+        # SAVE INDIVIDUAL ITEMS
+        # ----------------------------------------------------
+
+        for item in luggage_items:
+
+            LuggageItem.objects.create(
+
+                booking=booking,
+
+                item_number=item[
+                    "item_number"
+                ],
+
+                luggage_type=item[
+                    "luggage_type"
+                ],
+
+                weight=item[
+                    "weight"
+                ],
+
+            )
+
+        # ----------------------------------------------------
+        # SUCCESS
+        # ----------------------------------------------------
 
         return render(
             request,
             "home/luggage_booking.html",
             {
                 "stations": stations,
+
                 "success":
                     "Luggage booking submitted successfully!",
+
                 "minimum_travel_date":
                     minimum_travel_date,
             }
         )
+
+    # --------------------------------------------------------
+    # GET REQUEST
+    # --------------------------------------------------------
 
     return render(
         request,
         "home/luggage_booking.html",
         {
             "stations": stations,
+
             "minimum_travel_date":
                 minimum_travel_date,
         }
     )
+
 def my_bookings(request):
     passenger = Passenger.objects.get(id=request.session["passenger_id"])
 
