@@ -127,7 +127,6 @@ class Hospital(models.Model):
             f"{self.station.station_name}"
         )
 
-
 class LuggageItem(models.Model):
 
     booking = models.ForeignKey(
@@ -143,6 +142,16 @@ class LuggageItem(models.Model):
     )
 
     weight = models.FloatField()
+
+    item_description = models.TextField(
+        blank=True
+    )
+
+    item_image = models.ImageField(
+        upload_to="luggage_items/",
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return (

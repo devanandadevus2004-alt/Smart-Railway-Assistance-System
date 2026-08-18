@@ -359,7 +359,6 @@ def dashboard(request):
     return render(request, "home/dashboard.html", {
         "name": request.session["passenger_name"]
     })
-
 def luggage_booking(request):
 
     stations = Station.objects.all()
@@ -465,7 +464,10 @@ def luggage_booking(request):
         try:
 
             number_of_items = int(
-                request.POST.get("number_of_items", 0)
+                request.POST.get(
+                    "number_of_items",
+                    0
+                )
             )
 
         except (TypeError, ValueError):
@@ -479,7 +481,10 @@ def luggage_booking(request):
                 "home/luggage_booking.html",
                 {
                     "stations": stations,
-                    "error": "Please enter at least one luggage item.",
+                    "error": (
+                        "Please enter at least one "
+                        "luggage item."
+                    ),
                     "minimum_travel_date":
                         minimum_travel_date,
                 }
@@ -493,15 +498,47 @@ def luggage_booking(request):
 
         total_weight = 0
 
-        for i in range(1, number_of_items + 1):
+        for i in range(
+            1,
+            number_of_items + 1
+        ):
+
+            # ------------------------------------------------
+            # ITEM TYPE
+            # ------------------------------------------------
 
             luggage_type = request.POST.get(
                 f"item_type_{i}"
             )
 
+            # ------------------------------------------------
+            # ITEM WEIGHT
+            # ------------------------------------------------
+
             weight_value = request.POST.get(
                 f"item_weight_{i}"
             )
+
+            # ------------------------------------------------
+            # ITEM DESCRIPTION
+            # ------------------------------------------------
+
+            item_description = request.POST.get(
+                f"item_description_{i}",
+                ""
+            ).strip()
+
+            # ------------------------------------------------
+            # ITEM IMAGE
+            # ------------------------------------------------
+
+            item_image = request.FILES.get(
+                f"item_image_{i}"
+            )
+
+            # ------------------------------------------------
+            # TYPE / WEIGHT CHECK
+            # ------------------------------------------------
 
             if not luggage_type or not weight_value:
 
@@ -511,13 +548,17 @@ def luggage_booking(request):
                     {
                         "stations": stations,
                         "error": (
-                            f"Please enter the type and weight "
-                            f"for Item {i}."
+                            f"Please enter the type and "
+                            f"weight for Item {i}."
                         ),
                         "minimum_travel_date":
                             minimum_travel_date,
                     }
                 )
+
+            # ------------------------------------------------
+            # WEIGHT VALIDATION
+            # ------------------------------------------------
 
             try:
 
@@ -565,7 +606,8 @@ def luggage_booking(request):
             if (
                 transfer_type == "WITHOUT_TICKET"
                 and
-                item_weight > STANDARD_PARCEL_MAX_WEIGHT
+                item_weight >
+                STANDARD_PARCEL_MAX_WEIGHT
             ):
 
                 return render(
@@ -574,22 +616,69 @@ def luggage_booking(request):
                     {
                         "stations": stations,
                         "error": (
-                            f"Item {i} weighs {item_weight} kg. "
-                            f"The normal maximum for a single "
-                            f"parcel package is "
+                            f"Item {i} weighs "
+                            f"{item_weight} kg. "
+                            f"The normal maximum for "
+                            f"a single parcel package "
+                            f"is "
                             f"{STANDARD_PARCEL_MAX_WEIGHT} kg. "
-                            "Packages exceeding this limit "
-                            "require applicable railway "
-                            "permission."
+                            "Packages exceeding this "
+                            "limit require applicable "
+                            "railway permission."
                         ),
                         "minimum_travel_date":
                             minimum_travel_date,
                     }
                 )
 
+            # ------------------------------------------------
+            # OTHER ITEM VALIDATION
+            # DESCRIPTION + IMAGE REQUIRED
+            # ------------------------------------------------
+
+            if luggage_type == "Other":
+
+                if not item_description:
+
+                    return render(
+                        request,
+                        "home/luggage_booking.html",
+                        {
+                            "stations": stations,
+                            "error": (
+                                f"Please provide a "
+                                f"description for "
+                                f"Item {i}."
+                            ),
+                            "minimum_travel_date":
+                                minimum_travel_date,
+                        }
+                    )
+
+                if not item_image:
+
+                    return render(
+                        request,
+                        "home/luggage_booking.html",
+                        {
+                            "stations": stations,
+                            "error": (
+                                f"Please upload an "
+                                f"image for Item {i}."
+                            ),
+                            "minimum_travel_date":
+                                minimum_travel_date,
+                        }
+                    )
+
+            # ------------------------------------------------
+            # STORE ITEM DATA TEMPORARILY
+            # ------------------------------------------------
+
             luggage_items.append({
 
-                "item_number": i,
+                "item_number":
+                    i,
 
                 "luggage_type":
                     luggage_type,
@@ -597,7 +686,17 @@ def luggage_booking(request):
                 "weight":
                     item_weight,
 
+                "item_description":
+                    item_description,
+
+                "item_image":
+                    item_image,
+
             })
+
+            # ------------------------------------------------
+            # CALCULATE TOTAL WEIGHT
+            # ------------------------------------------------
 
             total_weight += item_weight
 
@@ -654,7 +753,9 @@ def luggage_booking(request):
                     }
                 )
 
-            # Ticket travel date should match luggage travel date
+            # ------------------------------------------------
+            # TICKET TRAVEL DATE CHECK
+            # ------------------------------------------------
 
             if ticket_booking.travel_date != travel_date:
 
@@ -724,6 +825,14 @@ def luggage_booking(request):
 
                 weight=item[
                     "weight"
+                ],
+
+                item_description=item[
+                    "item_description"
+                ],
+
+                item_image=item[
+                    "item_image"
                 ],
 
             )

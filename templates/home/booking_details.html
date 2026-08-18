@@ -76,18 +76,96 @@
 
 <h2>Luggage Booking Details</h2>
 
-<p><b>Passenger:</b> {{ booking.passenger.full_name }}</p>
-
-<p><b>Source Station:</b> {{ booking.source_station.station_name }}</p>
-
-<p><b>Destination Station:</b> {{ booking.destination_station.station_name }}</p>
-
 <p><b>Luggage Type:</b> {{ booking.luggage_type }}</p>
 
-<p><b>Weight:</b> {{ booking.weight }} kg</p>
+<p><b>Total Weight:</b> {{ booking.weight }} kg</p>
 
 <p><b>Travel Date:</b> {{ booking.travel_date }}</p>
 
+<hr>
+
+<h3 style="color:#003366;">
+    📦 Individual Luggage Items
+</h3>
+
+{% for item in booking.items.all %}
+
+<div style="
+    background:#f8fbff;
+    border:1px solid #dce3ec;
+    border-radius:8px;
+    padding:18px;
+    margin:15px 0;
+">
+
+    <h4 style="
+        color:#003366;
+        margin-top:0;
+    ">
+        Item {{ item.item_number }}
+    </h4>
+
+    <p>
+        <b>Luggage Type:</b>
+        {{ item.luggage_type }}
+    </p>
+
+    <p>
+        <b>Weight:</b>
+        {{ item.weight }} kg
+    </p>
+
+
+    {% if item.luggage_type == "Other" %}
+
+        <p>
+            <b>Description:</b>
+            {{ item.item_description }}
+        </p>
+
+
+        {% if item.item_image %}
+
+            <p>
+                <b>Uploaded Luggage Image:</b>
+            </p>
+
+            <img
+                src="{{ item.item_image.url }}"
+                alt="Luggage Item {{ item.item_number }}"
+                style="
+                    width:300px;
+                    max-width:100%;
+                    max-height:300px;
+                    object-fit:contain;
+                    border:1px solid #ccc;
+                    border-radius:8px;
+                    display:block;
+                    margin-top:10px;
+                "
+            >
+
+        {% else %}
+
+            <p style="color:#777;">
+                No image uploaded.
+            </p>
+
+        {% endif %}
+
+    {% endif %}
+
+</div>
+
+{% empty %}
+
+<p style="color:#777;">
+    No individual luggage item details available.
+</p>
+
+{% endfor %}
+
+<hr>
 <hr>
 
 <button type="button" onclick="showAcceptForm()">
