@@ -2,7 +2,7 @@ from .seat_allocation_algorithm import (
     allocate_seats_for_passengers
 )
 import json
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.utils import timezone
 from django.db import transaction
@@ -421,6 +421,22 @@ def ticket_booking(request):
 
     travel_date = None
 
+    # ========================================================
+    # MINIMUM BOOKING DATE
+    #
+    # Booking is allowed only from the day after tomorrow.
+    #
+    # Example:
+    # Today        -> 18 Aug
+    # Tomorrow     -> 19 Aug
+    # Day after    -> 20 Aug  ✅
+    # ========================================================
+
+    min_travel_date = (
+        timezone.localdate()
+        + timedelta(days=2)
+    )
+
     if request.method == 'POST':
 
         source_id = request.POST.get(
@@ -435,6 +451,70 @@ def ticket_booking(request):
             'travel_date'
         )
 
+        # ====================================================
+        # VALIDATE TRAVEL DATE
+        # ====================================================
+
+        if not travel_date:
+
+            return render(
+                request,
+                'ticket_booking/ticket_booking.html',
+                {
+                    'stations': stations,
+                    'trains': None,
+                    'travel_date': travel_date,
+                    'min_travel_date': min_travel_date,
+                    'error': 'Please select a travel date.'
+                }
+            )
+
+        try:
+
+            selected_date = datetime.strptime(
+                travel_date,
+                '%Y-%m-%d'
+            ).date()
+
+        except ValueError:
+
+            return render(
+                request,
+                'ticket_booking/ticket_booking.html',
+                {
+                    'stations': stations,
+                    'trains': None,
+                    'travel_date': travel_date,
+                    'min_travel_date': min_travel_date,
+                    'error': 'Invalid travel date.'
+                }
+            )
+
+        # ====================================================
+        # PREVENT TODAY AND TOMORROW
+        # ====================================================
+
+        if selected_date < min_travel_date:
+
+            return render(
+                request,
+                'ticket_booking/ticket_booking.html',
+                {
+                    'stations': stations,
+                    'trains': None,
+                    'travel_date': travel_date,
+                    'min_travel_date': min_travel_date,
+                    'error': (
+                        'Train tickets can be booked only '
+                        'from the day after tomorrow.'
+                    )
+                }
+            )
+
+        # ====================================================
+        # STORE VALID BOOKING DETAILS IN SESSION
+        # ====================================================
+
         request.session[
             'source_station_id'
         ] = source_id
@@ -446,6 +526,10 @@ def ticket_booking(request):
         request.session[
             'travel_date'
         ] = travel_date
+
+        # ====================================================
+        # FIND AVAILABLE TRAINS
+        # ====================================================
 
         if source_id and destination_id:
 
@@ -505,22 +589,16 @@ def ticket_booking(request):
         'ticket_booking/ticket_booking.html',
 
         {
-            'stations':
-                stations,
+            'stations': stations,
 
-            'trains':
-                trains,
+            'trains': trains,
 
-            'travel_date':
-                travel_date,
+            'travel_date': travel_date,
+
+            'min_travel_date': min_travel_date,
         }
 
     )
-
-
-# ============================================================
-# PASSENGER REQUIREMENTS
-# ============================================================
 
 # ============================================================
 # PASSENGER REQUIREMENTS

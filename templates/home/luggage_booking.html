@@ -676,43 +676,130 @@
             </div>
 
 
-            <!-- =========================
-                 TICKET BOOKING ID
-            ========================= -->
+                <!-- =========================
+     TICKET BOOKING ID
+========================= -->
 
-            <div
-                class="form-group"
-                id="ticketBookingSection"
-            >
+<div
+    class="form-group"
+    id="ticketBookingSection"
+    style="display:none;"
+>
 
-                <label for="ticket_booking_id">
+    <label for="ticket_booking_id">
 
-                    Ticket Booking ID
+        Ticket Booking ID
 
-                </label>
+    </label>
 
-                <input
-                    type="number"
-                    name="ticket_booking_id"
-                    id="ticket_booking_id"
-                    placeholder="Enter your confirmed ticket Booking ID"
-                    min="1"
-                >
+    <input
+        type="number"
+        name="ticket_booking_id"
+        id="ticket_booking_id"
+        placeholder="Enter your confirmed ticket Booking ID"
+        min="1"
+    >
 
-                <small style="color:#666;">
+    <small style="color:#666;">
 
-                    Enter the Booking ID of your confirmed railway ticket.
+        Enter the Booking ID of your confirmed railway ticket.
 
-                </small>
+    </small>
 
-            </div>
+    <button
+        type="button"
+        id="verifyTicketBtn"
+        style="margin-top:12px;"
+    >
 
+        🔍 Verify Ticket
+
+    </button>
+    <div
+    id="ticketVerificationMessage"
+    style="
+        display:none;
+        margin-top:15px;
+        padding:12px;
+        border-radius:8px;
+        font-weight:bold;
+    "
+></div>
+
+</div>
+<!-- =========================
+     TICKET INFORMATION
+========================= -->
+
+<div
+    id="ticketInformation"
+    style="
+        display:none;
+        margin-top:20px;
+        padding:20px;
+        background:#f7faff;
+        border:1px solid #dbe5f0;
+        border-radius:12px;
+    "
+>
+
+    <h3
+        style="
+            color:#003366;
+            margin-top:0;
+            margin-bottom:15px;
+        "
+    >
+        🎫 Ticket Information
+    </h3>
+
+    <div style="line-height:1.9;">
+
+        <strong>Booking ID:</strong>
+        <span id="ticketBookingDisplay"></span>
+
+        <br>
+
+        <strong>Train:</strong>
+        <span id="ticketTrainDisplay"></span>
+
+        <br>
+
+        <strong>Passenger:</strong>
+        <span id="ticketPassengerDisplay"></span>
+
+        <br>
+
+        <strong>Travel Date:</strong>
+        <span id="ticketDateDisplay"></span>
+
+        <br>
+
+        <strong>From:</strong>
+        <span id="ticketSourceDisplay"></span>
+
+        <br>
+
+        <strong>To:</strong>
+        <span id="ticketDestinationDisplay"></span>
+
+        <br>
+
+        <strong>Status:</strong>
+        <span id="ticketStatusDisplay"></span>
+
+    </div>
+
+</div>
 
             <!-- =========================
                  SOURCE / DESTINATION
             ========================= -->
 
-            <div class="form-row">
+            <div
+    class="form-row"
+    id="stationSection"
+>
 
 
                 <div class="form-group">
@@ -897,23 +984,30 @@
                  TRAVEL DATE
             ========================= -->
 
-            <div class="form-group">
+            <!-- =========================
+     TRAVEL DATE
+========================= -->
 
-                <label>
+<div
+    class="form-group"
+    id="travelDateSection"
+>
 
-                    Travel Date
+    <label>
 
-                </label>
+        Travel Date
 
-                <input
-                    type="date"
-                    name="travel_date"
-                    min="{{ minimum_travel_date|date:'Y-m-d' }}"
-                    required
-                >
+    </label>
 
-            </div>
+    <input
+        type="date"
+        name="travel_date"
+        id="travel_date"
+        min="{{ minimum_travel_date|date:'Y-m-d' }}"
+        required
+    >
 
+</div>
 
             <!-- =========================
                  CONTACT NUMBER
@@ -1027,49 +1121,185 @@ $(document).ready(function() {
     /* ==========================================
        TRANSFER TYPE
     ========================================== */
+    /* ==========================================
+   TRANSFER TYPE
+========================================== */
 
-    $('#transfer_type').on('change', function() {
+$('#transfer_type').on('change', function() {
 
-        const ticketSection =
-            document.getElementById(
-                "ticketBookingSection"
-            );
+    const transferType = this.value;
 
-        const ticketInput =
-            document.getElementById(
-                "ticket_booking_id"
-            );
+    const ticketSection =
+        document.getElementById(
+            "ticketBookingSection"
+        );
+
+    const ticketInput =
+        document.getElementById(
+            "ticket_booking_id"
+        );
+
+    const stationSection =
+        document.getElementById(
+            "stationSection"
+        );
+
+    const sourceStation =
+        document.getElementById(
+            "source_station"
+        );
+
+    const destinationStation =
+        document.getElementById(
+            "destination_station"
+        );
+
+    const travelDateSection =
+        document.getElementById(
+            "travelDateSection"
+        );
+
+    const travelDate =
+        document.getElementById(
+            "travel_date"
+        );
+
+    const ticketInformation =
+        document.getElementById(
+            "ticketInformation"
+        );
 
 
-        if (this.value === "WITH_TICKET") {
+    /* ======================================
+       WITH TICKET
+    ====================================== */
 
-            ticketSection.style.display = "block";
+    if (transferType === "WITH_TICKET") {
 
-            ticketInput.required = true;
+        /* Show Ticket Booking ID */
 
-        }
+        ticketSection.style.display = "block";
 
-        else if (this.value === "WITHOUT_TICKET") {
+        ticketInput.required = true;
 
-            ticketSection.style.display = "none";
 
-            ticketInput.required = false;
+        /* Hide Source / Destination */
 
-            ticketInput.value = "";
+        stationSection.style.display = "none";
 
-        }
+        sourceStation.required = false;
 
-        else {
+        destinationStation.required = false;
 
-            ticketSection.style.display = "none";
 
-            ticketInput.required = false;
+        /* Hide Travel Date */
 
-            ticketInput.value = "";
+        travelDateSection.style.display = "none";
 
-        }
+        travelDate.required = false;
 
-    });
+
+        /* Hide old ticket information */
+
+        ticketInformation.style.display = "none";
+
+
+        /* Clear station selections */
+
+        $('#source_station')
+            .val(null)
+            .trigger('change');
+
+        $('#destination_station')
+            .val(null)
+            .trigger('change');
+
+
+        /* Clear travel date */
+
+        travelDate.value = "";
+
+    }
+
+
+    /* ======================================
+       WITHOUT TICKET
+    ====================================== */
+
+    else if (
+        transferType === "WITHOUT_TICKET"
+    ) {
+
+        /* Hide Ticket Booking ID */
+
+        ticketSection.style.display = "none";
+
+        ticketInput.required = false;
+
+        ticketInput.value = "";
+
+
+        /* Hide Ticket Information */
+
+        ticketInformation.style.display = "none";
+
+
+        /* Show Source / Destination */
+
+        stationSection.style.display = "flex";
+
+        sourceStation.required = true;
+
+        destinationStation.required = true;
+
+
+        /* Show Travel Date */
+
+        travelDateSection.style.display = "block";
+
+        travelDate.required = true;
+
+    }
+
+
+    /* ======================================
+       NO TRANSFER TYPE
+    ====================================== */
+
+    else {
+
+        /* Hide Ticket Booking ID */
+
+        ticketSection.style.display = "none";
+
+        ticketInput.required = false;
+
+        ticketInput.value = "";
+
+
+        /* Show Source / Destination */
+
+        stationSection.style.display = "flex";
+
+        sourceStation.required = true;
+
+        destinationStation.required = true;
+
+
+        /* Show Travel Date */
+
+        travelDateSection.style.display = "block";
+
+        travelDate.required = true;
+
+
+        /* Hide Ticket Information */
+
+        ticketInformation.style.display = "none";
+
+    }
+
+});
 
 
     /* ==========================================
@@ -1501,9 +1731,505 @@ document.querySelector("form").addEventListener("submit", function(event) {
 
 });
 
+
+document.querySelector("form").addEventListener("submit", function(event) {
+
+    const source = document.getElementById("source_station").value;
+    const destination = document.getElementById("destination_station").value;
+
+    if (source && destination && source === destination) {
+
+        event.preventDefault();
+
+        alert(
+            "Source Station and Destination Station cannot be the same. " +
+            "Please select different stations."
+        );
+    }
+
+});
+
+// =========================================================
+// VERIFY TICKET
+// =========================================================
+
+$('#verifyTicketBtn').on('click', function() {
+
+    const ticketBookingId =
+        $('#ticket_booking_id').val().trim();
+
+    const messageBox =
+        $('#ticketVerificationMessage');
+
+    const ticketInformation =
+        $('#ticketInformation');
+
+    // -----------------------------------------------------
+    // CHECK BOOKING ID
+    // -----------------------------------------------------
+
+    if (!ticketBookingId) {
+
+        ticketInformation.hide();
+
+        messageBox
+            .text('⚠️ Please enter your Ticket Booking ID.')
+            .css({
+                'display': 'block',
+                'background': '#f8d7da',
+                'color': '#842029'
+            });
+
+        return;
+    }
+
+    // -----------------------------------------------------
+    // DISABLE BUTTON WHILE VERIFYING
+    // -----------------------------------------------------
+
+    const verifyButton =
+        $('#verifyTicketBtn');
+
+    verifyButton.prop('disabled', true);
+
+    verifyButton.text(
+        '🔄 Verifying Ticket...'
+    );
+
+    messageBox.hide();
+
+    ticketInformation.hide();
+
+    // -----------------------------------------------------
+    // SEND REQUEST TO DJANGO
+    // -----------------------------------------------------
+
+    $.ajax({
+
+        url: "{% url 'verify_luggage_ticket' %}",
+
+        type: "POST",
+
+        data: {
+
+            ticket_booking_id:
+                ticketBookingId,
+
+            csrfmiddlewaretoken:
+                '{{ csrf_token }}'
+
+        },
+
+        success: function(response) {
+
+            // -------------------------------------------------
+            // TICKET NOT VALID
+            // -------------------------------------------------
+
+            if (!response.success) {
+
+                ticketInformation.hide();
+
+                messageBox
+                    .text('❌ ' + response.message)
+                    .css({
+                        'display': 'block',
+                        'background': '#f8d7da',
+                        'color': '#842029'
+                    });
+
+                return;
+            }
+
+            // -------------------------------------------------
+            // TICKET VERIFIED
+            // -------------------------------------------------
+
+            messageBox
+                .text('✅ ' + response.message)
+                .css({
+                    'display': 'block',
+                    'background': '#d1e7dd',
+                    'color': '#0f5132'
+                });
+
+            // -------------------------------------------------
+            // GET TICKET DATA
+            // -------------------------------------------------
+
+            const ticket =
+                response.ticket;
+
+            // -------------------------------------------------
+            // DISPLAY TICKET INFORMATION
+            // -------------------------------------------------
+
+            $('#ticketBookingDisplay').text(
+                ticket.booking_id
+            );
+
+            $('#ticketTrainDisplay').text(
+                ticket.train
+            );
+
+            $('#ticketPassengerDisplay').text(
+                ticket.passenger
+            );
+
+            $('#ticketDateDisplay').text(
+                ticket.travel_date
+            );
+
+            $('#ticketSourceDisplay').text(
+                ticket.source
+            );
+
+            $('#ticketDestinationDisplay').text(
+                ticket.destination
+            );
+
+            $('#ticketStatusDisplay').text(
+                ticket.status
+            );
+
+            // -------------------------------------------------
+            // SHOW TICKET INFORMATION
+            // -------------------------------------------------
+
+            ticketInformation.show();
+
+        },
+
+        error: function(xhr) {
+
+            ticketInformation.hide();
+
+            messageBox
+                .text(
+                    '❌ Unable to verify the ticket. '
+                    + 'Please try again.'
+                )
+                .css({
+                    'display': 'block',
+                    'background': '#f8d7da',
+                    'color': '#842029'
+                });
+
+        },
+
+        complete: function() {
+
+            // -------------------------------------------------
+            // ENABLE BUTTON AGAIN
+            // -------------------------------------------------
+
+            verifyButton.prop(
+                'disabled',
+                false
+            );
+
+            verifyButton.text(
+                '🔍 Verify Ticket'
+            );
+
+        }
+
+    });
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const verifyButton =
+        document.getElementById("verifyTicketBtn");
+
+    const ticketInput =
+        document.getElementById("ticket_booking_id");
+
+    const messageBox =
+        document.getElementById(
+            "ticketVerificationMessage"
+        );
+
+    const ticketInformation =
+        document.getElementById(
+            "ticketInformation"
+        );
+
+
+    // =====================================================
+    // VERIFY TICKET BUTTON
+    // =====================================================
+
+    verifyButton.addEventListener("click", function () {
+
+        console.log("VERIFY BUTTON CLICKED");
+
+
+        const ticketId =
+            ticketInput.value.trim();
+
+
+        // =================================================
+        // CHECK EMPTY TICKET ID
+        // =================================================
+
+        if (!ticketId) {
+
+            messageBox.style.display = "block";
+
+            messageBox.style.background = "#f8d7da";
+
+            messageBox.style.color = "#842029";
+
+            messageBox.textContent =
+                "⚠️ Please enter your Ticket Booking ID.";
+
+            ticketInformation.style.display = "none";
+
+            return;
+        }
+
+
+        // =================================================
+        // SHOW VERIFYING MESSAGE
+        // =================================================
+
+        verifyButton.disabled = true;
+
+        verifyButton.textContent =
+            "🔄 Verifying Ticket...";
+
+
+        messageBox.style.display = "block";
+
+        messageBox.style.background = "#fff3cd";
+
+        messageBox.style.color = "#664d03";
+
+        messageBox.textContent =
+            "🔄 Verifying your ticket...";
+
+
+        ticketInformation.style.display = "none";
+
+
+        // =================================================
+        // SEND REQUEST TO DJANGO
+        // =================================================
+
+        fetch(
+            "{% url 'verify_luggage_ticket' %}",
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Content-Type":
+                        "application/x-www-form-urlencoded",
+
+                    "X-CSRFToken":
+                        document.querySelector(
+                            '[name=csrfmiddlewaretoken]'
+                        ).value
+
+                },
+
+                body:
+                    "ticket_booking_id=" +
+                    encodeURIComponent(ticketId)
+
+            }
+        )
+
+
+        // =================================================
+        // RECEIVE DJANGO RESPONSE
+        // =================================================
+
+        .then(function(response) {
+
+            console.log(
+                "Django response status:",
+                response.status
+            );
+
+            return response.json();
+
+        })
+
+
+        .then(function(data) {
+
+            console.log(
+                "Django response:",
+                data
+            );
+
+
+            // =============================================
+            // TICKET INVALID
+            // =============================================
+
+            if (!data.success) {
+
+                messageBox.style.display =
+                    "block";
+
+                messageBox.style.background =
+                    "#f8d7da";
+
+                messageBox.style.color =
+                    "#842029";
+
+                messageBox.textContent =
+                    "❌ " + data.message;
+
+                ticketInformation.style.display =
+                    "none";
+
+                return;
+            }
+
+
+            // =============================================
+            // TICKET VALID
+            // =============================================
+
+            const ticket =
+                data.ticket;
+
+
+            // =============================================
+            // FILL TICKET INFORMATION
+            // =============================================
+
+            document.getElementById(
+                "ticketBookingDisplay"
+            ).textContent =
+                ticket.booking_id;
+
+
+            document.getElementById(
+                "ticketTrainDisplay"
+            ).textContent =
+                ticket.train;
+
+
+            document.getElementById(
+                "ticketPassengerDisplay"
+            ).textContent =
+                ticket.passenger;
+
+
+            document.getElementById(
+                "ticketDateDisplay"
+            ).textContent =
+                ticket.travel_date;
+
+
+            document.getElementById(
+                "ticketSourceDisplay"
+            ).textContent =
+                ticket.source;
+
+
+            document.getElementById(
+                "ticketDestinationDisplay"
+            ).textContent =
+                ticket.destination;
+
+
+            document.getElementById(
+                "ticketStatusDisplay"
+            ).textContent =
+                ticket.status;
+
+
+            // =============================================
+            // SUCCESS MESSAGE
+            // =============================================
+
+            messageBox.style.display =
+                "block";
+
+            messageBox.style.background =
+                "#d1e7dd";
+
+            messageBox.style.color =
+                "#0f5132";
+
+            messageBox.textContent =
+                "✅ Ticket verified successfully.";
+
+
+            // =============================================
+            // SHOW TICKET INFORMATION
+            // =============================================
+
+            ticketInformation.style.display =
+                "block";
+
+        })
+
+
+        // =================================================
+        // SERVER / NETWORK ERROR
+        // =================================================
+
+        .catch(function(error) {
+
+            console.error(
+                "Ticket verification error:",
+                error
+            );
+
+
+            messageBox.style.display =
+                "block";
+
+            messageBox.style.background =
+                "#f8d7da";
+
+            messageBox.style.color =
+                "#842029";
+
+            messageBox.textContent =
+                "❌ Unable to verify the ticket. " +
+                "Please try again.";
+
+            ticketInformation.style.display =
+                "none";
+
+        })
+
+
+        // =================================================
+        // ENABLE BUTTON AGAIN
+        // =================================================
+
+        .finally(function() {
+
+            verifyButton.disabled =
+                false;
+
+            verifyButton.textContent =
+                "🔍 Verify Ticket";
+
+        });
+
+    });
+
+});
+
+
+
+
 </script>
 
 
 </body>
+
 
 </html>

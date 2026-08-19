@@ -21,4 +21,9 @@ urlpatterns = [
     views.update_profile,
     name="update_profile"
 ),
+path(
+    "verify-luggage-ticket/",
+    views.verify_luggage_ticket,
+    name="verify_luggage_ticket"
+),
 ]

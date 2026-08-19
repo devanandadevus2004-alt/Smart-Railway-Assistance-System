@@ -8,6 +8,8 @@ from datetime import datetime, time
 from django.utils import timezone
 from django.shortcuts import get_object_or_404, redirect, render
 from datetime import timedelta
+from django.http import JsonResponse
+from ticket_booking.models import TicketBooking,SeatReservation
 
 
 def booking_details(request, booking_id):
@@ -365,11 +367,287 @@ def luggage_booking(request):
 
     today = timezone.localdate()
 
+    # WITHOUT_TICKET existing rule
     minimum_travel_date = today + timedelta(days=2)
+
+    # WITH_TICKET new rule
+    minimum_ticket_booking_date = today + timedelta(days=5)
 
     STANDARD_PARCEL_MAX_WEIGHT = 150
 
-    if request.method == "POST":
+    # =========================================================
+    # GET REQUEST
+    # =========================================================
+
+    if request.method == "GET":
+
+        return render(
+            request,
+            "home/luggage_booking.html",
+            {
+                "stations": stations,
+                "minimum_travel_date": minimum_travel_date,
+            }
+        )
+
+    # =========================================================
+    # POST REQUEST
+    # =========================================================
+
+    try:
+
+        # -----------------------------------------------------
+        # BASIC FORM DATA
+        # -----------------------------------------------------
+
+        transfer_type = request.POST.get(
+            "transfer_type"
+        )
+
+        contact_number = request.POST.get(
+            "contact_number"
+        )
+
+        passenger = Passenger.objects.get(
+            id=request.session["passenger_id"]
+        )
+
+    except Passenger.DoesNotExist:
+
+        return render(
+            request,
+            "home/luggage_booking.html",
+            {
+                "stations": stations,
+                "error": "Passenger account could not be found.",
+                "minimum_travel_date": minimum_travel_date,
+            }
+        )
+
+    # =========================================================
+    # VARIABLES THAT WILL BE SET DEPENDING ON TRANSFER TYPE
+    # =========================================================
+
+    ticket_booking = None
+
+    source_station = None
+    destination_station = None
+    travel_date = None
+    # =========================================================
+# WITH TICKET
+# =========================================================
+
+    if transfer_type == "WITH_TICKET":
+
+    # -----------------------------------------------------
+    # GET TICKET BOOKING ID
+    # -----------------------------------------------------
+
+        ticket_booking_id = request.POST.get(
+            "ticket_booking_id"
+        )
+
+        if not ticket_booking_id:
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        "Please enter your confirmed "
+                        "Ticket Booking ID."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
+            )
+
+        # -----------------------------------------------------
+        # RETRIEVE TICKET
+        # -----------------------------------------------------
+
+        try:
+
+            ticket_booking = TicketBooking.objects.get(
+                id=ticket_booking_id,
+                passenger=passenger
+            )
+
+        except TicketBooking.DoesNotExist:
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        "The Ticket Booking ID is invalid "
+                        "or does not belong to your account."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
+            )
+
+        # -----------------------------------------------------
+        # CHECK TICKET STATUS
+        # -----------------------------------------------------
+
+        if ticket_booking.status != "CONFIRMED":
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        "Luggage transfer is available "
+                        "only for confirmed railway tickets. "
+                        f"Current ticket status: "
+                        f"{ticket_booking.status}."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
+            )
+
+        # -----------------------------------------------------
+        # GET JOURNEY DATE FROM TICKET
+        # -----------------------------------------------------
+
+        travel_date = ticket_booking.travel_date
+
+        # -----------------------------------------------------
+        # CHECK WHETHER JOURNEY HAS EXPIRED
+        # -----------------------------------------------------
+
+        if travel_date < today:
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        "Luggage transfer cannot be booked "
+                        "because the ticket journey date "
+                        "has already expired."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
+            )
+
+        # -----------------------------------------------------
+        # CHECK 5-DAY ADVANCE REQUIREMENT
+        # -----------------------------------------------------
+
+        days_remaining = (
+            travel_date - today
+        ).days
+
+        if days_remaining < 5:
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        "Luggage transfer must be booked "
+                        "at least 5 days before the "
+                        "ticket journey date. "
+                        f"Your journey is only "
+                        f"{days_remaining} day(s) away."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
+            )
+
+        # -----------------------------------------------------
+        # GET SOURCE AND DESTINATION FROM TRAIN
+        # -----------------------------------------------------
+
+        # -----------------------------------------------------
+# GET PASSENGER'S ACTUAL SOURCE AND DESTINATION
+# FROM SEAT RESERVATION
+# -----------------------------------------------------
+        seat_reservation = (
+            SeatReservation.objects
+            .filter(
+                booking_id=ticket_booking.id,
+                status="BOOKED"
+            )
+            .select_related(
+                "source_station",
+                "destination_station"
+            )
+            .first()
+        )
+
+        if not seat_reservation:
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        "No seat reservation was found "
+                        "for this ticket booking."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
+            )
+
+        source_station = (
+            seat_reservation.source_station
+        )
+
+        destination_station = (
+            seat_reservation.destination_station
+        )
+
+        # -----------------------------------------------------
+        # PREPARE TICKET INFORMATION FOR DISPLAY
+        # -----------------------------------------------------
+
+        ticket_information = {
+
+            "booking_id":
+                ticket_booking.id,
+
+            "train":
+                ticket_booking.train,
+
+            "passenger":
+                passenger,
+
+            "travel_date":
+                ticket_booking.travel_date,
+
+            "source_station":
+                source_station,
+
+            "destination_station":
+                destination_station,
+
+            "status":
+                ticket_booking.status,
+    }
+
+    # =========================================================
+    # WITHOUT TICKET
+    # =========================================================
+
+    elif transfer_type == "WITHOUT_TICKET":
+
+        # -----------------------------------------------------
+        # SOURCE
+        # -----------------------------------------------------
 
         try:
 
@@ -381,41 +659,52 @@ def luggage_booking(request):
                 id=request.POST["destination_station"]
             )
 
-        except Station.DoesNotExist:
+        except (
+            Station.DoesNotExist,
+            KeyError
+        ):
 
             return render(
                 request,
                 "home/luggage_booking.html",
                 {
                     "stations": stations,
-                    "error": "Invalid source or destination station.",
-                    "minimum_travel_date": minimum_travel_date,
+                    "error": (
+                        "Invalid source or destination station."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
                 }
             )
 
-        # ----------------------------------------------------
-        # BASIC FORM DATA
-        # ----------------------------------------------------
+        # -----------------------------------------------------
+        # SAME STATION CHECK
+        # -----------------------------------------------------
 
-        transfer_type = request.POST.get(
-            "transfer_type"
-        )
+        if source_station.id == destination_station.id:
+
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        "Source Station and Destination "
+                        "Station cannot be the same. "
+                        "Please select different stations."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
+            )
+
+        # -----------------------------------------------------
+        # TRAVEL DATE
+        # -----------------------------------------------------
 
         travel_date_string = request.POST.get(
             "travel_date"
         )
-
-        contact_number = request.POST.get(
-            "contact_number"
-        )
-
-        passenger = Passenger.objects.get(
-            id=request.session["passenger_id"]
-        )
-
-        # ----------------------------------------------------
-        # TRAVEL DATE
-        # ----------------------------------------------------
 
         try:
 
@@ -424,21 +713,26 @@ def luggage_booking(request):
                 "%Y-%m-%d"
             ).date()
 
-        except (TypeError, ValueError):
+        except (
+            TypeError,
+            ValueError
+        ):
 
             return render(
                 request,
                 "home/luggage_booking.html",
                 {
                     "stations": stations,
-                    "error": "Please enter a valid travel date.",
-                    "minimum_travel_date": minimum_travel_date,
+                    "error":
+                        "Please enter a valid travel date.",
+                    "minimum_travel_date":
+                        minimum_travel_date,
                 }
             )
 
-        # ----------------------------------------------------
-        # MINIMUM ADVANCE PERIOD
-        # ----------------------------------------------------
+        # -----------------------------------------------------
+        # EXISTING 2-DAY RULE
+        # -----------------------------------------------------
 
         if travel_date < minimum_travel_date:
 
@@ -457,24 +751,111 @@ def luggage_booking(request):
                 }
             )
 
-        # ----------------------------------------------------
-        # NUMBER OF ITEMS
-        # ----------------------------------------------------
+    # =========================================================
+    # INVALID TRANSFER TYPE
+    # =========================================================
 
-        try:
+    else:
 
-            number_of_items = int(
-                request.POST.get(
-                    "number_of_items",
-                    0
-                )
+        return render(
+            request,
+            "home/luggage_booking.html",
+            {
+                "stations": stations,
+                "error":
+                    "Please select a valid transfer type.",
+                "minimum_travel_date":
+                    minimum_travel_date,
+            }
+        )
+
+    # =========================================================
+    # NUMBER OF ITEMS
+    # =========================================================
+
+    try:
+
+        number_of_items = int(
+            request.POST.get(
+                "number_of_items",
+                0
             )
+        )
 
-        except (TypeError, ValueError):
+    except (
+        TypeError,
+        ValueError
+    ):
 
-            number_of_items = 0
+        number_of_items = 0
 
-        if number_of_items <= 0:
+    if number_of_items <= 0:
+
+        return render(
+            request,
+            "home/luggage_booking.html",
+            {
+                "stations": stations,
+                "error": (
+                    "Please enter at least one "
+                    "luggage item."
+                ),
+                "minimum_travel_date":
+                    minimum_travel_date,
+            }
+        )
+
+    # =========================================================
+    # COLLECT INDIVIDUAL ITEMS
+    # =========================================================
+
+    luggage_items = []
+
+    total_weight = 0
+
+    for i in range(
+        1,
+        number_of_items + 1
+    ):
+
+        # -----------------------------------------------------
+        # ITEM TYPE
+        # -----------------------------------------------------
+
+        luggage_type = request.POST.get(
+            f"item_type_{i}"
+        )
+
+        # -----------------------------------------------------
+        # ITEM WEIGHT
+        # -----------------------------------------------------
+
+        weight_value = request.POST.get(
+            f"item_weight_{i}"
+        )
+
+        # -----------------------------------------------------
+        # DESCRIPTION
+        # -----------------------------------------------------
+
+        item_description = request.POST.get(
+            f"item_description_{i}",
+            ""
+        ).strip()
+
+        # -----------------------------------------------------
+        # IMAGE
+        # -----------------------------------------------------
+
+        item_image = request.FILES.get(
+            f"item_image_{i}"
+        )
+
+        # -----------------------------------------------------
+        # TYPE / WEIGHT CHECK
+        # -----------------------------------------------------
+
+        if not luggage_type or not weight_value:
 
             return render(
                 request,
@@ -482,91 +863,99 @@ def luggage_booking(request):
                 {
                     "stations": stations,
                     "error": (
-                        "Please enter at least one "
-                        "luggage item."
+                        f"Please enter the type and "
+                        f"weight for Item {i}."
                     ),
                     "minimum_travel_date":
                         minimum_travel_date,
                 }
             )
 
-        # ----------------------------------------------------
-        # COLLECT INDIVIDUAL ITEMS
-        # ----------------------------------------------------
+        # -----------------------------------------------------
+        # WEIGHT VALIDATION
+        # -----------------------------------------------------
 
-        luggage_items = []
+        try:
 
-        total_weight = 0
+            item_weight = float(
+                weight_value
+            )
 
-        for i in range(
-            1,
-            number_of_items + 1
+        except (
+            TypeError,
+            ValueError
         ):
 
-            # ------------------------------------------------
-            # ITEM TYPE
-            # ------------------------------------------------
-
-            luggage_type = request.POST.get(
-                f"item_type_{i}"
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        f"Please enter a valid weight "
+                        f"for Item {i}."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
             )
 
-            # ------------------------------------------------
-            # ITEM WEIGHT
-            # ------------------------------------------------
+        if item_weight <= 0:
 
-            weight_value = request.POST.get(
-                f"item_weight_{i}"
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        f"Weight for Item {i} "
+                        f"must be greater than zero."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
             )
 
-            # ------------------------------------------------
-            # ITEM DESCRIPTION
-            # ------------------------------------------------
+        # -----------------------------------------------------
+        # 150 KG CHECK
+        # ONLY WITHOUT TICKET
+        # -----------------------------------------------------
 
-            item_description = request.POST.get(
-                f"item_description_{i}",
-                ""
-            ).strip()
+        if (
+            transfer_type == "WITHOUT_TICKET"
+            and
+            item_weight >
+            STANDARD_PARCEL_MAX_WEIGHT
+        ):
 
-            # ------------------------------------------------
-            # ITEM IMAGE
-            # ------------------------------------------------
-
-            item_image = request.FILES.get(
-                f"item_image_{i}"
+            return render(
+                request,
+                "home/luggage_booking.html",
+                {
+                    "stations": stations,
+                    "error": (
+                        f"Item {i} weighs "
+                        f"{item_weight} kg. "
+                        f"The normal maximum for "
+                        f"a single parcel package "
+                        f"is "
+                        f"{STANDARD_PARCEL_MAX_WEIGHT} kg. "
+                        "Packages exceeding this "
+                        "limit require applicable "
+                        "railway permission."
+                    ),
+                    "minimum_travel_date":
+                        minimum_travel_date,
+                }
             )
 
-            # ------------------------------------------------
-            # TYPE / WEIGHT CHECK
-            # ------------------------------------------------
+        # -----------------------------------------------------
+        # OTHER ITEM VALIDATION
+        # -----------------------------------------------------
 
-            if not luggage_type or not weight_value:
+        if luggage_type == "Other":
 
-                return render(
-                    request,
-                    "home/luggage_booking.html",
-                    {
-                        "stations": stations,
-                        "error": (
-                            f"Please enter the type and "
-                            f"weight for Item {i}."
-                        ),
-                        "minimum_travel_date":
-                            minimum_travel_date,
-                    }
-                )
-
-            # ------------------------------------------------
-            # WEIGHT VALIDATION
-            # ------------------------------------------------
-
-            try:
-
-                item_weight = float(
-                    weight_value
-                )
-
-            except (TypeError, ValueError):
+            if not item_description:
 
                 return render(
                     request,
@@ -574,15 +963,16 @@ def luggage_booking(request):
                     {
                         "stations": stations,
                         "error": (
-                            f"Please enter a valid weight "
-                            f"for Item {i}."
+                            f"Please provide a "
+                            f"description for "
+                            f"Item {i}."
                         ),
                         "minimum_travel_date":
                             minimum_travel_date,
                     }
                 )
 
-            if item_weight <= 0:
+            if not item_image:
 
                 return render(
                     request,
@@ -590,274 +980,118 @@ def luggage_booking(request):
                     {
                         "stations": stations,
                         "error": (
-                            f"Weight for Item {i} "
-                            f"must be greater than zero."
+                            f"Please upload an "
+                            f"image for Item {i}."
                         ),
                         "minimum_travel_date":
                             minimum_travel_date,
                     }
                 )
 
-            # ------------------------------------------------
-            # 150 KG CHECK
-            # ONLY FOR WITHOUT-TICKET PARCEL TRANSFER
-            # ------------------------------------------------
+        # -----------------------------------------------------
+        # STORE ITEM DATA
+        # -----------------------------------------------------
 
-            if (
-                transfer_type == "WITHOUT_TICKET"
-                and
-                item_weight >
-                STANDARD_PARCEL_MAX_WEIGHT
-            ):
+        luggage_items.append({
 
-                return render(
-                    request,
-                    "home/luggage_booking.html",
-                    {
-                        "stations": stations,
-                        "error": (
-                            f"Item {i} weighs "
-                            f"{item_weight} kg. "
-                            f"The normal maximum for "
-                            f"a single parcel package "
-                            f"is "
-                            f"{STANDARD_PARCEL_MAX_WEIGHT} kg. "
-                            "Packages exceeding this "
-                            "limit require applicable "
-                            "railway permission."
-                        ),
-                        "minimum_travel_date":
-                            minimum_travel_date,
-                    }
-                )
+            "item_number":
+                i,
 
-            # ------------------------------------------------
-            # OTHER ITEM VALIDATION
-            # DESCRIPTION + IMAGE REQUIRED
-            # ------------------------------------------------
+            "luggage_type":
+                luggage_type,
 
-            if luggage_type == "Other":
+            "weight":
+                item_weight,
 
-                if not item_description:
+            "item_description":
+                item_description,
 
-                    return render(
-                        request,
-                        "home/luggage_booking.html",
-                        {
-                            "stations": stations,
-                            "error": (
-                                f"Please provide a "
-                                f"description for "
-                                f"Item {i}."
-                            ),
-                            "minimum_travel_date":
-                                minimum_travel_date,
-                        }
-                    )
+            "item_image":
+                item_image,
 
-                if not item_image:
+        })
 
-                    return render(
-                        request,
-                        "home/luggage_booking.html",
-                        {
-                            "stations": stations,
-                            "error": (
-                                f"Please upload an "
-                                f"image for Item {i}."
-                            ),
-                            "minimum_travel_date":
-                                minimum_travel_date,
-                        }
-                    )
+        total_weight += item_weight
 
-            # ------------------------------------------------
-            # STORE ITEM DATA TEMPORARILY
-            # ------------------------------------------------
+    # =========================================================
+    # SAVE MAIN LUGGAGE BOOKING
+    # =========================================================
 
-            luggage_items.append({
+    main_luggage_type = luggage_items[0][
+        "luggage_type"
+    ]
 
-                "item_number":
-                    i,
+    booking = LuggageBooking.objects.create(
 
-                "luggage_type":
-                    luggage_type,
+        passenger=passenger,
 
-                "weight":
-                    item_weight,
+        transfer_type=transfer_type,
 
-                "item_description":
-                    item_description,
+        ticket_booking=ticket_booking,
 
-                "item_image":
-                    item_image,
+        # WITH_TICKET:
+        # These came directly from ticket.
+        #
+        # WITHOUT_TICKET:
+        # These came from passenger selection.
+        source_station=source_station,
 
-            })
+        destination_station=destination_station,
 
-            # ------------------------------------------------
-            # CALCULATE TOTAL WEIGHT
-            # ------------------------------------------------
+        luggage_type=main_luggage_type,
 
-            total_weight += item_weight
+        number_of_bags=number_of_items,
 
-        # ----------------------------------------------------
-        # TICKET VERIFICATION
-        # ----------------------------------------------------
+        weight=total_weight,
 
-        ticket_booking = None
+        # WITH_TICKET:
+        # This is ticket travel date.
+        #
+        # WITHOUT_TICKET:
+        # This is passenger-entered travel date.
+        travel_date=travel_date,
 
-        if transfer_type == "WITH_TICKET":
+        contact_number=contact_number,
 
-            ticket_booking_id = request.POST.get(
-                "ticket_booking_id"
-            )
+        # Existing default is Pending.
+        status="Pending",
+    )
 
-            if not ticket_booking_id:
+    # =========================================================
+    # SAVE INDIVIDUAL LUGGAGE ITEMS
+    # =========================================================
 
-                return render(
-                    request,
-                    "home/luggage_booking.html",
-                    {
-                        "stations": stations,
-                        "error": (
-                            "Please select or enter a valid "
-                            "ticket booking."
-                        ),
-                        "minimum_travel_date":
-                            minimum_travel_date,
-                    }
-                )
+    for item in luggage_items:
 
-            try:
+        LuggageItem.objects.create(
 
-                ticket_booking = TicketBooking.objects.get(
-                    id=ticket_booking_id,
-                    passenger=passenger,
-                    status="CONFIRMED"
-                )
+            booking=booking,
 
-            except TicketBooking.DoesNotExist:
+            item_number=item[
+                "item_number"
+            ],
 
-                return render(
-                    request,
-                    "home/luggage_booking.html",
-                    {
-                        "stations": stations,
-                        "error": (
-                            "The selected ticket is not a "
-                            "valid confirmed ticket belonging "
-                            "to this account."
-                        ),
-                        "minimum_travel_date":
-                            minimum_travel_date,
-                    }
-                )
+            luggage_type=item[
+                "luggage_type"
+            ],
 
-            # ------------------------------------------------
-            # TICKET TRAVEL DATE CHECK
-            # ------------------------------------------------
+            weight=item[
+                "weight"
+            ],
 
-            if ticket_booking.travel_date != travel_date:
+            item_description=item[
+                "item_description"
+            ],
 
-                return render(
-                    request,
-                    "home/luggage_booking.html",
-                    {
-                        "stations": stations,
-                        "error": (
-                            "The luggage travel date must "
-                            "match the ticket travel date."
-                        ),
-                        "minimum_travel_date":
-                            minimum_travel_date,
-                    }
-                )
-
-        # ----------------------------------------------------
-        # SAVE MAIN BOOKING
-        # ----------------------------------------------------
-
-        main_luggage_type = luggage_items[0][
-            "luggage_type"
-        ]
-
-        booking = LuggageBooking.objects.create(
-
-            passenger=passenger,
-
-            transfer_type=transfer_type,
-
-            ticket_booking=ticket_booking,
-
-            source_station=source_station,
-
-            destination_station=destination_station,
-
-            luggage_type=main_luggage_type,
-
-            number_of_bags=number_of_items,
-
-            weight=total_weight,
-
-            travel_date=travel_date,
-
-            contact_number=contact_number,
+            item_image=item[
+                "item_image"
+            ],
 
         )
 
-        # ----------------------------------------------------
-        # SAVE INDIVIDUAL ITEMS
-        # ----------------------------------------------------
-
-        for item in luggage_items:
-
-            LuggageItem.objects.create(
-
-                booking=booking,
-
-                item_number=item[
-                    "item_number"
-                ],
-
-                luggage_type=item[
-                    "luggage_type"
-                ],
-
-                weight=item[
-                    "weight"
-                ],
-
-                item_description=item[
-                    "item_description"
-                ],
-
-                item_image=item[
-                    "item_image"
-                ],
-
-            )
-
-        # ----------------------------------------------------
-        # SUCCESS
-        # ----------------------------------------------------
-
-        return render(
-            request,
-            "home/luggage_booking.html",
-            {
-                "stations": stations,
-
-                "success":
-                    "Luggage booking submitted successfully!",
-
-                "minimum_travel_date":
-                    minimum_travel_date,
-            }
-        )
-
-    # --------------------------------------------------------
-    # GET REQUEST
-    # --------------------------------------------------------
+    # =========================================================
+    # SUCCESS
+    # =========================================================
 
     return render(
         request,
@@ -865,11 +1099,16 @@ def luggage_booking(request):
         {
             "stations": stations,
 
+            "success": (
+                "Luggage booking request submitted "
+                "successfully. Your request has been "
+                "sent to the officer for verification."
+            ),
+
             "minimum_travel_date":
                 minimum_travel_date,
         }
     )
-
 def my_bookings(request):
     passenger = Passenger.objects.get(id=request.session["passenger_id"])
 
@@ -1274,3 +1513,207 @@ def update_profile(request):
             "passenger": passenger
         }
     )
+
+def verify_luggage_ticket(request):
+
+    if request.method != "POST":
+        return JsonResponse({
+            "success": False,
+            "message": "Invalid request."
+        })
+
+    # ---------------------------------------------
+    # GET LOGGED-IN PASSENGER
+    # ---------------------------------------------
+
+    passenger_id = request.session.get("passenger_id")
+
+    if not passenger_id:
+
+        return JsonResponse({
+            "success": False,
+            "message": "Please login before verifying your ticket."
+        })
+
+    # ---------------------------------------------
+    # GET TICKET BOOKING ID
+    # ---------------------------------------------
+
+    ticket_booking_id = request.POST.get(
+        "ticket_booking_id"
+    )
+
+    if not ticket_booking_id:
+
+        return JsonResponse({
+            "success": False,
+            "message": "Please enter a Ticket Booking ID."
+        })
+
+    # ---------------------------------------------
+    # RETRIEVE TICKET
+    # ---------------------------------------------
+
+    try:
+
+        ticket_booking = TicketBooking.objects.select_related(
+            "passenger",
+            "train",
+            "train__source_station",
+            "train__destination_station"
+        ).get(
+            id=ticket_booking_id,
+            passenger_id=passenger_id
+        )
+
+    except TicketBooking.DoesNotExist:
+
+        return JsonResponse({
+            "success": False,
+            "message": (
+                "Invalid Ticket Booking ID or the ticket "
+                "does not belong to your account."
+            )
+        })
+
+    # ---------------------------------------------
+    # CHECK TICKET STATUS
+    # ---------------------------------------------
+
+    if ticket_booking.status != "CONFIRMED":
+
+        return JsonResponse({
+            "success": False,
+            "message": (
+                "Luggage transfer is available only "
+                "for confirmed railway tickets. "
+                f"Current ticket status: "
+                f"{ticket_booking.status}."
+            )
+        })
+
+    # ---------------------------------------------
+    # GET TODAY
+    # ---------------------------------------------
+
+    today = timezone.localdate()
+
+    travel_date = ticket_booking.travel_date
+
+    # ---------------------------------------------
+    # CHECK JOURNEY EXPIRED
+    # ---------------------------------------------
+
+    if travel_date < today:
+
+        return JsonResponse({
+            "success": False,
+            "message": (
+                "Luggage transfer cannot be booked "
+                "because the ticket journey date "
+                "has already expired."
+            )
+        })
+
+    # ---------------------------------------------
+    # CHECK 5-DAY RULE
+    # ---------------------------------------------
+
+    days_remaining = (
+        travel_date - today
+    ).days
+
+    if days_remaining < 5:
+
+        return JsonResponse({
+            "success": False,
+            "message": (
+                "Luggage transfer must be booked "
+                "at least 5 days before the ticket "
+                "journey date. "
+                f"Your journey is only "
+                f"{days_remaining} day(s) away."
+            )
+        })
+
+    # ---------------------------------------------
+# GET PASSENGER'S ACTUAL JOURNEY STATIONS
+# FROM SEAT RESERVATION
+# ---------------------------------------------
+
+    seat_reservation = (
+        SeatReservation.objects
+        .filter(
+            booking_id=ticket_booking.id,
+            status="BOOKED"
+        )
+        .select_related(
+            "source_station",
+            "destination_station"
+        )
+        .first()
+    )
+
+    if not seat_reservation:
+
+        return JsonResponse({
+            "success": False,
+            "message": (
+                "No seat reservation was found "
+                "for this ticket booking."
+            )
+        })
+
+    source_station = (
+        seat_reservation.source_station
+    )
+
+    destination_station = (
+        seat_reservation.destination_station
+    )
+
+    # ---------------------------------------------
+    # SUCCESS
+    # ---------------------------------------------
+
+    return JsonResponse({
+
+        "success": True,
+
+        "message": "Ticket verified successfully.",
+
+        "ticket": {
+
+            "booking_id":
+                ticket_booking.id,
+
+            "train":
+                (
+                    f"{ticket_booking.train.train_number} - "
+                    f"{ticket_booking.train.train_name}"
+                ),
+
+            "passenger":
+                ticket_booking.passenger.full_name,
+
+            "travel_date":
+                travel_date.strftime("%d %b %Y"),
+
+            "source":
+                (
+                    f"{source_station.station_name} "
+                    f"({source_station.station_code})"
+                ),
+
+            "destination":
+                (
+                    f"{destination_station.station_name} "
+                    f"({destination_station.station_code})"
+                ),
+
+            "status":
+                ticket_booking.status,
+
+        }
+
+    })

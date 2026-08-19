@@ -436,10 +436,11 @@
                     </label>
 
                     <input
-                        type="date"
-                        name="travel_date"
-                        required
-                    >
+    type="date"
+    name="travel_date"
+    id="travel_date"
+    required
+>
 
                 </div>
 
@@ -599,6 +600,27 @@
             width: '100%'
         });
     });
+
+    
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const travelDate = document.getElementById("travel_date");
+
+        const today = new Date();
+
+        // Day after tomorrow
+        today.setDate(today.getDate() + 2);
+
+        const year = today.getFullYear();
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const day = String(today.getDate()).padStart(2, '0');
+
+        const minimumDate = `${year}-${month}-${day}`;
+
+        travelDate.min = minimumDate;
+
+    });
+
 </script>
 
 </body>
