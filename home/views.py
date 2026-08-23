@@ -1717,3 +1717,6 @@ def verify_luggage_ticket(request):
         }
 
     })
+
+def about(request):
+    return render(request, "home/about.html")

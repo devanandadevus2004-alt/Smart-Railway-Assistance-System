@@ -1,0 +1,422 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>About - Smart Railway Assistance</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #333;
+        }
+
+        /* Navigation */
+
+        .navbar {
+            background: #003366;
+            color: white;
+
+            padding: 18px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .back-btn {
+            color: white;
+            text-decoration: none;
+
+            background: #0052cc;
+
+            padding: 10px 20px;
+            border-radius: 25px;
+
+            font-weight: bold;
+        }
+
+        .back-btn:hover {
+            background: #003d99;
+        }
+
+
+        /* Main About Section */
+
+        .about-section {
+            max-width: 1100px;
+            margin: 60px auto;
+
+            padding: 20px;
+        }
+
+        .about-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .about-header span {
+            display: inline-block;
+
+            background: #e8f0fe;
+            color: #0052cc;
+
+            padding: 8px 18px;
+            border-radius: 20px;
+
+            font-size: 13px;
+            font-weight: bold;
+
+            margin-bottom: 15px;
+        }
+
+        .about-header h1 {
+            color: #003366;
+            font-size: 40px;
+            margin: 10px 0;
+        }
+
+        .about-header p {
+            color: #666;
+            font-size: 17px;
+        }
+
+
+        /* About Content */
+
+        .about-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+
+            gap: 35px;
+            align-items: stretch;
+        }
+
+        .about-card {
+            background: white;
+
+            padding: 35px;
+            border-radius: 18px;
+
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .about-card h2 {
+            color: #003366;
+            margin-top: 0;
+        }
+
+        .about-card p {
+            color: #555;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+
+        /* Highlight Card */
+
+        .highlight-card {
+            background:
+                linear-gradient(
+                    135deg,
+                    #003366,
+                    #0052cc
+                );
+
+            color: white;
+
+            padding: 35px;
+            border-radius: 18px;
+
+            text-align: center;
+
+            box-shadow:
+                0 8px 25px
+                rgba(0, 51, 102, 0.25);
+        }
+
+        .train-icon {
+            font-size: 65px;
+            margin-bottom: 20px;
+        }
+
+        .highlight-card h2 {
+            margin-top: 0;
+        }
+
+        .highlight-card p {
+            color: #e5efff;
+            line-height: 1.7;
+        }
+
+
+        /* Features */
+
+        .features-title {
+            text-align: center;
+
+            color: #003366;
+
+            margin-top: 60px;
+            margin-bottom: 30px;
+
+            font-size: 30px;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 25px;
+        }
+
+        .feature-card {
+            background: white;
+
+            padding: 28px;
+            border-radius: 15px;
+
+            text-align: center;
+
+            box-shadow:
+                0 5px 18px
+                rgba(0, 0, 0, 0.08);
+
+            transition: 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-7px);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #003366;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+
+        /* Mobile */
+
+        @media (max-width: 800px) {
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .navbar h2 {
+                font-size: 18px;
+            }
+
+            .about-section {
+                margin: 30px auto;
+            }
+
+            .about-header h1 {
+                font-size: 30px;
+            }
+
+            .about-content {
+                grid-template-columns: 1fr;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- Navigation -->
+
+    <div class="navbar">
+
+        <h2>🚆 Smart Railway Assistance</h2>
+
+        <a
+    href="{% url 'home' %}"
+    class="back-btn"
+>
+    ← Back to Home
+</a>
+
+    </div>
+
+
+    <!-- About Section -->
+
+    <div class="about-section">
+
+
+        <div class="about-header">
+
+            <span>ABOUT THE PROJECT</span>
+
+            <h1>
+                Smart Railway Assistance and Reservation System
+            </h1>
+
+            <p>
+                Making railway travel easier, safer and smarter.
+            </p>
+
+        </div>
+
+
+        <div class="about-content">
+
+
+            <div class="about-card">
+
+                <h2>About the System</h2>
+
+                <p>
+                    The Smart Railway Assistance and Reservation System
+                    is designed to improve the overall railway travel
+                    experience for passengers through a smart and
+                    user-friendly platform.
+                </p>
+
+                <p>
+                    The system brings together important railway
+                    services including ticket booking, intelligent
+                    seat allocation based on passenger preferences,
+                    luggage and parcel transfer, station guidance,
+                    emergency assistance and notifications.
+                </p>
+
+                <p>
+                    The main objective of this project is to provide
+                    passengers with a more convenient and efficient
+                    way to access railway-related services from a
+                    single platform.
+                </p>
+
+            </div>
+
+
+            <div class="highlight-card">
+
+                <div class="train-icon">
+                    🚆
+                </div>
+
+                <h2>
+                    Our Goal
+                </h2>
+
+                <p>
+                    To build a smarter railway assistance system
+                    that focuses on passenger comfort, convenience,
+                    safety and efficient service delivery.
+                </p>
+
+            </div>
+
+
+        </div>
+
+
+        <h2 class="features-title">
+            Key Services
+        </h2>
+
+
+        <div class="features">
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🎫
+                </div>
+
+                <h3>
+                    Smart Ticket Booking
+                </h3>
+
+                <p>
+                    Book railway tickets with intelligent
+                    passenger preference-based seat allocation.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🧳
+                </div>
+
+                <h3>
+                    Luggage Transfer
+                </h3>
+
+                <p>
+                    Manage passenger luggage and parcel transfer
+                    services conveniently.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <div class="feature-icon">
+                    🆘
+                </div>
+
+                <h3>
+                    Railway Assistance
+                </h3>
+
+                <p>
+                    Access station guidance and emergency
+                    assistance when needed.
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>
+```

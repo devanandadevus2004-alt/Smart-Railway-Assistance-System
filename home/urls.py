@@ -26,4 +26,5 @@ path(
     views.verify_luggage_ticket,
     name="verify_luggage_ticket"
 ),
+path("about/", views.about, name="about"),
 ]
