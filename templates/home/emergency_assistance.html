@@ -6,32 +6,149 @@
 
     <style>
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f7fb;
-            margin: 0;
+        * {
+            box-sizing: border-box;
         }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #eef4fb, #f8fafc);
+            margin: 0;
+            color: #263238;
+        }
+
+        /* ==============================
+           MAIN CONTAINER
+        ============================== */
 
         .container {
-            width: 90%;
+            width: 92%;
             max-width: 1100px;
-            margin: 40px auto;
+            margin: 35px auto 50px;
         }
 
-        h1 {
+        /* ==============================
+           PAGE HEADER
+        ============================== */
+
+        .page-header {
+            background: linear-gradient(135deg, #003366, #0052a3);
+            color: white;
+            padding: 30px 25px;
+            border-radius: 16px;
             text-align: center;
-            color: #003366;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0, 51, 102, 0.18);
         }
 
-        /* Search Box */
+        .page-header .icon {
+            font-size: 42px;
+            margin-bottom: 8px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 32px;
+            letter-spacing: 0.3px;
+        }
+
+        .page-header p {
+            margin: 8px 0 0;
+            font-size: 15px;
+            opacity: 0.9;
+        }
+
+        /* ==============================
+           EMERGENCY CONTACTS
+        ============================== */
+
+        .emergency {
+            background: white;
+            padding: 24px;
+            border-radius: 14px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #d32f2f;
+        }
+
+        .emergency-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .emergency-header h2 {
+            color: #c62828;
+            margin: 0;
+            font-size: 21px;
+        }
+
+        .emergency-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .emergency-item {
+            background: #fff5f5;
+            border: 1px solid #f2d2d2;
+            border-radius: 10px;
+            padding: 15px 10px;
+            text-align: center;
+            transition: 0.2s ease;
+        }
+
+        .emergency-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 12px rgba(198, 40, 40, 0.12);
+        }
+
+        .emergency-item .emoji {
+            font-size: 25px;
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .emergency-item .label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .emergency-item strong {
+            font-size: 20px;
+            color: #c62828;
+        }
+
+        /* ==============================
+           SEARCH BOX
+        ============================== */
 
         .search-box {
             background: white;
-            padding: 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,.15);
+            padding: 28px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
             margin-bottom: 30px;
+        }
+
+        .search-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .search-title h2 {
+            margin: 0;
+            color: #003366;
+            font-size: 21px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
         }
 
         .search-box label {
@@ -39,9 +156,12 @@
             color: #333;
             display: block;
             margin-bottom: 8px;
+            font-size: 14px;
         }
 
-        /* Station Search */
+        /* ==============================
+           STATION SEARCH
+        ============================== */
 
         .station-search {
             position: relative;
@@ -50,19 +170,28 @@
 
         #station_search {
             width: 100%;
-            box-sizing: border-box;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            padding: 14px 16px;
+            border-radius: 8px;
+            border: 1px solid #ccd3dc;
             font-size: 16px;
+            background: #fafbfd;
+            transition: 0.2s ease;
+        }
+
+        #station_search:hover {
+            border-color: #9aa8b8;
         }
 
         #station_search:focus {
             outline: none;
             border-color: #0052cc;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
         }
 
-        /* Suggestions */
+        /* ==============================
+           SUGGESTIONS
+        ============================== */
 
         #station_suggestions {
             position: absolute;
@@ -70,127 +199,297 @@
             left: 0;
             right: 0;
             background: white;
-            border: 1px solid #ccc;
+            border: 1px solid #ccd3dc;
             border-top: none;
             max-height: 250px;
             overflow-y: auto;
             z-index: 1000;
             display: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
         }
 
         .station-option {
-            padding: 12px;
+            padding: 13px 15px;
             cursor: pointer;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #edf0f3;
+            font-size: 15px;
+            transition: 0.15s ease;
         }
 
         .station-option:hover {
-            background: #f0f4ff;
+            background: #eef4ff;
+            color: #0052cc;
         }
 
         .no-station {
-            padding: 12px;
+            padding: 14px;
             color: #777;
+            text-align: center;
         }
 
-        /* Distance */
+        /* ==============================
+           DISTANCE SELECT
+        ============================== */
 
         select {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            padding: 14px;
+            margin: 0;
+            border-radius: 8px;
+            border: 1px solid #ccd3dc;
             font-size: 16px;
+            background: #fafbfd;
+            cursor: pointer;
         }
 
-        /* Search Button */
+        select:focus {
+            outline: none;
+            border-color: #0052cc;
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+        }
+
+        /* ==============================
+           SEARCH BUTTON
+        ============================== */
 
         button {
             width: 100%;
-            padding: 12px;
-            background: #0052cc;
+            padding: 14px;
+            background: linear-gradient(135deg, #0052cc, #006be6);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            margin-top: 10px;
+            font-weight: bold;
+            margin-top: 5px;
+            transition: 0.2s ease;
+            box-shadow: 0 4px 10px rgba(0, 82, 204, 0.2);
         }
 
         button:hover {
-            background: #003d99;
+            background: linear-gradient(135deg, #003d99, #0052cc);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(0, 82, 204, 0.25);
         }
 
-        /* Emergency Contacts */
-
-        .emergency {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,.15);
+        button:active {
+            transform: translateY(0);
         }
 
-        .emergency h2 {
-            color: #c62828;
+        /* ==============================
+           HOSPITAL RESULTS
+        ============================== */
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0 18px;
         }
 
-        .number {
-            margin: 10px 0;
-            font-size: 18px;
+        .results-header h2 {
+            color: #003366;
+            margin: 0;
+            font-size: 23px;
         }
-
-        /* Hospital */
 
         .hospital-card {
             background: white;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 22px;
+            margin-bottom: 18px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.07);
+            border: 1px solid #e8edf3;
+            transition: 0.2s ease;
+        }
+
+        .hospital-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 25px rgba(0, 0, 0, 0.11);
+            border-color: #d6e2f2;
+        }
+
+        .hospital-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .hospital-icon {
+            width: 42px;
+            height: 42px;
             border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,.15);
+            background: #eef5ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 23px;
         }
 
         .hospital-card h2 {
             color: #003366;
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .hospital-info {
+            margin: 9px 0;
+            color: #555;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+
+        .distance {
+            display: inline-block;
+            background: #eaf7ee;
+            color: #218838;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .contact {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* ==============================
+           BUTTONS
+        ============================== */
+
+        .hospital-actions {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+        }
+
+        .call-btn,
+        .details-btn {
+            display: inline-block;
+            padding: 10px 17px;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s ease;
         }
 
         .call-btn {
-            display: inline-block;
-            margin-top: 10px;
-            margin-right: 8px;
             background: #28a745;
             color: white;
-            padding: 10px 18px;
-            border-radius: 5px;
-            text-decoration: none;
         }
 
         .call-btn:hover {
             background: #218838;
+            transform: translateY(-1px);
         }
 
         .details-btn {
-            display: inline-block;
-            margin-top: 10px;
             background: #0052cc;
             color: white;
-            padding: 10px 18px;
-            border-radius: 5px;
-            text-decoration: none;
         }
 
         .details-btn:hover {
             background: #003d99;
+            transform: translateY(-1px);
         }
+
+        /* ==============================
+           NO HOSPITAL
+        ============================== */
 
         .no-hospital {
             background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,.15);
-            color: #555;
+            padding: 35px 20px;
+            border-radius: 14px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.07);
+            color: #666;
             text-align: center;
+        }
+
+        .no-hospital .icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        /* ==============================
+           BACK BUTTON
+        ============================== */
+
+        .back-section {
+            text-align: center;
+            margin: 30px 0 40px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            padding: 11px 22px;
+            background: #555;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background: #333;
+            transform: translateY(-1px);
+        }
+
+        /* ==============================
+           RESPONSIVE
+        ============================== */
+
+        @media (max-width: 850px) {
+
+            .emergency-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 94%;
+                margin-top: 20px;
+            }
+
+            .page-header {
+                padding: 25px 18px;
+            }
+
+            .page-header h1 {
+                font-size: 26px;
+            }
+
+            .emergency-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .search-box,
+            .emergency,
+            .hospital-card {
+                padding: 18px;
+            }
+
+            .hospital-actions {
+                flex-direction: column;
+            }
+
+            .call-btn,
+            .details-btn {
+                text-align: center;
+                width: 100%;
+            }
+
         }
 
     </style>
@@ -201,45 +500,123 @@
 
 <div class="container">
 
-    <h1>🚨 Emergency Assistance</h1>
+    <!-- ==============================
+         PAGE HEADER
+    ============================== -->
+
+    <div class="page-header">
+
+        <div class="icon">🚨</div>
+
+        <h1>Emergency Assistance</h1>
+
+        <p>
+            Quickly find emergency services and nearby hospitals
+        </p>
+
+    </div>
 
 
-    <!-- ================================================= -->
-    <!-- EMERGENCY CONTACTS -->
-    <!-- ================================================= -->
+    <!-- ==============================
+         EMERGENCY CONTACTS
+    ============================== -->
 
     <div class="emergency">
 
-        <h2>Emergency Contacts</h2>
+        <div class="emergency-header">
 
-        <div class="number">
-            🚆 Railway Helpline: <strong>139</strong>
+            <span>📞</span>
+
+            <h2>Emergency Contacts</h2>
+
         </div>
 
-        <div class="number">
-            👮 RPF Helpline: <strong>182</strong>
-        </div>
 
-        <div class="number">
-            🚑 Ambulance: <strong>108</strong>
-        </div>
+        <div class="emergency-grid">
 
-        <div class="number">
-            🚔 Police: <strong>112</strong>
-        </div>
+            <div class="emergency-item">
 
-        <div class="number">
-            👩 Women Helpline: <strong>181</strong>
+                <span class="emoji">🚆</span>
+
+                <span class="label">
+                    Railway Helpline
+                </span>
+
+                <strong>139</strong>
+
+            </div>
+
+
+            <div class="emergency-item">
+
+                <span class="emoji">👮</span>
+
+                <span class="label">
+                    RPF Helpline
+                </span>
+
+                <strong>182</strong>
+
+            </div>
+
+
+            <div class="emergency-item">
+
+                <span class="emoji">🚑</span>
+
+                <span class="label">
+                    Ambulance
+                </span>
+
+                <strong>108</strong>
+
+            </div>
+
+
+            <div class="emergency-item">
+
+                <span class="emoji">🚔</span>
+
+                <span class="label">
+                    Police
+                </span>
+
+                <strong>112</strong>
+
+            </div>
+
+
+            <div class="emergency-item">
+
+                <span class="emoji">👩</span>
+
+                <span class="label">
+                    Women Helpline
+                </span>
+
+                <strong>181</strong>
+
+            </div>
+
         </div>
 
     </div>
 
 
-    <!-- ================================================= -->
-    <!-- STATION & DISTANCE SEARCH -->
-    <!-- ================================================= -->
+    <!-- ==============================
+         SEARCH BOX
+    ============================== -->
 
     <div class="search-box">
+
+        <div class="search-title">
+
+            <span>🏥</span>
+
+            <h2>Find Nearby Hospitals</h2>
+
+        </div>
+
 
         <form method="POST">
 
@@ -248,79 +625,89 @@
 
             <!-- Station -->
 
-            <label>
-                Select Railway Station
-            </label>
+            <div class="form-group">
 
-            <div class="station-search">
-
-                <input
-                    type="text"
-                    id="station_search"
-                    placeholder="🔍 Search railway station..."
-                    autocomplete="off"
-                    required
-                >
-
-                <!-- Hidden station ID -->
-
-                <input
-    type="hidden"
-    name="station"
-    id="station_id"
->
+                <label>
+                    Select Railway Station
+                </label>
 
 
-                <!-- Suggestions -->
+                <div class="station-search">
 
-                <div id="station_suggestions">
+                    <input
+                        type="text"
+                        id="station_search"
+                        placeholder="🔍 Search railway station..."
+                        autocomplete="off"
+                        required
+                    >
 
-                    {% for station in stations %}
 
-                        <div
-                            class="station-option"
-                            data-id="{{ station.id }}"
-                            data-name="{{ station.station_name|escapejs }}"
-                        >
-                            {{ station.station_name }}
-                        </div>
+                    <!-- Hidden station ID -->
 
-                    {% endfor %}
+                    <input
+                        type="hidden"
+                        name="station"
+                        id="station_id"
+                    >
+
+
+                    <!-- Suggestions -->
+
+                    <div id="station_suggestions">
+
+                        {% for station in stations %}
+
+                            <div
+                                class="station-option"
+                                data-id="{{ station.id }}"
+                                data-name="{{ station.station_name|escapejs }}"
+                            >
+                                {{ station.station_name }}
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
 
                 </div>
 
             </div>
 
 
-            <!-- Maximum Distance -->
+            <!-- Distance -->
 
-            <label>
-                Maximum Distance
-            </label>
+            <div class="form-group">
 
-            <select name="distance">
+                <label>
+                    Maximum Distance
+                </label>
 
-                <option value="1">
-                    Within 1 km
-                </option>
+                <select name="distance">
 
-                <option value="2">
-                    Within 2 km
-                </option>
+                    <option value="1">
+                        Within 1 km
+                    </option>
 
-                <option value="5" selected>
-                    Within 5 km
-                </option>
+                    <option value="2">
+                        Within 2 km
+                    </option>
 
-                <option value="10">
-                    Within 10 km
-                </option>
+                    <option value="5" selected>
+                        Within 5 km
+                    </option>
 
-                <option value="all">
-                    All Hospitals
-                </option>
+                    <option value="10">
+                        Within 10 km
+                    </option>
 
-            </select>
+                    <option value="all">
+                        All Hospitals
+                    </option>
+
+                </select>
+
+            </div>
 
 
             <!-- Search -->
@@ -334,59 +721,83 @@
     </div>
 
 
-    <!-- ================================================= -->
-    <!-- HOSPITAL RESULTS -->
-    <!-- ================================================= -->
+    <!-- ==============================
+         HOSPITAL RESULTS
+    ============================== -->
 
     {% if hospitals %}
 
-        <h2>
-            Nearby Hospitals
-        </h2>
+        <div class="results-header">
+
+            <h2>
+                🏥 Nearby Hospitals
+            </h2>
+
+        </div>
 
 
         {% for hospital in hospitals %}
 
             <div class="hospital-card">
 
-                <h2>
-                    🏥 {{ hospital.hospital_name }}
-                </h2>
+                <div class="hospital-title">
 
-                <p>
-                    📍
-                    <strong>
-                        {{ hospital.distance_km }} km
-                    </strong>
+                    <div class="hospital-icon">
+                        🏥
+                    </div>
+
+                    <h2>
+                        {{ hospital.hospital_name }}
+                    </h2>
+
+                </div>
+
+
+                <p class="hospital-info">
+
+                    <span class="distance">
+                        📍 {{ hospital.distance_km }} km
+                    </span>
+
                 </p>
 
-                <p>
-                    {{ hospital.address }}
+
+                <p class="hospital-info">
+
+                    📍 {{ hospital.address }}
+
                 </p>
 
-                <p>
+
+                <p class="hospital-info contact">
+
                     📞 {{ hospital.contact_number }}
+
                 </p>
 
 
-                <!-- Call Hospital -->
+                <div class="hospital-actions">
 
-                <a
-                    href="tel:{{ hospital.contact_number }}"
-                    class="call-btn"
-                >
-                    ☎ Call Hospital
-                </a>
+                    <!-- Call Hospital -->
+
+                    <a
+                        href="tel:{{ hospital.contact_number }}"
+                        class="call-btn"
+                    >
+                        ☎ Call Hospital
+                    </a>
 
 
-                <!-- View Details -->
+                    <!-- View Details -->
 
-                <a
-                    href="{% url 'hospital_details' hospital.id %}"
-                    class="details-btn"
-                >
-                    View Details
-                </a>
+                    <a
+                        href="{% url 'hospital_details' hospital.id %}"
+                        class="details-btn"
+                    >
+                        View Details
+                    </a>
+
+                </div>
 
             </div>
 
@@ -396,6 +807,10 @@
     {% elif selected_station %}
 
         <div class="no-hospital">
+
+            <div class="icon">
+                🏥
+            </div>
 
             <p>
                 No nearby hospital information is available
@@ -408,18 +823,16 @@
 
 </div>
 
-<div style="text-align:center; margin-top:30px;">
+
+<!-- ==============================
+     BACK BUTTON
+============================== -->
+
+<div class="back-section">
 
     <a
         href="{% url 'dashboard' %}"
-        style="
-            display:inline-block;
-            padding:12px 22px;
-            background:#555;
-            color:white;
-            text-decoration:none;
-            border-radius:6px;
-        "
+        class="back-btn"
     >
         ← Back to Dashboard
     </a>
@@ -427,9 +840,9 @@
 </div>
 
 
-<!-- ===================================================== -->
-<!-- STATION SEARCH JAVASCRIPT -->
-<!-- ===================================================== -->
+<!-- =====================================================
+     STATION SEARCH JAVASCRIPT
+===================================================== -->
 
 <script>
 
@@ -526,6 +939,7 @@
                 "block";
 
         }
+
         else {
 
             const noResult =
@@ -597,6 +1011,7 @@
         );
 
 </script>
+
 
 </body>
 </html>
