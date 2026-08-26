@@ -12,6 +12,65 @@ class Station(models.Model):
     def __str__(self):
         return f"{self.station_name} ({self.station_code})"
 
+
+# Station Facility Model
+
+class StationFacility(models.Model):
+
+    FACILITY_CHOICES = [
+        ('WAITING_ROOM', 'Waiting Room'),
+        ('TICKET_COUNTER', 'Ticket Counter'),
+        ('WASHROOM', 'Washroom'),
+        ('FOOD_STALL', 'Food Stall'),
+        ('LIFT', 'Lift'),
+        ('ESCALATOR', 'Escalator'),
+        ('FOOT_OVER_BRIDGE', 'Foot Over Bridge'),
+        ('CLOAK_ROOM', 'Cloak Room'),
+        ('DRINKING_WATER', 'Drinking Water'),
+        ('PARKING', 'Parking'),
+        ('OTHER', 'Other'),
+    ]
+
+    station = models.ForeignKey(
+        Station,
+        on_delete=models.CASCADE,
+        related_name='facilities'
+    )
+
+    facility_type = models.CharField(
+        max_length=50,
+        choices=FACILITY_CHOICES
+    )
+
+    direction = models.CharField(
+        max_length=50,
+        blank=True
+    )
+
+    platform_number = models.CharField(
+        max_length=50,
+        blank=True
+    )
+
+    location_description = models.TextField()
+
+    nearby_landmark = models.CharField(
+        max_length=200,
+        blank=True
+    )
+
+    additional_information = models.TextField(
+        blank=True
+    )
+
+    def __str__(self):
+        return (
+            f"{self.station.station_name} - "
+            f"{self.get_facility_type_display()}"
+        )
+
+
+
 class Passenger(models.Model):
     full_name = models.CharField(max_length=100)
 

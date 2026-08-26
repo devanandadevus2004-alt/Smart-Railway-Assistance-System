@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Passenger
 from .models import Passenger, LuggageBooking
-from .models import Passenger, LuggageBooking, Station,LuggageItem
+from .models import Passenger, LuggageBooking, Station,LuggageItem,StationFacility
 from .models import Officer
 from datetime import datetime, time
 from django.utils import timezone
@@ -1720,3 +1720,59 @@ def verify_luggage_ticket(request):
 
 def about(request):
     return render(request, "home/about.html")
+
+def station_guide(request):
+
+    stations = Station.objects.all().order_by(
+        "station_name"
+    )
+
+    selected_station = None
+    selected_facility = None
+
+    if request.method == "POST":
+
+        station_id = request.POST.get(
+            "station"
+        )
+
+        facility_id = request.POST.get(
+            "facility"
+        )
+
+        # Get selected station
+        if station_id:
+
+            try:
+
+                selected_station = Station.objects.get(
+                    id=station_id
+                )
+
+            except Station.DoesNotExist:
+
+                selected_station = None
+
+        # Get selected facility
+        if facility_id:
+
+            try:
+
+                selected_facility = StationFacility.objects.get(
+                    id=facility_id,
+                    station=selected_station
+                )
+
+            except StationFacility.DoesNotExist:
+
+                selected_facility = None
+
+    return render(
+        request,
+        "home/station_guide.html",
+        {
+            "stations": stations,
+            "selected_station": selected_station,
+            "selected_facility": selected_facility,
+        }
+    )

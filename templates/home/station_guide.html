@@ -1,0 +1,604 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Station Guide</title>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Select2 CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+        rel="stylesheet"
+    />
+
+    <!-- Select2 JavaScript -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"
+    ></script>
+
+    <style>
+
+        * {
+
+            box-sizing: border-box;
+
+        }
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: linear-gradient(135deg, #e8f0fe, #f5f9ff);
+
+            color: #333;
+
+        }
+
+        /* Navigation */
+
+        .navbar {
+
+            background: #003366;
+
+            color: white;
+
+            padding: 18px 40px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+        }
+
+        .navbar h2 {
+
+            margin: 0;
+
+            font-size: 22px;
+
+        }
+
+        .back-btn {
+
+            color: white;
+
+            text-decoration: none;
+
+            background: #0052cc;
+
+            padding: 10px 20px;
+
+            border-radius: 25px;
+
+            font-weight: bold;
+
+        }
+
+        .back-btn:hover {
+
+            background: #003d99;
+
+        }
+
+        /* Container */
+
+        .container {
+
+            width: 90%;
+
+            max-width: 950px;
+
+            margin: 40px auto;
+
+        }
+
+        .guide-card {
+
+            background: white;
+
+            padding: 35px;
+
+            border-radius: 20px;
+
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+
+        }
+
+        h1 {
+
+            text-align: center;
+
+            color: #003366;
+
+            margin-top: 0;
+
+        }
+
+        .subtitle {
+
+            text-align: center;
+
+            color: #666;
+
+            margin-bottom: 30px;
+
+        }
+
+        /* Form */
+
+        .form-group {
+
+            margin-bottom: 20px;
+
+        }
+
+        label {
+
+            display: block;
+
+            margin-bottom: 8px;
+
+            font-weight: bold;
+
+            color: #003366;
+
+        }
+
+        select {
+
+            width: 100%;
+
+            padding: 13px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
+            background: white;
+
+        }
+
+        /* Select2 Styling */
+
+        .select2-container {
+
+            width: 100% !important;
+
+        }
+
+        .select2-container--default
+        .select2-selection--single {
+
+            height: 46px;
+
+            border: 1px solid #ccc;
+
+            border-radius: 8px;
+
+            padding: 8px 5px;
+
+            font-size: 15px;
+
+        }
+
+        .select2-container--default
+        .select2-selection--single
+        .select2-selection__rendered {
+
+            color: #333;
+
+            line-height: 28px;
+
+        }
+
+        .select2-container--default
+        .select2-selection--single
+        .select2-selection__arrow {
+
+            height: 44px;
+
+        }
+
+        .search-btn {
+
+            width: 100%;
+
+            padding: 14px;
+
+            background: #0052cc;
+
+            color: white;
+
+            border: none;
+
+            border-radius: 25px;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+        .search-btn:hover {
+
+            background: #003d99;
+
+        }
+
+        /* Facility Result */
+
+        .facility-result {
+
+            margin-top: 35px;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            background: #f5f9ff;
+
+            border-left: 5px solid #0052cc;
+
+        }
+
+        .facility-result h2 {
+
+            color: #003366;
+
+            margin-top: 0;
+
+        }
+
+        .info-row {
+
+            padding: 12px 0;
+
+            border-bottom: 1px solid #ddd;
+
+        }
+
+        .info-row:last-child {
+
+            border-bottom: none;
+
+        }
+
+        .label {
+
+            font-weight: bold;
+
+            color: #003366;
+
+        }
+
+        /* Mobile */
+
+        @media (max-width: 700px) {
+
+            .navbar {
+
+                flex-direction: column;
+
+                gap: 15px;
+
+                text-align: center;
+
+            }
+
+            .container {
+
+                width: 92%;
+
+                margin: 20px auto;
+
+            }
+
+            .guide-card {
+
+                padding: 25px 20px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+
+    <div class="navbar">
+
+        <h2>🚆 Smart Railway Assistance</h2>
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="back-btn"
+        >
+
+            ← Dashboard
+
+        </a>
+
+    </div>
+
+
+    <div class="container">
+
+        <div class="guide-card">
+
+            <h1>🗺️ Station Guide</h1>
+
+            <p class="subtitle">
+
+                Select a railway station and facility
+                to view its location and directions.
+
+            </p>
+
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+
+                <!-- Station Selection -->
+
+                <div class="form-group">
+
+                    <label>
+
+                        🚉 Select Station
+
+                    </label>
+
+                    <select
+                        name="station"
+                        id="station"
+                        required
+                    >
+
+                        <option value="">
+
+                            Select or Search Railway Station
+
+                        </option>
+
+                        {% for station in stations %}
+
+                        <option
+                            value="{{ station.id }}"
+
+                            {% if selected_station and selected_station.id == station.id %}
+                                selected
+                            {% endif %}
+                        >
+
+                            {{ station.station_name }}
+                            ({{ station.station_code }})
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Facility Selection -->
+
+                {% if selected_station %}
+
+                <div class="form-group">
+
+                    <label>
+
+                        🏢 Select Facility
+
+                    </label>
+
+                    <select
+                        name="facility"
+                        required
+                    >
+
+                        <option value="">
+
+                            Select Facility
+
+                        </option>
+
+                        {% for facility in selected_station.facilities.all %}
+
+                        <option
+                            value="{{ facility.id }}"
+                        >
+
+                            {{ facility.get_facility_type_display }}
+
+                        </option>
+
+                        {% empty %}
+
+                        <option disabled>
+
+                            No facility information available
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                {% endif %}
+
+
+                <button
+                    type="submit"
+                    class="search-btn"
+                >
+
+                    🔍 View Facility Information
+
+                </button>
+
+            </form>
+
+
+            <!-- Selected Facility -->
+
+            {% if selected_facility %}
+
+            <div class="facility-result">
+
+                <h2>
+
+                    {{ selected_facility.get_facility_type_display }}
+
+                </h2>
+
+
+                <div class="info-row">
+
+                    <span class="label">
+
+                        🚉 Station:
+
+                    </span>
+
+                    {{ selected_facility.station.station_name }}
+
+                </div>
+
+
+                {% if selected_facility.direction %}
+
+                <div class="info-row">
+
+                    <span class="label">
+
+                        🧭 Direction:
+
+                    </span>
+
+                    {{ selected_facility.direction }}
+
+                </div>
+
+                {% endif %}
+
+
+                {% if selected_facility.platform_number %}
+
+                <div class="info-row">
+
+                    <span class="label">
+
+                        🚆 Platform:
+
+                    </span>
+
+                    {{ selected_facility.platform_number }}
+
+                </div>
+
+                {% endif %}
+
+
+                <div class="info-row">
+
+                    <span class="label">
+
+                        📍 Location:
+
+                    </span>
+
+                    {{ selected_facility.location_description }}
+
+                </div>
+
+
+                {% if selected_facility.nearby_landmark %}
+
+                <div class="info-row">
+
+                    <span class="label">
+
+                        🏷️ Nearby Landmark:
+
+                    </span>
+
+                    {{ selected_facility.nearby_landmark }}
+
+                </div>
+
+                {% endif %}
+
+
+                {% if selected_facility.additional_information %}
+
+                <div class="info-row">
+
+                    <span class="label">
+
+                        ℹ️ Additional Information:
+
+                    </span>
+
+                    {{ selected_facility.additional_information }}
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- Initialize Searchable Station Dropdown -->
+
+    <script>
+
+        $(document).ready(function() {
+
+            $('#station').select2({
+
+                placeholder: "Search railway station",
+
+                allowClear: true,
+
+                width: '100%'
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>
+
