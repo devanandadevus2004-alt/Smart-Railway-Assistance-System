@@ -4,3 +4,9 @@ db.sqlite3
 .env
 venv/
 .vscode/
+# Local database and backup files
+db_before_data_import.sqlite3
+railway_sqlite_backup.json
+
+# Local settings backup
+railway_system/settings_before_sqlite_population.py

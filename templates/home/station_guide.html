@@ -1,370 +1,728 @@
 
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Station Guide</title>
+    <title>Station Guide | Smart Railway Assistance</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <!-- Select2 CSS -->
+    <!-- Select2 -->
     <link
         href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
         rel="stylesheet"
     />
 
-    <!-- Select2 JavaScript -->
     <script
-        src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"
-    ></script>
+        src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js">
+    </script>
 
     <style>
 
         * {
-
             box-sizing: border-box;
-
+            margin: 0;
+            padding: 0;
         }
 
         body {
-
-            margin: 0;
-
-            font-family: Arial, sans-serif;
-
-            background: linear-gradient(135deg, #e8f0fe, #f5f9ff);
-
-            color: #333;
-
+            font-family: "Inter", Arial, sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at top left, #dbeafe 0%, transparent 35%),
+                radial-gradient(circle at bottom right, #e0e7ff 0%, transparent 35%),
+                #f4f7fb;
+            color: #1e293b;
         }
 
-        /* Navigation */
+        /* =========================
+           NAVBAR
+        ========================= */
 
         .navbar {
-
-            background: #003366;
-
+            height: 76px;
+            background: linear-gradient(135deg, #002b5c, #004b8d);
             color: white;
 
-            padding: 18px 40px;
-
+            padding: 0 6%;
             display: flex;
-
+            align-items: center;
             justify-content: space-between;
 
-            align-items: center;
-
+            box-shadow: 0 4px 20px rgba(0, 43, 92, 0.20);
         }
 
-        .navbar h2 {
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
 
-            margin: 0;
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
             font-size: 22px;
+        }
 
+        .brand-text h2 {
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .brand-text span {
+            display: block;
+            font-size: 11px;
+            opacity: 0.75;
+            margin-top: 2px;
         }
 
         .back-btn {
-
+            text-decoration: none;
             color: white;
 
-            text-decoration: none;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.20);
 
-            background: #0052cc;
+            padding: 10px 18px;
+            border-radius: 12px;
 
-            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
 
-            border-radius: 25px;
-
-            font-weight: bold;
-
+            transition: 0.25s;
         }
 
         .back-btn:hover {
-
-            background: #003d99;
-
+            background: white;
+            color: #003b73;
+            transform: translateY(-2px);
         }
 
-        /* Container */
+        /* =========================
+           MAIN CONTAINER
+        ========================= */
 
         .container {
-
-            width: 90%;
-
-            max-width: 950px;
-
-            margin: 40px auto;
-
+            width: 92%;
+            max-width: 1000px;
+            margin: 45px auto 60px;
         }
 
-        .guide-card {
+        /* =========================
+           PAGE HEADER
+        ========================= */
 
-            background: white;
+        .page-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-            padding: 35px;
+        .page-icon {
+            width: 68px;
+            height: 68px;
+
+            margin: 0 auto 16px;
+
+            background: linear-gradient(135deg, #0066cc, #004a99);
+            color: white;
 
             border-radius: 20px;
 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
+            font-size: 32px;
+
+            box-shadow: 0 10px 25px rgba(0, 82, 204, 0.25);
         }
 
-        h1 {
-
-            text-align: center;
-
-            color: #003366;
-
-            margin-top: 0;
-
+        .page-header h1 {
+            color: #002b5c;
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 8px;
         }
 
-        .subtitle {
-
-            text-align: center;
-
-            color: #666;
-
-            margin-bottom: 30px;
-
+        .page-header p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: auto;
         }
 
-        /* Form */
+        /* =========================
+           MAIN CARD
+        ========================= */
+
+        .guide-card {
+            background: rgba(255,255,255,0.96);
+            border-radius: 24px;
+            padding: 35px;
+
+            box-shadow:
+                0 20px 50px rgba(15, 23, 42, 0.08),
+                0 2px 8px rgba(15, 23, 42, 0.04);
+
+            border: 1px solid rgba(226,232,240,0.8);
+        }
+
+        /* =========================
+           FORM SECTION
+        ========================= */
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            color: #0f172a;
+            font-size: 17px;
+            font-weight: 700;
+
+            margin-bottom: 22px;
+        }
+
+        .section-title-icon {
+            width: 34px;
+            height: 34px;
+
+            background: #e8f1ff;
+            color: #0052cc;
+
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 17px;
+        }
 
         .form-group {
-
-            margin-bottom: 20px;
-
+            margin-bottom: 22px;
         }
 
         label {
-
             display: block;
 
-            margin-bottom: 8px;
+            margin-bottom: 9px;
 
-            font-weight: bold;
+            font-size: 13px;
+            font-weight: 700;
 
-            color: #003366;
-
+            color: #334155;
         }
 
-        select {
-
-            width: 100%;
-
-            padding: 13px;
-
-            border: 1px solid #ccc;
-
-            border-radius: 8px;
-
-            font-size: 15px;
-
-            background: white;
-
-        }
-
-        /* Select2 Styling */
+        /* =========================
+           SELECT2
+        ========================= */
 
         .select2-container {
-
             width: 100% !important;
-
         }
 
         .select2-container--default
         .select2-selection--single {
 
-            height: 46px;
+            height: 52px !important;
 
-            border: 1px solid #ccc;
+            border: 1px solid #d7dee8 !important;
+            border-radius: 12px !important;
 
-            border-radius: 8px;
+            background: #fff !important;
 
-            padding: 8px 5px;
+            padding: 4px 8px !important;
 
-            font-size: 15px;
+            transition: 0.2s;
+        }
 
+        .select2-container--default
+        .select2-selection--single:hover {
+
+            border-color: #8bb7eb !important;
+        }
+
+        .select2-container--default.select2-container--open
+        .select2-selection--single {
+
+            border-color: #0052cc !important;
+
+            box-shadow:
+                0 0 0 3px rgba(0,82,204,0.10);
         }
 
         .select2-container--default
         .select2-selection--single
         .select2-selection__rendered {
 
-            color: #333;
+            line-height: 42px !important;
+            color: #334155 !important;
 
-            line-height: 28px;
+            font-size: 14px;
+        }
 
+        .select2-container--default
+        .select2-selection--single
+        .select2-selection__placeholder {
+
+            color: #94a3b8 !important;
         }
 
         .select2-container--default
         .select2-selection--single
         .select2-selection__arrow {
 
-            height: 44px;
-
+            height: 50px !important;
+            right: 8px !important;
         }
+
+        .select2-dropdown {
+
+            border: 1px solid #d7dee8 !important;
+            border-radius: 12px !important;
+
+            overflow: hidden;
+
+            box-shadow: 0 12px 30px rgba(15,23,42,0.12);
+        }
+
+        .select2-search--dropdown {
+            padding: 10px;
+        }
+
+        .select2-search--dropdown
+        .select2-search__field {
+
+            border: 1px solid #d7dee8 !important;
+            border-radius: 8px;
+
+            padding: 9px;
+
+            font-size: 14px;
+        }
+
+        .select2-results__option {
+            padding: 11px 13px !important;
+            font-size: 13px;
+        }
+
+        .select2-container--default
+        .select2-results__option--highlighted[aria-selected] {
+
+            background: #0052cc !important;
+        }
+
+        /* =========================
+           SEARCH BUTTON
+        ========================= */
 
         .search-btn {
 
             width: 100%;
+            height: 52px;
 
-            padding: 14px;
+            border: none;
+            border-radius: 12px;
 
-            background: #0052cc;
+            background: linear-gradient(
+                135deg,
+                #0052cc,
+                #006ee6
+            );
 
             color: white;
 
-            border: none;
-
-            border-radius: 25px;
-
-            font-size: 16px;
-
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 700;
 
             cursor: pointer;
 
+            box-shadow:
+                0 8px 18px rgba(0,82,204,0.20);
+
+            transition: 0.25s;
         }
 
         .search-btn:hover {
 
-            background: #003d99;
+            transform: translateY(-2px);
 
+            box-shadow:
+                0 12px 25px rgba(0,82,204,0.28);
         }
 
-        /* Facility Result */
+        .search-btn:active {
+            transform: translateY(0);
+        }
+
+        /* =========================
+           RESULT
+        ========================= */
 
         .facility-result {
 
-            margin-top: 35px;
+            margin-top: 32px;
 
-            padding: 25px;
+            background: linear-gradient(
+                135deg,
+                #f8fbff,
+                #eef6ff
+            );
 
-            border-radius: 15px;
+            border: 1px solid #dbeafe;
 
-            background: #f5f9ff;
+            border-radius: 18px;
 
-            border-left: 5px solid #0052cc;
+            overflow: hidden;
 
+            box-shadow:
+                0 8px 25px rgba(15,23,42,0.05);
         }
 
-        .facility-result h2 {
+        .result-header {
 
-            color: #003366;
+            background: linear-gradient(
+                135deg,
+                #003b73,
+                #005eb8
+            );
 
-            margin-top: 0;
+            color: white;
 
+            padding: 20px 24px;
+
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .result-icon {
+
+            width: 45px;
+            height: 45px;
+
+            background: rgba(255,255,255,0.15);
+
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 21px;
+        }
+
+        .result-header h2 {
+
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .result-header span {
+
+            display: block;
+
+            font-size: 11px;
+
+            opacity: 0.75;
+
+            margin-top: 3px;
+        }
+
+        .result-body {
+            padding: 8px 24px;
         }
 
         .info-row {
 
-            padding: 12px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
 
-            border-bottom: 1px solid #ddd;
+            padding: 17px 0;
 
+            border-bottom: 1px solid #e2e8f0;
+
+            font-size: 14px;
+
+            line-height: 1.6;
         }
 
         .info-row:last-child {
-
             border-bottom: none;
+        }
 
+        .info-icon {
+
+            width: 35px;
+            height: 35px;
+
+            flex-shrink: 0;
+
+            background: #e8f1ff;
+            color: #0052cc;
+
+            border-radius: 9px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 15px;
+        }
+
+        .info-content {
+            flex: 1;
         }
 
         .label {
 
-            font-weight: bold;
+            display: block;
 
-            color: #003366;
+            color: #64748b;
 
+            font-size: 11px;
+
+            font-weight: 600;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.4px;
+
+            margin-bottom: 3px;
         }
 
-        /* Mobile */
+        .info-value {
+
+            color: #1e293b;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty-state {
+
+            margin-top: 25px;
+
+            padding: 25px;
+
+            text-align: center;
+
+            border-radius: 14px;
+
+            background: #f8fafc;
+
+            border: 1px dashed #cbd5e1;
+
+            color: #64748b;
+        }
+
+        .empty-state-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .empty-state h3 {
+            color: #334155;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .empty-state p {
+            font-size: 12px;
+        }
+
+        /* =========================
+           FOOTER NOTE
+        ========================= */
+
+        .help-note {
+
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            margin-top: 20px;
+
+            padding: 12px 15px;
+
+            background: #f8fafc;
+
+            border-radius: 10px;
+
+            color: #64748b;
+
+            font-size: 11px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
 
         @media (max-width: 700px) {
 
             .navbar {
+                height: auto;
+                padding: 15px 5%;
 
-                flex-direction: column;
+                gap: 12px;
+            }
 
-                gap: 15px;
+            .brand-text h2 {
+                font-size: 16px;
+            }
 
-                text-align: center;
+            .brand-text span {
+                display: none;
+            }
 
+            .back-btn {
+                padding: 9px 12px;
+                font-size: 12px;
             }
 
             .container {
+                width: 94%;
+                margin: 30px auto 40px;
+            }
 
-                width: 92%;
+            .page-header h1 {
+                font-size: 26px;
+            }
 
-                margin: 20px auto;
-
+            .page-header p {
+                font-size: 13px;
             }
 
             .guide-card {
-
-                padding: 25px 20px;
-
+                padding: 24px 18px;
+                border-radius: 18px;
             }
 
+            .result-header {
+                padding: 17px;
+            }
+
+            .result-body {
+                padding: 5px 17px;
+            }
+
+            .info-row {
+                gap: 10px;
+            }
         }
 
     </style>
-
 </head>
 
 <body>
 
-    <!-- Navigation -->
+    <!-- =========================
+         NAVIGATION
+    ========================== -->
 
     <div class="navbar">
 
-        <h2>🚆 Smart Railway Assistance</h2>
+        <div class="brand">
+
+            <div class="brand-icon">
+                🚆
+            </div>
+
+            <div class="brand-text">
+                <h2>Smart Railway Assistance</h2>
+                <span>Passenger Support System</span>
+            </div>
+
+        </div>
 
         <a
             href="{% url 'dashboard' %}"
             class="back-btn"
         >
-
             ← Dashboard
-
         </a>
 
     </div>
 
 
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
+
     <div class="container">
+
+        <!-- Page Header -->
+
+        <div class="page-header">
+
+            <div class="page-icon">
+                🗺️
+            </div>
+
+            <h1>Station Guide</h1>
+
+            <p>
+                Find important facilities inside railway stations
+                and get their location and direction information.
+            </p>
+
+        </div>
+
+
+        <!-- Main Card -->
 
         <div class="guide-card">
 
-            <h1>🗺️ Station Guide</h1>
+            <div class="section-title">
 
-            <p class="subtitle">
+                <div class="section-title-icon">
+                    🚉
+                </div>
 
-                Select a railway station and facility
-                to view its location and directions.
+                <span>Find Station Facility</span>
 
-            </p>
+            </div>
 
+
+            <!-- FORM -->
 
             <form method="POST">
 
                 {% csrf_token %}
 
 
-                <!-- Station Selection -->
+                <!-- Station -->
 
                 <div class="form-group">
 
-                    <label>
-
-                        🚉 Select Station
-
+                    <label for="station">
+                        Railway Station
                     </label>
 
                     <select
@@ -374,16 +732,13 @@
                     >
 
                         <option value="">
-
-                            Select or Search Railway Station
-
+                            Search or select a railway station
                         </option>
 
                         {% for station in stations %}
 
                         <option
                             value="{{ station.id }}"
-
                             {% if selected_station and selected_station.id == station.id %}
                                 selected
                             {% endif %}
@@ -401,34 +756,29 @@
                 </div>
 
 
-                <!-- Facility Selection -->
+                <!-- Facility -->
 
                 {% if selected_station %}
 
                 <div class="form-group">
 
-                    <label>
-
-                        🏢 Select Facility
-
+                    <label for="facility">
+                        Station Facility
                     </label>
 
                     <select
                         name="facility"
+                        id="facility"
                         required
                     >
 
                         <option value="">
-
-                            Select Facility
-
+                            Select a facility
                         </option>
 
                         {% for facility in selected_station.facilities.all %}
 
-                        <option
-                            value="{{ facility.id }}"
-                        >
+                        <option value="{{ facility.id }}">
 
                             {{ facility.get_facility_type_display }}
 
@@ -437,9 +787,7 @@
                         {% empty %}
 
                         <option disabled>
-
                             No facility information available
-
                         </option>
 
                         {% endfor %}
@@ -451,16 +799,38 @@
                 {% endif %}
 
 
+                <!-- Search -->
+
                 <button
                     type="submit"
                     class="search-btn"
                 >
-
-                    🔍 View Facility Information
-
+                    🔍 &nbsp; View Facility Information
                 </button>
 
             </form>
+
+
+            <!-- Empty State -->
+
+            {% if selected_station and not selected_station.facilities.all %}
+
+            <div class="empty-state">
+
+                <div class="empty-state-icon">
+                    ℹ️
+                </div>
+
+                <h3>No Facility Information</h3>
+
+                <p>
+                    Facility information is not available
+                    for this station.
+                </p>
+
+            </div>
+
+            {% endif %}
 
 
             <!-- Selected Facility -->
@@ -469,116 +839,215 @@
 
             <div class="facility-result">
 
-                <h2>
+                <!-- Result Header -->
 
-                    {{ selected_facility.get_facility_type_display }}
+                <div class="result-header">
 
-                </h2>
+                    <div class="result-icon">
+                        🏢
+                    </div>
 
+                    <div>
 
-                <div class="info-row">
+                        <h2>
+                            {{ selected_facility.get_facility_type_display }}
+                        </h2>
 
-                    <span class="label">
+                        <span>
+                            Facility Information
+                        </span>
 
-                        🚉 Station:
-
-                    </span>
-
-                    {{ selected_facility.station.station_name }}
-
-                </div>
-
-
-                {% if selected_facility.direction %}
-
-                <div class="info-row">
-
-                    <span class="label">
-
-                        🧭 Direction:
-
-                    </span>
-
-                    {{ selected_facility.direction }}
-
-                </div>
-
-                {% endif %}
-
-
-                {% if selected_facility.platform_number %}
-
-                <div class="info-row">
-
-                    <span class="label">
-
-                        🚆 Platform:
-
-                    </span>
-
-                    {{ selected_facility.platform_number }}
-
-                </div>
-
-                {% endif %}
-
-
-                <div class="info-row">
-
-                    <span class="label">
-
-                        📍 Location:
-
-                    </span>
-
-                    {{ selected_facility.location_description }}
+                    </div>
 
                 </div>
 
 
-                {% if selected_facility.nearby_landmark %}
+                <!-- Result Body -->
 
-                <div class="info-row">
+                <div class="result-body">
 
-                    <span class="label">
 
-                        🏷️ Nearby Landmark:
+                    <!-- Station -->
 
-                    </span>
+                    <div class="info-row">
 
-                    {{ selected_facility.nearby_landmark }}
+                        <div class="info-icon">
+                            🚉
+                        </div>
+
+                        <div class="info-content">
+
+                            <span class="label">
+                                Station
+                            </span>
+
+                            <span class="info-value">
+                                {{ selected_facility.station.station_name }}
+                                ({{ selected_facility.station.station_code }})
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Direction -->
+
+                    {% if selected_facility.direction %}
+
+                    <div class="info-row">
+
+                        <div class="info-icon">
+                            🧭
+                        </div>
+
+                        <div class="info-content">
+
+                            <span class="label">
+                                Direction
+                            </span>
+
+                            <span class="info-value">
+                                {{ selected_facility.direction }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- Platform -->
+
+                    {% if selected_facility.platform_number %}
+
+                    <div class="info-row">
+
+                        <div class="info-icon">
+                            🚆
+                        </div>
+
+                        <div class="info-content">
+
+                            <span class="label">
+                                Platform
+                            </span>
+
+                            <span class="info-value">
+                                {{ selected_facility.platform_number }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- Location -->
+
+                    <div class="info-row">
+
+                        <div class="info-icon">
+                            📍
+                        </div>
+
+                        <div class="info-content">
+
+                            <span class="label">
+                                Location
+                            </span>
+
+                            <span class="info-value">
+                                {{ selected_facility.location_description }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Landmark -->
+
+                    {% if selected_facility.nearby_landmark %}
+
+                    <div class="info-row">
+
+                        <div class="info-icon">
+                            🏷️
+                        </div>
+
+                        <div class="info-content">
+
+                            <span class="label">
+                                Nearby Landmark
+                            </span>
+
+                            <span class="info-value">
+                                {{ selected_facility.nearby_landmark }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
+
+
+                    <!-- Additional Information -->
+
+                    {% if selected_facility.additional_information %}
+
+                    <div class="info-row">
+
+                        <div class="info-icon">
+                            ℹ️
+                        </div>
+
+                        <div class="info-content">
+
+                            <span class="label">
+                                Additional Information
+                            </span>
+
+                            <span class="info-value">
+                                {{ selected_facility.additional_information }}
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    {% endif %}
 
                 </div>
-
-                {% endif %}
-
-
-                {% if selected_facility.additional_information %}
-
-                <div class="info-row">
-
-                    <span class="label">
-
-                        ℹ️ Additional Information:
-
-                    </span>
-
-                    {{ selected_facility.additional_information }}
-
-                </div>
-
-                {% endif %}
 
             </div>
 
             {% endif %}
+
+
+            <!-- Help Note -->
+
+            <div class="help-note">
+
+                💡
+                <span>
+                    Select a station first. Available facilities
+                    will then be displayed for that station.
+                </span>
+
+            </div>
 
         </div>
 
     </div>
 
 
-    <!-- Initialize Searchable Station Dropdown -->
+    <!-- =========================
+         SELECT2
+    ========================== -->
 
     <script>
 
@@ -590,7 +1059,9 @@
 
                 allowClear: true,
 
-                width: '100%'
+                width: '100%',
+
+                minimumResultsForSearch: 0
 
             });
 
@@ -599,6 +1070,5 @@
     </script>
 
 </body>
-
 </html>
 
