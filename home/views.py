@@ -1723,9 +1723,9 @@ def about(request):
 
 def station_guide(request):
 
-    stations = Station.objects.all().order_by(
-        "station_name"
-    )
+    stations = Station.objects.filter(
+    facilities__isnull=False
+).distinct()
 
     selected_station = None
     selected_facility = None
