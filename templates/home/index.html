@@ -113,18 +113,26 @@
 
         /* FEATURE CARD */
         .card{
-            background:white;
-            width:20%;
-            min-width:0;
-            padding:22px 18px;
-            border-radius:12px;
-            box-shadow:0 5px 15px rgba(0,0,0,0.15);
-            text-align:center;
-            box-sizing:border-box;
-            display:flex;
-            flex-direction:column;
-            justify-content:space-between;
-        }
+    background:white;
+    width:20%;
+    min-width:0;
+    padding:22px 18px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.15);
+    text-align:center;
+    box-sizing:border-box;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+
+    /* Hover animation */
+    transition:transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
 
         .card h3{
             color:#0052cc;
