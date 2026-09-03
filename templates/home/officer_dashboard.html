@@ -13,46 +13,57 @@
         body{
             margin:0;
             font-family:Arial, sans-serif;
-            background:#f4f7fb;
+            background:#f3f6fa;
             color:#333;
         }
 
-        /* Navigation Bar */
+        /* ================= NAVBAR ================= */
 
         .navbar{
-            background:#003366;
+            background:#003b70;
             color:white;
-            padding:18px 40px;
+            padding:16px 45px;
 
             display:flex;
             justify-content:space-between;
             align-items:center;
 
-            box-shadow:0 3px 10px rgba(0,0,0,0.2);
+            box-shadow:0 3px 12px rgba(0,0,0,0.18);
+        }
+
+        .brand{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .brand-icon{
+            font-size:25px;
         }
 
         .navbar h2{
             margin:0;
-            font-size:22px;
+            font-size:21px;
+            letter-spacing:.2px;
         }
 
         .nav-links{
             display:flex;
-            gap:12px;
+            gap:10px;
         }
 
         .nav-btn{
             color:white;
             text-decoration:none;
             padding:9px 18px;
-            border-radius:20px;
+            border-radius:22px;
             font-weight:bold;
             font-size:14px;
-            transition:0.3s;
+            transition:.25s;
         }
 
         .home-btn{
-            background:#0052cc;
+            background:#0866d5;
         }
 
         .logout-btn{
@@ -61,71 +72,129 @@
 
         .nav-btn:hover{
             transform:translateY(-2px);
-            opacity:0.9;
+            box-shadow:0 4px 10px rgba(0,0,0,.18);
         }
 
 
-        /* Welcome Section */
+        /* ================= WELCOME ================= */
 
         .welcome{
             text-align:center;
-            padding:40px 20px 25px;
+            padding:38px 20px 28px;
         }
 
         .welcome h1{
             margin:0;
-            color:#003366;
+            color:#073d70;
+            font-size:34px;
         }
 
         .welcome p{
-            color:#666;
-            font-size:17px;
-            margin-top:10px;
+            color:#6b7280;
+            font-size:16px;
+            margin:8px 0 0;
         }
 
 
-        /* Dashboard Container */
+        /* ================= MAIN CONTAINER ================= */
 
         .dashboard{
             max-width:1100px;
-            margin:0 auto 60px;
+            margin:0 auto 45px;
             padding:0 25px;
         }
 
 
-        /* Station Information */
+        /* ================= QUICK INFO ================= */
+
+        .info-row{
+            display:grid;
+            grid-template-columns:2fr 1fr;
+            gap:20px;
+            margin-bottom:22px;
+        }
+
+        .info-card{
+            background:white;
+            border-radius:14px;
+            padding:22px 25px;
+            box-shadow:0 5px 18px rgba(0,0,0,.08);
+            border:1px solid #e6ebf2;
+        }
 
         .station-card{
-            background:white;
-            padding:20px 25px;
-            border-radius:12px;
-            box-shadow:0 5px 15px rgba(0,0,0,0.1);
-            margin-bottom:30px;
-            border-left:5px solid #0052cc;
+            border-left:5px solid #0866d5;
         }
 
-        .station-card h3{
-            margin:0;
-            color:#0052cc;
+        .info-label{
+            color:#7b8794;
+            font-size:13px;
+            font-weight:bold;
+            text-transform:uppercase;
+            margin-bottom:8px;
+        }
+
+        .station-name{
+            color:#073d70;
+            font-size:22px;
+            font-weight:bold;
+        }
+
+        .station-description{
+            margin-top:6px;
+            color:#6b7280;
+            font-size:14px;
+        }
+
+        .pending-card{
+            display:flex;
+            align-items:center;
+            justify-content:space-between;
+        }
+
+        .pending-number{
+            font-size:32px;
+            font-weight:bold;
+            color:#e53935;
+        }
+
+        .pending-text{
+            color:#6b7280;
+            font-size:14px;
         }
 
 
-        /* Booking Section */
+        /* ================= BOOKING SECTION ================= */
 
         .booking-section{
             background:white;
-            padding:25px;
+            padding:26px;
             border-radius:15px;
-            box-shadow:0 5px 18px rgba(0,0,0,0.12);
+            box-shadow:0 5px 20px rgba(0,0,0,.09);
+            border:1px solid #e6ebf2;
+        }
+
+        .section-header{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:8px;
         }
 
         .booking-section h2{
-            color:#003366;
-            margin-top:0;
+            color:#073d70;
+            margin:0;
+            font-size:23px;
+        }
+
+        .section-subtitle{
+            color:#7b8794;
+            font-size:14px;
+            margin:7px 0 20px;
         }
 
 
-        /* Table */
+        /* ================= TABLE ================= */
 
         .table-container{
             overflow-x:auto;
@@ -133,109 +202,172 @@
 
         table{
             width:100%;
-            border-collapse:collapse;
-            margin-top:20px;
+            border-collapse:separate;
+            border-spacing:0;
+            overflow:hidden;
         }
 
         th{
-            background:#003366;
+            background:#003b70;
             color:white;
-            padding:14px;
+            padding:14px 16px;
             text-align:left;
+            font-size:14px;
+            white-space:nowrap;
+        }
+
+        th:first-child{
+            border-radius:8px 0 0 0;
+        }
+
+        th:last-child{
+            border-radius:0 8px 0 0;
         }
 
         td{
-            padding:14px;
-            border-bottom:1px solid #ddd;
+            padding:16px;
+            border-bottom:1px solid #e8edf3;
+            font-size:14px;
+            background:white;
         }
 
-        tr:hover{
-            background:#f4f8ff;
+        tbody tr:hover td{
+            background:#f7faff;
+        }
+
+        .passenger{
+            font-weight:bold;
+            color:#27364a;
+        }
+
+        .destination{
+            color:#4b5563;
+        }
+
+        .travel-date{
+            color:#4b5563;
+            white-space:nowrap;
         }
 
 
-        /* Status - Default Blue */
+        /* ================= STATUS ================= */
 
         .status{
+            display:inline-block;
+            padding:6px 13px;
+            border-radius:20px;
+            font-size:12px;
             font-weight:bold;
+            text-transform:capitalize;
+            background:#e8f1ff;
             color:#0052cc;
         }
 
-        .status{
-    font-weight:bold;
-    color:#0052cc !important;
-}
-
-.status.pending{
-    color:#e53935 !important;
-}
-
-        /* PENDING Status - Red */
-
         .status.pending{
-            color:#e53935;
+            background:#fff0f0;
+            color:#d92d20 !important;
         }
 
 
-        /* Open Button */
+        /* ================= OPEN BUTTON ================= */
 
         .open-btn{
             display:inline-block;
-            padding:8px 18px;
-            background:#0052cc;
+            padding:8px 20px;
+            background:#0866d5;
             color:white;
             text-decoration:none;
             border-radius:20px;
             font-weight:bold;
-            transition:0.3s;
+            font-size:13px;
+            transition:.25s;
         }
 
         .open-btn:hover{
-            background:#003d99;
+            background:#004da8;
             transform:translateY(-2px);
+            box-shadow:0 4px 9px rgba(0,82,204,.25);
         }
 
 
-        /* Empty Message */
+        /* ================= EMPTY ================= */
 
         .empty{
             text-align:center;
-            padding:30px;
-            color:#777;
+            padding:40px !important;
+            color:#7b8794;
         }
 
 
-        /* Footer */
+        /* ================= FOOTER ================= */
 
         footer{
-            background:#003366;
+            background:#003b70;
             color:white;
             text-align:center;
-            padding:15px;
+            padding:14px;
+            font-size:14px;
         }
 
 
-        /* Mobile */
+        /* ================= RESPONSIVE ================= */
 
-        @media(max-width:700px){
+        @media(max-width:800px){
+
+            .navbar{
+                padding:15px 20px;
+            }
+
+            .navbar h2{
+                font-size:18px;
+            }
+
+            .info-row{
+                grid-template-columns:1fr;
+            }
+
+            .welcome{
+                padding-top:30px;
+            }
+
+            .welcome h1{
+                font-size:28px;
+            }
+
+        }
+
+
+        @media(max-width:600px){
 
             .navbar{
                 flex-direction:column;
-                gap:15px;
-                padding:18px;
+                gap:14px;
             }
 
             .nav-links{
-                flex-wrap:wrap;
+                width:100%;
                 justify-content:center;
             }
 
             .dashboard{
-                padding:0 15px;
+                padding:0 12px;
             }
 
             .booking-section{
-                padding:15px;
+                padding:18px;
+            }
+
+            .section-header{
+                align-items:flex-start;
+            }
+
+            .booking-section h2{
+                font-size:20px;
+            }
+
+            th,
+            td{
+                padding:12px;
             }
 
         }
@@ -248,11 +380,20 @@
 <body>
 
 
-<!-- Navigation Bar -->
+<!-- ================= NAVIGATION ================= -->
 
 <div class="navbar">
 
-    <h2>🚆 Smart Railway Assistance</h2>
+    <div class="brand">
+
+        <span class="brand-icon">🚆</span>
+
+        <h2>
+            Smart Railway Assistance
+        </h2>
+
+    </div>
+
 
     <div class="nav-links">
 
@@ -269,7 +410,8 @@
 </div>
 
 
-<!-- Welcome Section -->
+
+<!-- ================= WELCOME ================= -->
 
 <div class="welcome">
 
@@ -284,86 +426,172 @@
 </div>
 
 
-<!-- Dashboard -->
+
+<!-- ================= DASHBOARD ================= -->
 
 <div class="dashboard">
 
 
-    <!-- Station Information -->
+    <!-- QUICK INFORMATION -->
 
-    <div class="station-card">
+    <div class="info-row">
 
-        <h3>
-            📍 Station:
-            {{ officer.station.station_name }}
-        </h3>
+
+        <!-- STATION -->
+
+        <div class="info-card station-card">
+
+            <div class="info-label">
+                Assigned Station
+            </div>
+
+            <div class="station-name">
+
+                📍 {{ officer.station.station_name }}
+
+            </div>
+
+            <div class="station-description">
+
+                Manage passenger luggage requests assigned to this station.
+
+            </div>
+
+        </div>
+
+
+        <!-- PENDING COUNT -->
+
+        <div class="info-card pending-card">
+
+            <div>
+
+                <div class="info-label">
+                    Pending Requests
+                </div>
+
+                <div class="pending-text">
+                    Luggage bookings awaiting action
+                </div>
+
+            </div>
+
+            <div class="pending-number">
+                {{ bookings|length }}
+            </div>
+
+        </div>
 
     </div>
 
 
-    <!-- Pending Bookings -->
+
+    <!-- ================= PENDING BOOKINGS ================= -->
 
     <div class="booking-section">
 
-        <h2>
-            🧳 Pending Luggage Bookings
-        </h2>
+
+        <div class="section-header">
+
+            <h2>
+                🧳 Pending Luggage Bookings
+            </h2>
+
+        </div>
+
+
+        <p class="section-subtitle">
+            Review and manage luggage transfer requests assigned to your station.
+        </p>
 
 
         <div class="table-container">
 
             <table>
 
-                <tr>
+                <thead>
 
-                    <th>Passenger</th>
+                    <tr>
 
-                    <th>Destination</th>
+                        <th>
+                            Passenger
+                        </th>
 
-                    <th>Travel Date</th>
+                        <th>
+                            Destination
+                        </th>
 
-                    <th>Status</th>
+                        <th>
+                            Travel Date
+                        </th>
 
-                    <th>Action</th>
+                        <th>
+                            Status
+                        </th>
 
-                </tr>
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
 
 
                 {% for booking in bookings %}
 
                 <tr>
 
-                    <td>
+
+                    <!-- PASSENGER -->
+
+                    <td class="passenger">
+
                         {{ booking.passenger.full_name }}
+
                     </td>
 
-                    <td>
+
+                    <!-- DESTINATION -->
+
+                    <td class="destination">
+
                         {{ booking.destination_station.station_name }}
+
                     </td>
 
-                    <td>
+
+                    <!-- TRAVEL DATE -->
+
+                    <td class="travel-date">
+
                         {{ booking.travel_date }}
+
                     </td>
 
 
                     <!-- STATUS -->
-<td>
 
-    {% if booking.status|upper|cut:" " == "PENDING" %}
+                    <td>
 
-        <span class="status pending">
-            {{ booking.status }}
-        </span>
+                        {% if booking.status|upper|cut:" " == "PENDING" %}
 
-    {% else %}
+                            <span class="status pending">
+                                {{ booking.status }}
+                            </span>
 
-        <span class="status">
-            {{ booking.status }}
-        </span>
+                        {% else %}
 
-    {% endif %}
+                            <span class="status">
+                                {{ booking.status }}
+                            </span>
 
-</td>
+                        {% endif %}
+
+                    </td>
 
 
                     <!-- ACTION -->
@@ -379,6 +607,7 @@
 
                     </td>
 
+
                 </tr>
 
 
@@ -388,7 +617,7 @@
 
                     <td colspan="5" class="empty">
 
-                        📭 No bookings available.
+                        📭 No pending luggage bookings available.
 
                     </td>
 
@@ -396,6 +625,8 @@
 
                 {% endfor %}
 
+
+                </tbody>
 
             </table>
 
@@ -406,6 +637,9 @@
 
 </div>
 
+
+
+<!-- ================= FOOTER ================= -->
 
 <footer>
 
