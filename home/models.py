@@ -218,3 +218,70 @@ class LuggageItem(models.Model):
             f"{self.luggage_type} - "
             f"{self.weight} kg"
         )
+
+
+class MedicalAssistanceRequest(models.Model):
+
+    EMERGENCY_TYPES = [
+        ('MEDICAL_EMERGENCY', 'Medical Emergency'),
+        ('INJURY', 'Injury'),
+        ('BREATHING_DIFFICULTY', 'Breathing Difficulty'),
+        ('CHEST_PAIN', 'Chest Pain'),
+        ('UNCONSCIOUS', 'Unconscious Passenger'),
+        ('FALL_ACCIDENT', 'Fall / Accident'),
+        ('OTHER', 'Other'),
+    ]
+
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('RESPONDING', 'Officer Responding'),
+        ('RESOLVED', 'Resolved'),
+    ]
+
+    patient_name = models.CharField(
+        max_length=100
+    )
+
+    train_number = models.CharField(
+        max_length=20
+    )
+
+    station = models.ForeignKey(
+        Station,
+        on_delete=models.CASCADE,
+        related_name='medical_requests'
+    )
+
+    coach_number = models.CharField(
+        max_length=20
+    )
+
+    emergency_type = models.CharField(
+        max_length=30,
+        choices=EMERGENCY_TYPES
+    )
+
+    description = models.TextField(
+        blank=True
+    )
+
+    contact_number = models.CharField(
+        max_length=15
+    )
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='PENDING'
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return (
+            f"{self.patient_name} - "
+            f"{self.train_number} - "
+            f"{self.coach_number}"
+        )
