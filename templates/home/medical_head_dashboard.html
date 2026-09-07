@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Medical Head Dashboard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f5f9;
+            color: #263238;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 35px auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            background: linear-gradient(
+                135deg,
+                #003366,
+                #0052a3
+            );
+
+            color: white;
+            padding: 28px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+        }
+
+        .header p {
+            margin: 4px 0;
+            opacity: 0.9;
+        }
+
+        /* STATISTICS */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.07);
+        }
+
+        .stat-icon {
+            font-size: 30px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card h3 {
+            margin: 5px 0;
+            color: #003366;
+            font-size: 15px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: bold;
+            color: #d32f2f;
+        }
+
+        /* SECTION */
+
+        .section-title {
+            color: #003366;
+            font-size: 24px;
+            margin-bottom: 18px;
+        }
+
+        /* REQUEST CARD */
+
+        .request-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+
+            box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+
+            border-left: 6px solid #d32f2f;
+        }
+
+        .request-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 20px;
+        }
+
+        .patient-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #003366;
+        }
+
+        /* STATUS */
+
+        .status {
+            padding: 7px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-responding {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-resolved {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        /* INFORMATION */
+
+        .request-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 9px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .info-label {
+            display: block;
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-weight: bold;
+            color: #263238;
+        }
+
+        /* EMERGENCY */
+
+        .emergency-box {
+            margin-top: 18px;
+            padding: 16px;
+
+            background: #fff5f5;
+
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+        }
+
+        .emergency-box strong {
+            color: #c62828;
+        }
+
+        /* ACTIONS */
+
+        .actions {
+            margin-top: 20px;
+
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-form {
+            display: inline;
+        }
+
+        .btn {
+            border: none;
+            padding: 11px 18px;
+            border-radius: 7px;
+
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+        .respond-btn {
+            background: #2563eb;
+        }
+
+        .respond-btn:hover {
+            background: #1d4ed8;
+        }
+
+        .resolve-btn {
+            background: #16a34a;
+        }
+
+        .resolve-btn:hover {
+            background: #15803d;
+        }
+
+        .call-btn {
+            display: inline-block;
+
+            background: #64748b;
+            color: white;
+
+            text-decoration: none;
+
+            padding: 11px 18px;
+
+            border-radius: 7px;
+
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* EMPTY */
+
+        .empty {
+            background: white;
+            padding: 45px;
+            text-align: center;
+
+            border-radius: 15px;
+
+            color: #64748b;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        /* LOGOUT */
+
+        .logout-section {
+            text-align: center;
+            margin-top: 35px;
+        }
+
+        .logout-btn {
+            display: inline-block;
+
+            padding: 11px 25px;
+
+            background: #555;
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background: #333;
+        }
+
+        /* RESPONSIVE */
+
+        @media(max-width: 800px) {
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .request-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media(max-width: 500px) {
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .request-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            🚑 Medical Head Dashboard
+        </h1>
+
+        <p>
+            Welcome, {{ medical_head.full_name }}
+        </p>
+
+        <p>
+            📍 Station:
+            <strong>
+                {{ medical_head.station.station_name }}
+            </strong>
+        </p>
+
+        <p>
+            Employee ID:
+            {{ medical_head.employee_id }}
+        </p>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats">
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🚨
+            </div>
+
+            <h3>
+                Pending Requests
+            </h3>
+
+            <div class="stat-number">
+                {{ pending_count }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                🚑
+            </div>
+
+            <h3>
+                Medical Team Responding
+            </h3>
+
+            <div class="stat-number">
+                {{ responding_count }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                ✅
+            </div>
+
+            <h3>
+                Resolved Requests
+            </h3>
+
+            <div class="stat-number">
+                {{ resolved_count }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-icon">
+                📍
+            </div>
+
+            <h3>
+                Assigned Station
+            </h3>
+
+            <div class="stat-number">
+
+                {{ medical_head.station.station_code }}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- REQUESTS -->
+
+    <h2 class="section-title">
+        🚨 Medical Assistance Requests
+    </h2>
+
+
+    {% if medical_requests %}
+
+
+        {% for medical_request in medical_requests %}
+
+
+        <div class="request-card">
+
+
+            <!-- TOP -->
+
+            <div class="request-top">
+
+                <div class="patient-name">
+                    👤 {{ medical_request.patient_name }}
+                </div>
+
+
+                {% if medical_request.status == "PENDING" %}
+
+                    <span class="status status-pending">
+                        ⏳ Pending
+                    </span>
+
+                {% elif medical_request.status == "RESPONDING" %}
+
+                    <span class="status status-responding">
+                        🚑 Medical Team Responding
+                    </span>
+
+                {% else %}
+
+                    <span class="status status-resolved">
+                        ✅ Resolved
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- INFORMATION -->
+
+            <div class="request-grid">
+
+
+                <div class="info">
+
+                    <span class="info-label">
+                        Train Number
+                    </span>
+
+                    <span class="info-value">
+                        🚆 {{ medical_request.train_number }}
+                    </span>
+
+                </div>
+
+
+                <div class="info">
+
+                    <span class="info-label">
+                        Coach Number
+                    </span>
+
+                    <span class="info-value">
+                        🚃 {{ medical_request.coach_number }}
+                    </span>
+
+                </div>
+
+
+                <div class="info">
+
+                    <span class="info-label">
+                        Station
+                    </span>
+
+                    <span class="info-value">
+                        📍 {{ medical_request.station.station_name }}
+                    </span>
+
+                </div>
+
+
+                <div class="info">
+
+                    <span class="info-label">
+                        Contact Number
+                    </span>
+
+                    <span class="info-value">
+                        📞 {{ medical_request.contact_number }}
+                    </span>
+
+                </div>
+
+
+                <div class="info">
+
+                    <span class="info-label">
+                        Request Time
+                    </span>
+
+                    <span class="info-value">
+                        {{ medical_request.created_at|date:"d M Y, h:i A" }}
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- EMERGENCY -->
+
+            <div class="emergency-box">
+
+                <strong>
+                    🚨 Emergency:
+                </strong>
+
+                {{ medical_request.get_emergency_type_display }}
+
+                {% if medical_request.description %}
+
+                    <br><br>
+
+                    <strong>
+                        Additional Information:
+                    </strong>
+
+                    {{ medical_request.description }}
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="actions">
+
+
+                <!-- CALL -->
+
+                <a
+                    href="tel:{{ medical_request.contact_number }}"
+                    class="call-btn"
+                >
+                    ☎ Call Passenger
+                </a>
+
+
+                {% if medical_request.status == "PENDING" %}
+
+                    <form
+                        method="POST"
+                        action="{% url 'update_medical_request' medical_request.id %}"
+                        class="action-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <input
+                            type="hidden"
+                            name="status"
+                            value="RESPONDING"
+                        >
+
+                        <button
+                            type="submit"
+                            class="btn respond-btn"
+                        >
+                            🚑 Medical Team Responding
+                        </button>
+
+                    </form>
+
+
+                {% elif medical_request.status == "RESPONDING" %}
+
+                    <form
+                        method="POST"
+                        action="{% url 'update_medical_request' medical_request.id %}"
+                        class="action-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <input
+                            type="hidden"
+                            name="status"
+                            value="RESOLVED"
+                        >
+
+                        <button
+                            type="submit"
+                            class="btn resolve-btn"
+                        >
+                            ✅ Mark as Resolved
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+
+            </div>
+
+
+        </div>
+
+
+        {% endfor %}
+
+
+    {% else %}
+
+
+        <div class="empty">
+
+            <div class="empty-icon">
+                ✅
+            </div>
+
+            <h3>
+                No Medical Assistance Requests
+            </h3>
+
+            <p>
+                There are currently no medical assistance
+                requests for your station.
+            </p>
+
+        </div>
+
+
+    {% endif %}
+
+
+    <!-- LOGOUT -->
+
+    <div class="logout-section">
+
+        <a
+            href="{% url 'medical_head_login' %}"
+            class="logout-btn"
+        >
+            Logout
+        </a>
+
+    </div>
+
+
+</div>
+
+</body>
+</html>

@@ -10,6 +10,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from datetime import timedelta
 from django.http import JsonResponse
 from ticket_booking.models import TicketBooking,SeatReservation
+from .models import MedicalHead, MedicalAssistanceRequest
+
 
 
 def booking_details(request, booking_id):
@@ -1395,59 +1397,157 @@ def emergency_assistance(request):
     stations = Station.objects.all().order_by("station_name")
 
     hospitals = None
-
     selected_station = None
-
     selected_distance = None
 
     if request.method == "POST":
 
-        station_id = request.POST.get("station")
+        # ==========================================
+        # MEDICAL ASSISTANCE REQUEST
+        # ==========================================
 
-        selected_distance = request.POST.get("distance")
+        if "medical_request" in request.POST:
 
-        if station_id:
-
-            selected_station = Station.objects.get(id=station_id)
-
-            hospitals = Hospital.objects.filter(
-                station=selected_station
+            passenger_id = request.session.get(
+                "passenger_id"
             )
 
-            if (
-                selected_distance
-                and
-                selected_distance != "all"
-            ):
+            if not passenger_id:
+                return redirect("login")
 
-                hospitals = hospitals.filter(
-                    distance_km__lte=selected_distance
+            passenger = get_object_or_404(
+                Passenger,
+                id=passenger_id
+            )
+
+            train_number = request.POST.get(
+                "train_number"
+            )
+
+            patient_name = request.POST.get(
+                "patient_name"
+            )
+
+            station_id = request.POST.get(
+                "station"
+            )
+
+            coach_number = request.POST.get(
+                "coach_number"
+            )
+
+            emergency_type = request.POST.get(
+                "emergency_type"
+            )
+
+            other_description = request.POST.get(
+                "other_description"
+            )
+
+            contact_number = request.POST.get(
+                "contact_number"
+            )
+
+            # Get selected station
+            station = get_object_or_404(
+                Station,
+                id=station_id
+            )
+
+            # ==========================================
+            # EMERGENCY DESCRIPTION
+            # ==========================================
+
+            if emergency_type == "OTHER":
+
+                emergency_details = (
+                    other_description
                 )
 
-            hospitals = hospitals.order_by(
-                "distance_km"
+            else:
+
+                emergency_details = (
+                    emergency_type
+                )
+
+            # ==========================================
+            # CREATE MEDICAL REQUEST
+            # ==========================================
+
+            MedicalAssistanceRequest.objects.create(
+
+                passenger=passenger,
+
+                train_number=train_number,
+
+                patient_name=patient_name,
+
+                station=station,
+
+                coach_number=coach_number,
+
+                emergency_type=emergency_type,
+
+                description=emergency_details,
+
+                contact_number=contact_number,
+
+                status="PENDING"
             )
 
+            return redirect(
+                "my_medical_requests"
+            )
+
+        # ==========================================
+        # HOSPITAL SEARCH
+        # ==========================================
+
+        else:
+
+            station_id = request.POST.get(
+                "station"
+            )
+
+            selected_distance = request.POST.get(
+                "distance"
+            )
+
+            if station_id:
+
+                selected_station = get_object_or_404(
+                    Station,
+                    id=station_id
+                )
+
+                hospitals = Hospital.objects.filter(
+                    station=selected_station
+                )
+
+                if (
+                    selected_distance
+                    and
+                    selected_distance != "all"
+                ):
+
+                    hospitals = hospitals.filter(
+                        distance_km__lte=selected_distance
+                    )
+
+                hospitals = hospitals.order_by(
+                    "distance_km"
+                )
+
     return render(
-
         request,
-
         "home/emergency_assistance.html",
-
         {
-
             "stations": stations,
-
             "hospitals": hospitals,
-
             "selected_station": selected_station,
-
             "selected_distance": selected_distance,
-
         }
-
     )
-
 def hospital_details(request, hospital_id):
 
     hospital = get_object_or_404(
@@ -1774,5 +1874,195 @@ def station_guide(request):
             "stations": stations,
             "selected_station": selected_station,
             "selected_facility": selected_facility,
+        }
+    )
+
+def medical_head_login(request):
+
+    if request.method == "POST":
+
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        try:
+            medical_head = MedicalHead.objects.get(
+                username=username,
+                password=password
+            )
+
+            request.session["medical_head_id"] = medical_head.id
+
+            return redirect("/medical-head-dashboard/")
+
+        except MedicalHead.DoesNotExist:
+
+            return render(
+                request,
+                "home/medical_head_login.html",
+                {
+                    "error": "Invalid username or password."
+                }
+            )
+
+    return render(
+        request,
+        "home/medical_head_login.html"
+    )
+
+def medical_head_dashboard(request):
+
+    medical_head_id = request.session.get("medical_head_id")
+
+    if not medical_head_id:
+        return redirect("medical_head_login")
+
+    try:
+        medical_head = MedicalHead.objects.get(
+            id=medical_head_id
+        )
+    except MedicalHead.DoesNotExist:
+        return redirect("medical_head_login")
+
+    # Show only requests for this Medical Head's station
+    medical_requests = MedicalAssistanceRequest.objects.filter(
+        station=medical_head.station
+    ).order_by("-created_at")
+
+    pending_count = medical_requests.filter(
+        status="PENDING"
+    ).count()
+
+    responding_count = medical_requests.filter(
+        status="RESPONDING"
+    ).count()
+
+    resolved_count = medical_requests.filter(
+        status="RESOLVED"
+    ).count()
+
+    return render(
+        request,
+        "home/medical_head_dashboard.html",
+        {
+            "medical_head": medical_head,
+            "medical_requests": medical_requests,
+            "pending_count": pending_count,
+            "responding_count": responding_count,
+            "resolved_count": resolved_count,
+        }
+    )
+def medical_request_respond(request, request_id):
+
+    medical_head_id = request.session.get("medical_head_id")
+
+    if not medical_head_id:
+        return redirect("medical_head_login")
+
+    try:
+        medical_head = MedicalHead.objects.get(
+            id=medical_head_id
+        )
+    except MedicalHead.DoesNotExist:
+        return redirect("medical_head_login")
+
+    medical_request = get_object_or_404(
+        MedicalAssistanceRequest,
+        id=request_id,
+        station=medical_head.station
+    )
+
+    if request.method == "POST":
+        medical_request.status = "RESPONDING"
+        medical_request.save()
+
+    return redirect("medical_head_dashboard")
+
+def medical_request_resolve(request, request_id):
+
+    medical_head_id = request.session.get("medical_head_id")
+
+    if not medical_head_id:
+        return redirect("medical_head_login")
+
+    try:
+        medical_head = MedicalHead.objects.get(
+            id=medical_head_id
+        )
+    except MedicalHead.DoesNotExist:
+        return redirect("medical_head_login")
+
+    medical_request = get_object_or_404(
+        MedicalAssistanceRequest,
+        id=request_id,
+        station=medical_head.station
+    )
+
+    if request.method == "POST":
+        medical_request.status = "RESOLVED"
+        medical_request.save()
+
+    return redirect("medical_head_dashboard")
+
+def update_medical_request(request, request_id):
+
+    medical_head_id = request.session.get("medical_head_id")
+
+    if not medical_head_id:
+        return redirect("medical_head_login")
+
+    try:
+        medical_head = MedicalHead.objects.get(
+            id=medical_head_id
+        )
+    except MedicalHead.DoesNotExist:
+        return redirect("medical_head_login")
+
+    try:
+        medical_request = MedicalAssistanceRequest.objects.get(
+            id=request_id,
+            station=medical_head.station
+        )
+    except MedicalAssistanceRequest.DoesNotExist:
+        return redirect("medical_head_dashboard")
+
+    if request.method == "POST":
+
+        new_status = request.POST.get("status")
+
+        if new_status in ["RESPONDING", "RESOLVED"]:
+
+            medical_request.status = new_status
+            medical_request.save()
+
+    return redirect("medical_head_dashboard")
+
+def my_medical_requests(request):
+
+    passenger_id = request.session.get(
+        "passenger_id"
+    )
+
+    if not passenger_id:
+        return redirect("login")
+
+    passenger = get_object_or_404(
+        Passenger,
+        id=passenger_id
+    )
+
+    medical_requests = MedicalAssistanceRequest.objects.filter(
+        passenger=passenger
+    ).select_related(
+        "station"
+    ).order_by(
+        "-created_at"
+    )
+
+    return render(
+        request,
+        "home/my_medical_requests.html",
+        {
+            "passenger": passenger,
+            "medical_requests": medical_requests
         }
     )

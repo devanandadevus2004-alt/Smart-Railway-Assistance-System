@@ -17,6 +17,7 @@
             color: #263238;
         }
 
+
         /* ==============================
            MAIN CONTAINER
         ============================== */
@@ -26,6 +27,7 @@
             max-width: 1100px;
             margin: 35px auto 50px;
         }
+
 
         /* ==============================
            PAGE HEADER
@@ -57,6 +59,7 @@
             font-size: 15px;
             opacity: 0.9;
         }
+
 
         /* ==============================
            EMERGENCY CONTACTS
@@ -122,8 +125,184 @@
             color: #c62828;
         }
 
+
         /* ==============================
-           SEARCH BOX
+           MEDICAL ASSISTANCE
+        ============================== */
+
+        .medical-request {
+            background: white;
+            padding: 28px;
+            border-radius: 14px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
+            border-left: 5px solid #e53935;
+        }
+
+        .medical-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .medical-header > span {
+            font-size: 32px;
+        }
+
+        .medical-header h2 {
+            margin: 0;
+            color: #003366;
+            font-size: 22px;
+        }
+
+        .medical-header p {
+            margin: 5px 0 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+
+        /* ==============================
+           MEDICAL FORM GRID
+        ============================== */
+
+        .medical-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .medical-form-group {
+            margin-bottom: 20px;
+        }
+
+        .medical-form-group label {
+            display: block;
+            font-weight: bold;
+            color: #003366;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .medical-form-group label span {
+            color: #e53935;
+        }
+
+        .medical-form-group input,
+        .medical-form-group select,
+        .medical-form-group textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #ccd3dc;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: Arial, sans-serif;
+            background: #fafbfd;
+        }
+
+        .medical-form-group input:focus,
+        .medical-form-group select:focus,
+        .medical-form-group textarea:focus {
+            outline: none;
+            border-color: #0052cc;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+        }
+
+
+        /* ==============================
+           EMERGENCY OPTIONS
+        ============================== */
+
+        .emergency-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .emergency-option {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .emergency-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .emergency-option span {
+            display: block;
+            padding: 14px 10px;
+            text-align: center;
+            border: 1px solid #d9e0e8;
+            border-radius: 9px;
+            background: #f8fafc;
+            color: #333;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s ease;
+        }
+
+        .emergency-option span:hover {
+            border-color: #0052cc;
+            background: #eef4ff;
+        }
+
+        .emergency-option input:checked + span {
+            background: #eaf2ff;
+            border-color: #0052cc;
+            color: #0052cc;
+            box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.1);
+        }
+
+
+        /* ==============================
+           OTHER DESCRIPTION
+        ============================== */
+
+        #other-description {
+            display: none;
+        }
+
+        #other-description textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+
+        /* ==============================
+           MEDICAL SUBMIT BUTTON
+        ============================== */
+
+        .medical-submit {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #d32f2f, #e53935);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 5px;
+            transition: 0.2s ease;
+            box-shadow: 0 4px 10px rgba(211, 47, 47, 0.2);
+        }
+
+        .medical-submit:hover {
+            background: linear-gradient(135deg, #b71c1c, #d32f2f);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(211, 47, 47, 0.25);
+        }
+
+        .medical-submit:active {
+            transform: translateY(0);
+        }
+
+
+        /* ==============================
+           HOSPITAL SEARCH BOX
         ============================== */
 
         .search-box {
@@ -159,6 +338,7 @@
             font-size: 14px;
         }
 
+
         /* ==============================
            STATION SEARCH
         ============================== */
@@ -189,8 +369,9 @@
             box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
         }
 
+
         /* ==============================
-           SUGGESTIONS
+           STATION SUGGESTIONS
         ============================== */
 
         #station_suggestions {
@@ -228,11 +409,12 @@
             text-align: center;
         }
 
+
         /* ==============================
            DISTANCE SELECT
         ============================== */
 
-        select {
+        .search-box select {
             width: 100%;
             padding: 14px;
             margin: 0;
@@ -243,17 +425,18 @@
             cursor: pointer;
         }
 
-        select:focus {
+        .search-box select:focus {
             outline: none;
             border-color: #0052cc;
             box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
         }
 
+
         /* ==============================
-           SEARCH BUTTON
+           HOSPITAL SEARCH BUTTON
         ============================== */
 
-        button {
+        .hospital-search-btn {
             width: 100%;
             padding: 14px;
             background: linear-gradient(135deg, #0052cc, #006be6);
@@ -268,15 +451,12 @@
             box-shadow: 0 4px 10px rgba(0, 82, 204, 0.2);
         }
 
-        button:hover {
+        .hospital-search-btn:hover {
             background: linear-gradient(135deg, #003d99, #0052cc);
             transform: translateY(-1px);
             box-shadow: 0 6px 14px rgba(0, 82, 204, 0.25);
         }
 
-        button:active {
-            transform: translateY(0);
-        }
 
         /* ==============================
            HOSPITAL RESULTS
@@ -357,8 +537,9 @@
             color: #333;
         }
 
+
         /* ==============================
-           BUTTONS
+           HOSPITAL BUTTONS
         ============================== */
 
         .hospital-actions {
@@ -399,6 +580,7 @@
             transform: translateY(-1px);
         }
 
+
         /* ==============================
            NO HOSPITAL
         ============================== */
@@ -416,6 +598,7 @@
             font-size: 40px;
             margin-bottom: 10px;
         }
+
 
         /* ==============================
            BACK BUTTON
@@ -443,6 +626,7 @@
             transform: translateY(-1px);
         }
 
+
         /* ==============================
            RESPONSIVE
         ============================== */
@@ -453,7 +637,26 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            .emergency-options {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
         }
+
+
+        @media (max-width: 700px) {
+
+            .medical-form-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .emergency-options {
+                grid-template-columns: 1fr 1fr;
+            }
+
+        }
+
 
         @media (max-width: 600px) {
 
@@ -476,6 +679,7 @@
 
             .search-box,
             .emergency,
+            .medical-request,
             .hospital-card {
                 padding: 18px;
             }
@@ -490,167 +694,14 @@
                 width: 100%;
             }
 
-            /* ==============================
-   MEDICAL ASSISTANCE
-============================== */
-
-.medical-request {
-    background: white;
-    padding: 28px;
-    border-radius: 14px;
-    margin-bottom: 30px;
-    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.08);
-    border-left: 5px solid #e53935;
-}
-
-.medical-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 25px;
-}
-
-.medical-header > span {
-    font-size: 32px;
-}
-
-.medical-header h2 {
-    margin: 0;
-    color: #003366;
-    font-size: 22px;
-}
-
-.medical-header p {
-    margin: 5px 0 0;
-    color: #666;
-    font-size: 14px;
-}
-
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-weight: bold;
-    color: #003366;
-    margin-bottom: 8px;
-    font-size: 14px;
-}
-
-.form-group label span {
-    color: #e53935;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 13px 14px;
-    border: 1px solid #ccd3dc;
-    border-radius: 8px;
-    font-size: 15px;
-    font-family: Arial, sans-serif;
-    background: #fafbfd;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-    outline: none;
-    border-color: #0052cc;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
-}
+        }
 
 
-/* Emergency Options */
+        @media (max-width: 450px) {
 
-.emergency-options {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
-
-.emergency-option {
-    position: relative;
-    cursor: pointer;
-}
-
-.emergency-option input {
-    position: absolute;
-    opacity: 0;
-}
-
-.emergency-option span {
-    display: block;
-    padding: 14px 10px;
-    text-align: center;
-    border: 1px solid #d9e0e8;
-    border-radius: 9px;
-    background: #f8fafc;
-    color: #333;
-    font-size: 14px;
-    font-weight: bold;
-    transition: 0.2s ease;
-}
-
-.emergency-option span:hover {
-    border-color: #0052cc;
-    background: #eef4ff;
-}
-
-
-/* Selected option */
-
-.emergency-option input:checked + span {
-    background: #eaf2ff;
-    border-color: #0052cc;
-    color: #0052cc;
-    box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.1);
-}
-
-
-/* Submit */
-
-.medical-submit {
-    background: linear-gradient(135deg, #d32f2f, #e53935);
-    box-shadow: 0 4px 10px rgba(211, 47, 47, 0.2);
-}
-
-.medical-submit:hover {
-    background: linear-gradient(135deg, #b71c1c, #d32f2f);
-}
-
-
-/* Mobile */
-
-@media (max-width: 700px) {
-
-    .form-grid {
-        grid-template-columns: 1fr;
-        gap: 0;
-    }
-
-    .emergency-options {
-        grid-template-columns: 1fr 1fr;
-    }
-
-}
-
-@media (max-width: 450px) {
-
-    .emergency-options {
-        grid-template-columns: 1fr;
-    }
-
-}
+            .emergency-options {
+                grid-template-columns: 1fr;
+            }
 
         }
 
@@ -658,9 +709,11 @@
 
 </head>
 
+
 <body>
 
 <div class="container">
+
 
     <!-- ==============================
          PAGE HEADER
@@ -668,9 +721,13 @@
 
     <div class="page-header">
 
-        <div class="icon">🚨</div>
+        <div class="icon">
+            🚨
+        </div>
 
-        <h1>Emergency Assistance</h1>
+        <h1>
+            Emergency Assistance
+        </h1>
 
         <p>
             Quickly find emergency services and nearby hospitals
@@ -687,319 +744,448 @@
 
         <div class="emergency-header">
 
-            <span>📞</span>
+            <span>
+                📞
+            </span>
 
-            <h2>Emergency Contacts</h2>
+            <h2>
+                Emergency Contacts
+            </h2>
 
         </div>
 
 
         <div class="emergency-grid">
 
+
             <div class="emergency-item">
 
-                <span class="emoji">🚆</span>
+                <span class="emoji">
+                    🚆
+                </span>
 
                 <span class="label">
                     Railway Helpline
                 </span>
 
-                <strong>139</strong>
+                <strong>
+                    139
+                </strong>
 
             </div>
 
 
             <div class="emergency-item">
 
-                <span class="emoji">👮</span>
+                <span class="emoji">
+                    👮
+                </span>
 
                 <span class="label">
                     RPF Helpline
                 </span>
 
-                <strong>182</strong>
+                <strong>
+                    182
+                </strong>
 
             </div>
 
 
             <div class="emergency-item">
 
-                <span class="emoji">🚑</span>
+                <span class="emoji">
+                    🚑
+                </span>
 
                 <span class="label">
                     Ambulance
                 </span>
 
-                <strong>108</strong>
+                <strong>
+                    108
+                </strong>
 
             </div>
 
 
             <div class="emergency-item">
 
-                <span class="emoji">🚔</span>
+                <span class="emoji">
+                    🚔
+                </span>
 
                 <span class="label">
                     Police
                 </span>
 
-                <strong>112</strong>
+                <strong>
+                    112
+                </strong>
 
             </div>
 
 
             <div class="emergency-item">
 
-                <span class="emoji">👩</span>
+                <span class="emoji">
+                    👩
+                </span>
 
                 <span class="label">
                     Women Helpline
                 </span>
 
-                <strong>181</strong>
+                <strong>
+                    181
+                </strong>
 
             </div>
+
 
         </div>
 
     </div>
 
-    <!-- ==============================
-     MEDICAL ASSISTANCE REQUEST
-============================== -->
 
-<div class="medical-request">
+    <!-- =====================================================
+         MEDICAL ASSISTANCE REQUEST
+    ===================================================== -->
 
-    <div class="medical-header">
-        <span>🚑</span>
-        <div>
-            <h2>Request Medical Assistance</h2>
-            <p>Send an urgent medical assistance request to railway officers.</p>
-        </div>
-    </div>
-
-    <form method="POST">
-
-        {% csrf_token %}
-
-        <div class="form-grid">
-
-            <!-- Train Number -->
-            <div class="form-group">
-                <label>Train Number <span>*</span></label>
-
-                <input
-                    type="text"
-                    name="train_number"
-                    placeholder="Enter train number"
-                    required
-                >
-            </div>
+    <div class="medical-request">
 
 
-            <!-- Patient Name -->
-            <div class="form-group">
-                <label>Patient Name <span>*</span></label>
+        <div class="medical-header">
 
-                <input
-                    type="text"
-                    name="patient_name"
-                    placeholder="Enter patient name"
-                    required
-                >
-            </div>
+            <span>
+                🚑
+            </span>
 
+            <div>
 
-            <!-- Station -->
-            <div class="form-group">
-                <label>Station <span>*</span></label>
+                <h2>
+                    Request Medical Assistance
+                </h2>
 
-                <select name="station" required>
-
-                    <option value="">
-                        Select station
-                    </option>
-
-                    {% for station in stations %}
-
-                        <option value="{{ station.id }}">
-                            {{ station.station_name }}
-                        </option>
-
-                    {% endfor %}
-
-                </select>
-
-            </div>
-
-
-            <!-- Coach Number -->
-            <div class="form-group">
-                <label>Coach Number <span>*</span></label>
-
-                <input
-                    type="text"
-                    name="coach_number"
-                    placeholder="Example: S5 / B2 / A1"
-                    required
-                >
-            </div>
-
-        </div>
-
-
-        <!-- Emergency Type -->
-
-        <div class="form-group">
-
-            <label>
-                Emergency Type <span>*</span>
-            </label>
-
-            <div class="emergency-options">
-
-                <label class="emergency-option">
-                    <input
-                        type="radio"
-                        name="emergency_type"
-                        value="Medical Emergency"
-                        required
-                    >
-                    <span>🩺 Medical Emergency</span>
-                </label>
-
-
-                <label class="emergency-option">
-                    <input
-                        type="radio"
-                        name="emergency_type"
-                        value="Injury"
-                    >
-                    <span>🩹 Injury</span>
-                </label>
-
-
-                <label class="emergency-option">
-                    <input
-                        type="radio"
-                        name="emergency_type"
-                        value="Breathing Difficulty"
-                    >
-                    <span>🫁 Breathing Difficulty</span>
-                </label>
-
-
-                <label class="emergency-option">
-                    <input
-                        type="radio"
-                        name="emergency_type"
-                        value="Chest Pain"
-                    >
-                    <span>❤️ Chest Pain</span>
-                </label>
-
-
-                <label class="emergency-option">
-                    <input
-                        type="radio"
-                        name="emergency_type"
-                        value="Unconscious"
-                    >
-                    <span>😵 Unconscious</span>
-                </label>
-
-
-                <label class="emergency-option">
-                    <input
-                        type="radio"
-                        name="emergency_type"
-                        value="Others"
-                        id="others-option"
-                    >
-                    <span>➕ Others</span>
-                </label>
+                <p>
+                    Send an urgent medical assistance request to railway officers.
+                </p>
 
             </div>
 
         </div>
 
 
-        <!-- Other Emergency Description -->
+        <!-- IMPORTANT:
+             This is a separate form from the hospital search form.
+        -->
 
-        <div
-            class="form-group"
-            id="other-description"
-            style="display:none;"
+        <form
+            method="POST"
+            id="medical-form"
         >
-
-            <label>
-                Describe the Emergency <span>*</span>
-            </label>
-
-            <textarea
-                name="other_description"
-                id="other_description"
-                rows="4"
-                placeholder="Please describe the emergency..."
-            ></textarea>
-
-        </div>
-
-
-        <!-- Contact Number -->
-
-        <div class="form-group">
-
-            <label>
-                Contact Number <span>*</span>
-            </label>
-
-            <input
-                type="tel"
-                name="contact_number"
-                placeholder="Enter contact number"
-                required
-            >
-
-        </div>
-
-
-        <!-- Submit -->
-
-        <button
-            type="submit"
-            name="medical_request"
-            class="medical-submit"
-        >
-            🚨 Send Medical Request
-        </button>
-
-    </form>
-
-</div>
-
-
-    <!-- ==============================
-         SEARCH BOX
-    ============================== -->
-
-    <div class="search-box">
-
-        <div class="search-title">
-
-            <span>🏥</span>
-
-            <h2>Find Nearby Hospitals</h2>
-
-        </div>
-
-
-        <form method="POST">
 
             {% csrf_token %}
 
 
-            <!-- Station -->
+            <div class="medical-form-grid">
+
+
+                <!-- Train Number -->
+
+                <div class="medical-form-group">
+
+                    <label>
+                        Train Number <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="train_number"
+                        placeholder="Enter train number"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Patient Name -->
+
+                <div class="medical-form-group">
+
+                    <label>
+                        Patient Name <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="patient_name"
+                        placeholder="Enter patient name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- Station -->
+
+                <div class="medical-form-group">
+
+                    <label>
+                        Station <span>*</span>
+                    </label>
+
+                    <select
+                        name="station"
+                        required
+                    >
+
+                        <option value="">
+                            Select station
+                        </option>
+
+                        {% for station in stations %}
+
+                            <option value="{{ station.id }}">
+                                {{ station.station_name }}
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <!-- Coach Number -->
+
+                <div class="medical-form-group">
+
+                    <label>
+                        Coach Number <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        name="coach_number"
+                        placeholder="Example: S5 / B2 / A1"
+                        required
+                    >
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ==============================
+                 EMERGENCY TYPE
+            ============================== -->
+
+            <div class="medical-form-group">
+
+                <label>
+                    Emergency Type <span>*</span>
+                </label>
+
+
+                <div class="emergency-options">
+
+
+                    <label class="emergency-option">
+
+                        <input
+                            type="radio"
+                            name="emergency_type"
+                            value="Medical Emergency"
+                            required
+                        >
+
+                        <span>
+                            🩺 Medical Emergency
+                        </span>
+
+                    </label>
+
+
+                    <label class="emergency-option">
+
+                        <input
+                            type="radio"
+                            name="emergency_type"
+                            value="Injury"
+                        >
+
+                        <span>
+                            🩹 Injury
+                        </span>
+
+                    </label>
+
+
+                    <label class="emergency-option">
+
+                        <input
+                            type="radio"
+                            name="emergency_type"
+                            value="Breathing Difficulty"
+                        >
+
+                        <span>
+                            🫁 Breathing Difficulty
+                        </span>
+
+                    </label>
+
+
+                    <label class="emergency-option">
+
+                        <input
+                            type="radio"
+                            name="emergency_type"
+                            value="Chest Pain"
+                        >
+
+                        <span>
+                            ❤️ Chest Pain
+                        </span>
+
+                    </label>
+
+
+                    <label class="emergency-option">
+
+                        <input
+                            type="radio"
+                            name="emergency_type"
+                            value="Unconscious"
+                        >
+
+                        <span>
+                            😵 Unconscious
+                        </span>
+
+                    </label>
+
+
+                    <label class="emergency-option">
+
+                        <input
+                            type="radio"
+                            name="emergency_type"
+                            value="Others"
+                            id="others-option"
+                        >
+
+                        <span>
+                            ➕ Others
+                        </span>
+
+                    </label>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- ==============================
+                 OTHER EMERGENCY DESCRIPTION
+            ============================== -->
+
+            <div
+                class="medical-form-group"
+                id="other-description"
+            >
+
+                <label>
+                    Describe the Emergency <span>*</span>
+                </label>
+
+                <textarea
+                    name="other_description"
+                    id="other_description"
+                    rows="4"
+                    placeholder="Please describe the emergency..."
+                ></textarea>
+
+            </div>
+
+
+            <!-- ==============================
+                 CONTACT NUMBER
+            ============================== -->
+
+            <div class="medical-form-group">
+
+                <label>
+                    Contact Number <span>*</span>
+                </label>
+
+                <input
+                    type="tel"
+                    name="contact_number"
+                    placeholder="Enter contact number"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ==============================
+                 MEDICAL REQUEST SUBMIT
+            ============================== -->
+
+            <button
+                type="submit"
+                name="medical_request"
+                value="1"
+                class="medical-submit"
+            >
+                🚨 Send Medical Request
+            </button>
+
+
+        </form>
+
+    </div>
+
+
+    <!-- =====================================================
+         FIND NEARBY HOSPITALS
+    ===================================================== -->
+
+    <div class="search-box">
+
+
+        <div class="search-title">
+
+            <span>
+                🏥
+            </span>
+
+            <h2>
+                Find Nearby Hospitals
+            </h2>
+
+        </div>
+
+
+        <!-- IMPORTANT:
+             Completely separate form for hospital search.
+        -->
+
+        <form
+            method="POST"
+            id="hospital-form"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- ==============================
+                 STATION
+            ============================== -->
 
             <div class="form-group">
 
@@ -1009,6 +1195,7 @@
 
 
                 <div class="station-search">
+
 
                     <input
                         type="text"
@@ -1028,9 +1215,10 @@
                     >
 
 
-                    <!-- Suggestions -->
+                    <!-- Station Suggestions -->
 
                     <div id="station_suggestions">
+
 
                         {% for station in stations %}
 
@@ -1039,10 +1227,13 @@
                                 data-id="{{ station.id }}"
                                 data-name="{{ station.station_name|escapejs }}"
                             >
+
                                 {{ station.station_name }}
+
                             </div>
 
                         {% endfor %}
+
 
                     </div>
 
@@ -1051,13 +1242,16 @@
             </div>
 
 
-            <!-- Distance -->
+            <!-- ==============================
+                 DISTANCE
+            ============================== -->
 
             <div class="form-group">
 
                 <label>
                     Maximum Distance
                 </label>
+
 
                 <select name="distance">
 
@@ -1086,22 +1280,31 @@
             </div>
 
 
-            <!-- Search -->
+            <!-- ==============================
+                 SEARCH BUTTON
+            ============================== -->
 
-            <button type="submit">
+            <button
+                type="submit"
+                class="hospital-search-btn"
+                name="hospital_search"
+                value="1"
+            >
                 🔍 Search Hospitals
             </button>
+
 
         </form>
 
     </div>
 
 
-    <!-- ==============================
+    <!-- =====================================================
          HOSPITAL RESULTS
-    ============================== -->
+    ===================================================== -->
 
     {% if hospitals %}
+
 
         <div class="results-header">
 
@@ -1114,7 +1317,9 @@
 
         {% for hospital in hospitals %}
 
+
             <div class="hospital-card">
+
 
                 <div class="hospital-title">
 
@@ -1132,7 +1337,9 @@
                 <p class="hospital-info">
 
                     <span class="distance">
+
                         📍 {{ hospital.distance_km }} km
+
                     </span>
 
                 </p>
@@ -1154,6 +1361,7 @@
 
                 <div class="hospital-actions">
 
+
                     <!-- Call Hospital -->
 
                     <a
@@ -1173,14 +1381,18 @@
                         View Details
                     </a>
 
+
                 </div>
 
+
             </div>
+
 
         {% endfor %}
 
 
     {% elif selected_station %}
+
 
         <div class="no-hospital">
 
@@ -1195,7 +1407,9 @@
 
         </div>
 
+
     {% endif %}
+
 
 </div>
 
@@ -1217,135 +1431,252 @@
 
 
 <!-- =====================================================
-     STATION SEARCH JAVASCRIPT
+     JAVASCRIPT
 ===================================================== -->
 
 <script>
 
-    const searchInput =
-        document.getElementById("station_search");
 
-    const stationIdInput =
-        document.getElementById("station_id");
+    /* =====================================================
+       MEDICAL ASSISTANCE - OTHERS OPTION
+    ===================================================== */
 
-    const suggestions =
-        document.getElementById("station_suggestions");
+    const emergencyOptions =
+        document.querySelectorAll(
+            'input[name="emergency_type"]'
+        );
 
-    const stationOptions =
-        document.querySelectorAll(".station-option");
+    const otherDescription =
+        document.getElementById(
+            "other-description"
+        );
 
-
-    /* ==============================================
-       Show matching stations while typing
-       ============================================== */
-
-    searchInput.addEventListener("input", function () {
-
-        const searchText =
-            this.value.toLowerCase().trim();
-
-        suggestions.innerHTML = "";
-
-        if (searchText === "") {
-
-            suggestions.style.display = "none";
-
-            stationIdInput.value = "";
-
-            return;
-
-        }
+    const otherDescriptionInput =
+        document.getElementById(
+            "other_description"
+        );
 
 
-        let found = false;
+    emergencyOptions.forEach(function(option) {
 
+        option.addEventListener(
+            "change",
+            function() {
 
-        stationOptions.forEach(function (option) {
+                if (this.value === "Others") {
 
-            const stationName =
-                option.dataset.name.toLowerCase();
+                    /* Show description */
 
+                    otherDescription.style.display =
+                        "block";
 
-            if (stationName.includes(searchText)) {
+                    /* Make description required */
 
-                const newOption =
-                    document.createElement("div");
+                    otherDescriptionInput.required =
+                        true;
 
-                newOption.className =
-                    "station-option";
+                }
 
-                newOption.textContent =
-                    option.dataset.name;
+                else {
 
-                newOption.dataset.id =
-                    option.dataset.id;
+                    /* Hide description */
 
+                    otherDescription.style.display =
+                        "none";
 
-                newOption.addEventListener(
-                    "click",
-                    function () {
+                    /* Remove required */
 
-                        searchInput.value =
-                            this.textContent;
+                    otherDescriptionInput.required =
+                        false;
 
-                        stationIdInput.value =
-                            this.dataset.id;
+                    /* Clear previous text */
 
-                        suggestions.style.display =
-                            "none";
+                    otherDescriptionInput.value =
+                        "";
 
-                    }
-                );
-
-
-                suggestions.appendChild(
-                    newOption
-                );
-
-                found = true;
+                }
 
             }
-
-        });
-
-
-        if (found) {
-
-            suggestions.style.display =
-                "block";
-
-        }
-
-        else {
-
-            const noResult =
-                document.createElement("div");
-
-            noResult.className =
-                "no-station";
-
-            noResult.textContent =
-                "No station found";
-
-            suggestions.appendChild(
-                noResult
-            );
-
-            suggestions.style.display =
-                "block";
-
-        }
+        );
 
     });
 
 
-    /* ==============================================
-       Hide suggestions when clicking outside
-       ============================================== */
+    /* =====================================================
+       HOSPITAL STATION SEARCH
+    ===================================================== */
+
+    const searchInput =
+        document.getElementById(
+            "station_search"
+        );
+
+    const stationIdInput =
+        document.getElementById(
+            "station_id"
+        );
+
+    const suggestions =
+        document.getElementById(
+            "station_suggestions"
+        );
+
+    const stationOptions =
+        document.querySelectorAll(
+            ".station-option"
+        );
+
+
+    /* =====================================================
+       SHOW MATCHING STATIONS
+    ===================================================== */
+
+    searchInput.addEventListener(
+        "input",
+        function() {
+
+
+            const searchText =
+                this.value
+                    .toLowerCase()
+                    .trim();
+
+
+            suggestions.innerHTML = "";
+
+
+            /* Empty search */
+
+            if (searchText === "") {
+
+                suggestions.style.display =
+                    "none";
+
+                stationIdInput.value =
+                    "";
+
+                return;
+
+            }
+
+
+            let found = false;
+
+
+            stationOptions.forEach(
+                function(option) {
+
+
+                    const stationName =
+                        option.dataset.name
+                            .toLowerCase();
+
+
+                    if (
+                        stationName.includes(
+                            searchText
+                        )
+                    ) {
+
+
+                        const newOption =
+                            document.createElement(
+                                "div"
+                            );
+
+
+                        newOption.className =
+                            "station-option";
+
+
+                        newOption.textContent =
+                            option.dataset.name;
+
+
+                        newOption.dataset.id =
+                            option.dataset.id;
+
+
+                        newOption.addEventListener(
+                            "click",
+                            function() {
+
+
+                                searchInput.value =
+                                    this.textContent;
+
+
+                                stationIdInput.value =
+                                    this.dataset.id;
+
+
+                                suggestions.style.display =
+                                    "none";
+
+
+                            }
+                        );
+
+
+                        suggestions.appendChild(
+                            newOption
+                        );
+
+
+                        found = true;
+
+                    }
+
+                }
+            );
+
+
+            if (found) {
+
+                suggestions.style.display =
+                    "block";
+
+            }
+
+            else {
+
+
+                const noResult =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                noResult.className =
+                    "no-station";
+
+
+                noResult.textContent =
+                    "No station found";
+
+
+                suggestions.appendChild(
+                    noResult
+                );
+
+
+                suggestions.style.display =
+                    "block";
+
+            }
+
+        }
+    );
+
+
+    /* =====================================================
+       HIDE SUGGESTIONS WHEN CLICKING OUTSIDE
+    ===================================================== */
 
     document.addEventListener(
         "click",
-        function (event) {
+        function(event) {
+
 
             if (
                 !event.target.closest(
@@ -1362,29 +1693,46 @@
     );
 
 
-    /* ==============================================
-       Prevent submitting without selecting station
-       ============================================== */
+    /* =====================================================
+       HOSPITAL FORM VALIDATION ONLY
+       
+       IMPORTANT:
+       We use #hospital-form instead of
+       document.querySelector("form").
+       
+       Therefore medical form will NOT be affected.
+    ===================================================== */
 
-    document.querySelector("form")
-        .addEventListener(
-            "submit",
-            function (event) {
+    const hospitalForm =
+        document.getElementById(
+            "hospital-form"
+        );
 
-                if (!stationIdInput.value) {
 
-                    event.preventDefault();
+    hospitalForm.addEventListener(
+        "submit",
+        function(event) {
 
-                    alert(
-                        "Please search and select a railway station."
-                    );
 
-                    searchInput.focus();
+            if (!stationIdInput.value) {
 
-                }
+
+                event.preventDefault();
+
+
+                alert(
+                    "Please search and select a railway station."
+                );
+
+
+                searchInput.focus();
+
 
             }
-        );
+
+        }
+    );
+
 
 </script>
 

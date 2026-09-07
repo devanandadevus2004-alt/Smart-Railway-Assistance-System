@@ -32,4 +32,35 @@ path(
     views.station_guide,
     name="station_guide"
 ),
+path(
+    "medical-head-login/",
+    views.medical_head_login,
+    name="medical_head_login"
+),
+path(
+    "medical-head-dashboard/",
+    views.medical_head_dashboard,
+    name="medical_head_dashboard"
+),
+path(
+    "medical-request/<int:request_id>/respond/",
+    views.medical_request_respond,
+    name="medical_request_respond"
+),
+
+path(
+    "medical-request/<int:request_id>/resolve/",
+    views.medical_request_resolve,
+    name="medical_request_resolve"
+),
+path(
+    "medical-request/update/<int:request_id>/",
+    views.update_medical_request,
+    name="update_medical_request"
+),
+path(
+    "my-medical-requests/",
+    views.my_medical_requests,
+    name="my_medical_requests"
+),
 ]

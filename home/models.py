@@ -234,9 +234,18 @@ class MedicalAssistanceRequest(models.Model):
 
     STATUS_CHOICES = [
         ('PENDING', 'Pending'),
-        ('RESPONDING', 'Officer Responding'),
+        ('RESPONDING', 'Medical Team Responding'),
         ('RESOLVED', 'Resolved'),
     ]
+
+    # Passenger who submitted the request
+    passenger = models.ForeignKey(
+        Passenger,
+        on_delete=models.CASCADE,
+        related_name='medical_requests',
+        null=True,
+        blank=True
+    )
 
     patient_name = models.CharField(
         max_length=100
@@ -285,3 +294,37 @@ class MedicalAssistanceRequest(models.Model):
             f"{self.train_number} - "
             f"{self.coach_number}"
         )
+class MedicalHead(models.Model):
+
+    full_name = models.CharField(max_length=100)
+
+    employee_id = models.CharField(
+        max_length=20,
+        unique=True
+    )
+
+    username = models.CharField(
+        max_length=50,
+        unique=True
+    )
+
+    password = models.CharField(
+        max_length=100
+    )
+
+    email = models.EmailField(
+        unique=True
+    )
+
+    phone_number = models.CharField(
+        max_length=15
+    )
+
+    station = models.OneToOneField(
+        Station,
+        on_delete=models.CASCADE,
+        related_name="medical_head"
+    )
+
+    def __str__(self):
+        return f"{self.full_name} - {self.station.station_name}"
