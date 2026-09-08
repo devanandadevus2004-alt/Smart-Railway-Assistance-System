@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404, redirect, render
 from datetime import timedelta
 from django.http import JsonResponse
-from ticket_booking.models import TicketBooking,SeatReservation
+from ticket_booking.models import TicketBooking,SeatReservation,Train,TrainStop,TrainDelayUpdate
 from .models import MedicalHead, MedicalAssistanceRequest
 
 
@@ -1147,18 +1147,128 @@ def officer_dashboard(request):
     if "officer_id" not in request.session:
         return redirect("officer_login")
 
-    officer = Officer.objects.get(id=request.session["officer_id"])
+    officer = Officer.objects.get(
+        id=request.session["officer_id"]
+    )
 
+    # Existing luggage-transfer functionality
     bookings = LuggageBooking.objects.filter(
         source_station=officer.station
     )
 
-    return render(request, "home/officer_dashboard.html", {
-        "officer": officer,
-        "bookings": bookings,
-    })
+    # Trains stopping at this officer's station
+    trains = Train.objects.filter(
+        stops__station=officer.station,
+        is_active=True
+    ).distinct()
 
+    return render(
+        request,
+        "home/officer_dashboard.html",
+        {
+            "officer": officer,
+            "bookings": bookings,
+            "trains": trains,
+        }
+    )
 
+def update_train_delay(request, train_id):
+
+    if "officer_id" not in request.session:
+        return redirect("officer_login")
+
+    officer = Officer.objects.get(
+        id=request.session["officer_id"]
+    )
+
+    # Get the selected train
+    train = Train.objects.get(
+        id=train_id,
+        is_active=True
+    )
+
+    # Make sure this train actually stops at the officer's station
+    train_stop = TrainStop.objects.filter(
+        train=train,
+        station=officer.station
+    ).first()
+
+    if not train_stop:
+        return redirect("officer_dashboard")
+
+    if request.method == "POST":
+
+        status = request.POST.get("status")
+        distance = request.POST.get("distance_from_station")
+        reason = request.POST.get("reason")
+        expected_time = request.POST.get("expected_time")
+
+        # Distance is only required when train is before the station
+        if status != "BEFORE_STATION":
+            distance = None
+
+        MedicalAssistanceRequest.objects.none()  # REMOVE THIS LINE IF PRESENT
+
+        TrainDelayUpdate.objects.create(
+            train=train,
+            station=officer.station,
+            officer=officer,
+            status=status,
+            distance_from_station=distance,
+            reason=reason,
+            expected_time=expected_time if expected_time else None
+        )
+
+        return redirect("officer_dashboard")
+
+    return render(
+        request,
+        "home/update_train_delay.html",
+        {
+            "officer": officer,
+            "train": train,
+            "train_stop": train_stop,
+        }
+    )
+
+def train_delay(request):
+
+    train = None
+    latest_delay = None
+    previous_updates = None
+
+    if request.method == "POST":
+
+        train_number = request.POST.get("train_number")
+
+        if train_number:
+
+            try:
+                train = Train.objects.get(
+                    train_number=train_number
+                )
+
+                delay_updates = TrainDelayUpdate.objects.filter(
+                    train=train
+                ).order_by("-updated_at")
+
+                latest_delay = delay_updates.first()
+
+                previous_updates = delay_updates[1:]
+
+            except Train.DoesNotExist:
+
+                train = None
+
+    return render(
+        request,
+        "home/train_delay.html",
+        {
+            "train": train,
+            "latest_delay": latest_delay,
+            "previous_updates": previous_updates,
+        }
+    )
 
 
 

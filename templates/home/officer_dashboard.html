@@ -336,6 +336,102 @@
 
         }
 
+        /* ================= TRAIN DELAY SECTION ================= */
+
+.delay-section{
+    background:white;
+    padding:26px;
+    border-radius:15px;
+    margin-top:22px;
+    box-shadow:0 5px 20px rgba(0,0,0,.09);
+    border:1px solid #e6ebf2;
+}
+
+.delay-section h2{
+    color:#073d70;
+    margin:0;
+    font-size:23px;
+}
+
+.delay-subtitle{
+    color:#7b8794;
+    font-size:14px;
+    margin:7px 0 20px;
+}
+
+.train-card{
+    border:1px solid #e1e7ef;
+    border-radius:12px;
+    padding:18px;
+    margin-bottom:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:15px;
+    transition:.2s;
+}
+
+.train-card:hover{
+    background:#f7faff;
+    border-color:#cbd9ea;
+}
+
+.train-info h3{
+    margin:0 0 6px;
+    color:#073d70;
+    font-size:18px;
+}
+
+.train-info p{
+    margin:3px 0;
+    color:#6b7280;
+    font-size:14px;
+}
+
+.delay-btn{
+    display:inline-block;
+    padding:9px 18px;
+    background:#e53935;
+    color:white;
+    text-decoration:none;
+    border-radius:20px;
+    font-weight:bold;
+    font-size:13px;
+    transition:.25s;
+    white-space:nowrap;
+}
+
+.delay-btn:hover{
+    background:#c62828;
+    transform:translateY(-2px);
+    box-shadow:0 4px 9px rgba(211,47,47,.25);
+}
+
+.no-trains{
+    text-align:center;
+    padding:35px;
+    color:#7b8794;
+    background:#f8fafc;
+    border-radius:10px;
+}
+
+
+/* ================= RESPONSIVE DELAY ================= */
+
+@media(max-width:600px){
+
+    .train-card{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .delay-btn{
+        width:100%;
+        text-align:center;
+    }
+
+}
+
 
         @media(max-width:600px){
 
@@ -632,10 +728,76 @@
 
         </div>
 
+        </div>
+
+
+    <!-- ================= TRAIN DELAY MANAGEMENT ================= -->
+
+    <div class="delay-section">
+
+        <h2>
+            🚆 Train Delay Management
+        </h2>
+
+        <p class="delay-subtitle">
+            Update delay information for trains stopping at
+            {{ officer.station.station_name }}.
+        </p>
+
+
+        {% for train in trains %}
+
+            <div class="train-card">
+
+                <div class="train-info">
+
+                    <h3>
+                        {{ train.train_number }} - {{ train.train_name }}
+                    </h3>
+
+                    <p>
+                        🚉
+                        {{ train.source_station.station_name }}
+                        →
+                        {{ train.destination_station.station_name }}
+                    </p>
+
+                    <p>
+                        🕐 Scheduled Departure:
+                        {{ train.departure_time }}
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{% url 'update_train_delay' train.id %}"
+                    class="delay-btn"
+                >
+                    Update Delay
+                </a>
+
+            </div>
+
+
+        {% empty %}
+
+            <div class="no-trains">
+
+                🚆 No active trains are currently available
+                for {{ officer.station.station_name }}.
+
+            </div>
+
+        {% endfor %}
+
     </div>
 
 
 </div>
+
+
+
 
 
 

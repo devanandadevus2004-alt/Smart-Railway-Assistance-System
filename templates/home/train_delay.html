@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Train Delay Information</title>
+
+    <style>
+
+        *{
+            box-sizing:border-box;
+        }
+
+        body{
+            margin:0;
+            font-family:Arial, sans-serif;
+            background:#f3f6fa;
+            color:#333;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar{
+            background:#003b70;
+            color:white;
+            padding:16px 45px;
+
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+
+            box-shadow:0 3px 12px rgba(0,0,0,.18);
+        }
+
+        .brand{
+            display:flex;
+            align-items:center;
+            gap:10px;
+        }
+
+        .brand-icon{
+            font-size:25px;
+        }
+
+        .navbar h2{
+            margin:0;
+            font-size:21px;
+        }
+
+        .nav-links{
+            display:flex;
+            gap:10px;
+        }
+
+        .nav-btn{
+            color:white;
+            text-decoration:none;
+            padding:9px 18px;
+            border-radius:22px;
+            font-weight:bold;
+            font-size:14px;
+        }
+
+        .home-btn{
+            background:#0866d5;
+        }
+
+        /* ================= MAIN ================= */
+
+        .container{
+            max-width:900px;
+            margin:45px auto;
+            padding:0 20px;
+        }
+
+        .page-title{
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        .page-title h1{
+            margin:0;
+            color:#073d70;
+            font-size:32px;
+        }
+
+        .page-title p{
+            color:#6b7280;
+            margin-top:8px;
+        }
+
+        /* ================= SEARCH ================= */
+
+        .search-card{
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 5px 20px rgba(0,0,0,.09);
+            border:1px solid #e6ebf2;
+        }
+
+        .search-card label{
+            display:block;
+            font-weight:bold;
+            color:#073d70;
+            margin-bottom:8px;
+        }
+
+        .search-box{
+            display:flex;
+            gap:10px;
+        }
+
+        .search-box input{
+            flex:1;
+            padding:13px 15px;
+            border:1px solid #ccd5df;
+            border-radius:8px;
+            font-size:15px;
+        }
+
+        .search-btn{
+            border:none;
+            background:#0866d5;
+            color:white;
+            padding:13px 25px;
+            border-radius:8px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        .search-btn:hover{
+            background:#004da8;
+        }
+
+        /* ================= TRAIN ================= */
+
+        .train-card{
+            margin-top:25px;
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 5px 20px rgba(0,0,0,.09);
+            border:1px solid #e6ebf2;
+        }
+
+        .train-title{
+            color:#073d70;
+            margin:0;
+            font-size:23px;
+        }
+
+        .route{
+            color:#6b7280;
+            margin:8px 0 20px;
+        }
+
+        /* ================= CURRENT DELAY ================= */
+
+        .delay-card{
+            border-radius:12px;
+            padding:22px;
+            background:#fff4f4;
+            border-left:5px solid #e53935;
+        }
+
+        .delay-heading{
+            color:#c62828;
+            margin:0 0 15px;
+        }
+
+        .delay-row{
+            margin:9px 0;
+            color:#444;
+        }
+
+        .delay-row strong{
+            color:#27364a;
+        }
+
+        /* ================= NO DELAY ================= */
+
+        .no-delay{
+            padding:20px;
+            border-radius:12px;
+            background:#effaf2;
+            border-left:5px solid #2e7d32;
+            color:#2e7d32;
+            font-weight:bold;
+        }
+
+        /* ================= PREVIOUS ================= */
+
+        .previous-section{
+            margin-top:25px;
+        }
+
+        .previous-section h3{
+            color:#073d70;
+        }
+
+        .update-card{
+            background:#f8fafc;
+            border:1px solid #e1e7ef;
+            border-radius:10px;
+            padding:17px;
+            margin-top:10px;
+        }
+
+        .update-card p{
+            margin:6px 0;
+            font-size:14px;
+            color:#555;
+        }
+
+        /* ================= NOT FOUND ================= */
+
+        .not-found{
+            margin-top:25px;
+            padding:20px;
+            background:#fff4f4;
+            color:#c62828;
+            border-radius:10px;
+            text-align:center;
+            font-weight:bold;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer{
+            margin-top:60px;
+            background:#003b70;
+            color:white;
+            text-align:center;
+            padding:14px;
+            font-size:14px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width:600px){
+
+            .navbar{
+                flex-direction:column;
+                gap:14px;
+                padding:15px 20px;
+            }
+
+            .search-box{
+                flex-direction:column;
+            }
+
+            .search-btn{
+                width:100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ================= NAVBAR ================= -->
+
+<div class="navbar">
+
+    <div class="brand">
+
+        <span class="brand-icon">🚆</span>
+
+        <h2>
+            Smart Railway Assistance
+        </h2>
+
+    </div>
+
+    <div class="nav-links">
+
+        <a href="/" class="nav-btn home-btn">
+            🏠 Home
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+
+    <div class="page-title">
+
+        <h1>
+            🚆 Train Delay Information
+        </h1>
+
+        <p>
+            Check the latest delay information reported by railway station officers.
+        </p>
+
+    </div>
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <div class="search-card">
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <label>
+                Enter Train Number
+            </label>
+
+            <div class="search-box">
+
+                <input
+                    type="text"
+                    name="train_number"
+                    placeholder="Example: 16123"
+                    value="{{ request.POST.train_number }}"
+                    required
+                >
+
+                <button
+                    type="submit"
+                    class="search-btn"
+                >
+                    🔍 Search
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    {% if train %}
+
+    <!-- ================= TRAIN INFORMATION ================= -->
+
+    <div class="train-card">
+
+        <h2 class="train-title">
+
+            🚆 {{ train.train_number }} -
+            {{ train.train_name }}
+
+        </h2>
+
+        <p class="route">
+
+            {{ train.source_station.station_name }}
+
+            →
+
+            {{ train.destination_station.station_name }}
+
+        </p>
+
+
+        <!-- ================= CURRENT DELAY ================= -->
+
+        {% if latest_delay %}
+
+        <div class="delay-card">
+
+            <h3 class="delay-heading">
+                🔴 Current Delay Information
+            </h3>
+
+
+            <div class="delay-row">
+
+                📍 <strong>Station:</strong>
+
+                {{ latest_delay.station.station_name }}
+
+            </div>
+
+
+            <div class="delay-row">
+
+                🚆 <strong>Status:</strong>
+
+                {{ latest_delay.get_status_display }}
+
+            </div>
+
+
+            {% if latest_delay.distance_from_station %}
+
+            <div class="delay-row">
+
+                📏 <strong>Distance from station:</strong>
+
+                {{ latest_delay.distance_from_station }} km
+
+            </div>
+
+            {% endif %}
+
+
+            <div class="delay-row">
+
+                ⚠️ <strong>Reason:</strong>
+
+                {{ latest_delay.reason }}
+
+            </div>
+
+
+            <div class="delay-row">
+
+                🕐 <strong>Expected time:</strong>
+
+                {{ latest_delay.expected_time }}
+
+            </div>
+
+
+            <div class="delay-row">
+
+                🕒 <strong>Last updated:</strong>
+
+                {{ latest_delay.updated_at }}
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= PREVIOUS UPDATES ================= -->
+
+        {% if previous_updates %}
+
+        <div class="previous-section">
+
+            <h3>
+                📋 Previous Delay Updates
+            </h3>
+
+
+            {% for update in previous_updates %}
+
+            <div class="update-card">
+
+                <p>
+                    📍 <strong>Station:</strong>
+                    {{ update.station.station_name }}
+                </p>
+
+                <p>
+                    🚆 <strong>Status:</strong>
+                    {{ update.get_status_display }}
+                </p>
+
+                {% if update.distance_from_station %}
+
+                <p>
+                    📏 <strong>Distance:</strong>
+                    {{ update.distance_from_station }} km
+                </p>
+
+                {% endif %}
+
+                <p>
+                    ⚠️ <strong>Reason:</strong>
+                    {{ update.reason }}
+                </p>
+
+                <p>
+                    🕐 <strong>Expected time:</strong>
+                    {{ update.expected_time }}
+                </p>
+
+                <p>
+                    🕒 <strong>Updated:</strong>
+                    {{ update.updated_at }}
+                </p>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% endif %}
+
+
+        {% else %}
+
+        <!-- ================= NO DELAY ================= -->
+
+        <div class="no-delay">
+
+            🟢 No delay information has been reported
+            for this train by station officers.
+
+        </div>
+
+        {% endif %}
+
+
+    </div>
+
+
+    {% elif request.method == "POST" %}
+
+    <!-- ================= TRAIN NOT FOUND ================= -->
+
+    <div class="not-found">
+
+        ❌ No train found with the entered train number.
+
+    </div>
+
+    {% endif %}
+
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    © 2026 Smart Railway Assistance and Reservation System
+
+</footer>
+
+
+</body>
+</html>

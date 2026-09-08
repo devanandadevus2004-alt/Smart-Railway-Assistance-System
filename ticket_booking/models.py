@@ -572,4 +572,58 @@ class SeatAllocationEvaluation(models.Model):
             f"Seat {self.allocated_seat_number} - "
             f"{self.preference_satisfaction_percentage}%"
         )
-        
+
+    
+
+class TrainDelayUpdate(models.Model):
+
+    STATUS_CHOICES = [
+        ('AT_STATION', 'At Station'),
+        ('BEFORE_STATION', 'Stopped Before Station'),
+        ('BETWEEN_STATIONS', 'Stopped Between Stations'),
+        ('MOVING_SLOWLY', 'Moving Slowly'),
+    ]
+
+    train = models.ForeignKey(
+        Train,
+        on_delete=models.CASCADE,
+        related_name='delay_updates'
+    )
+
+    station = models.ForeignKey(
+        'home.Station',
+        on_delete=models.CASCADE,
+        related_name='train_delay_updates'
+    )
+
+    officer = models.ForeignKey(
+        'home.Officer',
+        on_delete=models.CASCADE,
+        related_name='delay_updates'
+    )
+
+    status = models.CharField(
+        max_length=30,
+        choices=STATUS_CHOICES
+    )
+
+    distance_from_station = models.DecimalField(
+        max_digits=6,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    reason = models.TextField()
+
+    expected_time = models.TimeField(
+        null=True,
+        blank=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.train.train_number} - {self.station.station_name}"

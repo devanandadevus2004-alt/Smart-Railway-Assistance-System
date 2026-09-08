@@ -63,4 +63,14 @@ path(
     views.my_medical_requests,
     name="my_medical_requests"
 ),
+path(
+    "update-train-delay/<int:train_id>/",
+    views.update_train_delay,
+    name="update_train_delay"
+),
+path(
+    "train-delay/",
+    views.train_delay,
+    name="train_delay"
+),
 ]

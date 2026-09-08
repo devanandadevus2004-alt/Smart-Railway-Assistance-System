@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Update Train Delay</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f3f6fa;
+            color: #333;
+        }
+
+        .navbar {
+            background: #003b70;
+            color: white;
+            padding: 16px 45px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 12px rgba(0,0,0,.18);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-icon {
+            font-size: 25px;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 21px;
+        }
+
+        .nav-btn {
+            color: white;
+            text-decoration: none;
+            padding: 9px 18px;
+            border-radius: 22px;
+            font-weight: bold;
+            font-size: 14px;
+            background: #0866d5;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.09);
+            border: 1px solid #e6ebf2;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #073d70;
+            font-size: 27px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 25px;
+        }
+
+        .train-info {
+            background: #f3f7fc;
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .train-info h2 {
+            margin: 0 0 8px;
+            color: #073d70;
+            font-size: 20px;
+        }
+
+        .train-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 7px;
+            font-weight: bold;
+            color: #374151;
+        }
+
+        select,
+        input,
+        textarea {
+            width: 100%;
+            padding: 11px 13px;
+            border: 1px solid #ccd5e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+        }
+
+        select:focus,
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #0866d5;
+        }
+
+        textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .distance-field {
+            display: none;
+        }
+
+        .hint {
+            color: #7b8794;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .submit-btn {
+            flex: 1;
+            border: none;
+            padding: 12px;
+            background: #0866d5;
+            color: white;
+            border-radius: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .submit-btn:hover {
+            background: #004da8;
+        }
+
+        .cancel-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            background: #e53935;
+            color: white;
+            text-decoration: none;
+            border-radius: 22px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .cancel-btn:hover {
+            background: #c62828;
+        }
+
+        footer {
+            margin-top: 50px;
+            background: #003b70;
+            color: white;
+            text-align: center;
+            padding: 14px;
+            font-size: 14px;
+        }
+
+        @media(max-width:600px) {
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .navbar h2 {
+                font-size: 18px;
+            }
+
+            .container {
+                margin-top: 25px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+    <div class="brand">
+
+        <span class="brand-icon">🚆</span>
+
+        <h2>
+            Smart Railway Assistance
+        </h2>
+
+    </div>
+
+    <a
+        href="{% url 'officer_dashboard' %}"
+        class="nav-btn"
+    >
+        ← Dashboard
+    </a>
+
+</div>
+
+
+<!-- MAIN -->
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>
+            🚆 Update Train Delay
+        </h1>
+
+        <p class="subtitle">
+            Provide the latest movement and delay information for this train.
+        </p>
+
+
+        <!-- TRAIN INFORMATION -->
+
+        <div class="train-info">
+
+            <h2>
+                {{ train.train_number }} - {{ train.train_name }}
+            </h2>
+
+            <p>
+                🚉
+                {{ train.source_station.station_name }}
+                →
+                {{ train.destination_station.station_name }}
+            </p>
+
+            <p>
+                📍 Officer Station:
+                <strong>
+                    {{ officer.station.station_name }}
+                </strong>
+            </p>
+
+            <p>
+                🕐 Scheduled Departure:
+                {{ train_stop.departure_time }}
+            </p>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <!-- STATUS -->
+
+            <label for="status">
+                Current Train Situation
+            </label>
+
+            <select
+                name="status"
+                id="status"
+                required
+            >
+
+                <option value="">
+                    Select current situation
+                </option>
+
+                <option value="AT_STATION">
+                    At Station
+                </option>
+
+                <option value="BEFORE_STATION">
+                    Stopped Before Station
+                </option>
+
+                <option value="BETWEEN_STATIONS">
+                    Stopped Between Stations
+                </option>
+
+                <option value="MOVING_SLOWLY">
+                    Moving Slowly
+                </option>
+
+            </select>
+
+
+            <!-- DISTANCE -->
+
+            <div
+                class="distance-field"
+                id="distanceField"
+            >
+
+                <label for="distance_from_station">
+                    Distance from Station (km)
+                </label>
+
+                <input
+                    type="number"
+                    name="distance_from_station"
+                    id="distance_from_station"
+                    step="0.01"
+                    min="0"
+                    placeholder="Example: 1.20"
+                >
+
+                <div class="hint">
+                    Enter the approximate distance of the train from
+                    {{ officer.station.station_name }}.
+                </div>
+
+            </div>
+
+
+            <!-- REASON -->
+
+            <label for="reason">
+                Reason for Delay
+            </label>
+
+            <textarea
+                name="reason"
+                id="reason"
+                required
+                placeholder="Example: Signal clearance pending near the station."
+            ></textarea>
+
+
+            <!-- EXPECTED TIME -->
+
+            <label for="expected_time">
+                Expected Movement / Departure Time
+            </label>
+
+            <input
+                type="time"
+                name="expected_time"
+                id="expected_time"
+                required
+            >
+
+            <div class="hint">
+                Enter the expected time when the train is expected
+                to resume movement or depart from the station.
+            </div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="buttons">
+
+                <a
+                    href="{% url 'officer_dashboard' %}"
+                    class="cancel-btn"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Update Delay
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<footer>
+
+    © 2026 Smart Railway Assistance and Reservation System
+
+</footer>
+
+
+<!-- DISTANCE FIELD SCRIPT -->
+
+<script>
+
+    const statusSelect =
+        document.getElementById("status");
+
+    const distanceField =
+        document.getElementById("distanceField");
+
+    const distanceInput =
+        document.getElementById("distance_from_station");
+
+
+    function updateDistanceField() {
+
+        if (statusSelect.value === "BEFORE_STATION") {
+
+            distanceField.style.display = "block";
+
+            distanceInput.required = true;
+
+        } else {
+
+            distanceField.style.display = "none";
+
+            distanceInput.required = false;
+
+            distanceInput.value = "";
+
+        }
+
+    }
+
+
+    statusSelect.addEventListener(
+        "change",
+        updateDistanceField
+    );
+
+</script>
+
+
+</body>
+</html>
