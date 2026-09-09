@@ -1142,6 +1142,8 @@ def officer_login(request):
             })
 
     return render(request, "home/officer_login.html")
+
+
 def officer_dashboard(request):
 
     if "officer_id" not in request.session:
@@ -1151,12 +1153,12 @@ def officer_dashboard(request):
         id=request.session["officer_id"]
     )
 
-    # Existing luggage-transfer functionality
+    # Get luggage requests for this officer's assigned station
     bookings = LuggageBooking.objects.filter(
         source_station=officer.station
     )
 
-    # Trains stopping at this officer's station
+    # Get trains stopping at this officer's assigned station
     trains = Train.objects.filter(
         stops__station=officer.station,
         is_active=True
@@ -1171,7 +1173,6 @@ def officer_dashboard(request):
             "trains": trains,
         }
     )
-
 def update_train_delay(request, train_id):
 
     if "officer_id" not in request.session:
