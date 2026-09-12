@@ -581,6 +581,66 @@
         }
 
 
+
+        /* ==============================
+   MEDICAL ASSISTANCE STATION SEARCH
+============================== */
+
+.medical-station-search {
+    position: relative;
+}
+
+#medical_station_search {
+    width: 100%;
+    padding: 13px 14px;
+    border: 1px solid #ccd3dc;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    background: #fafbfd;
+}
+
+#medical_station_search:focus {
+    outline: none;
+    border-color: #0052cc;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(0, 82, 204, 0.1);
+}
+
+#medical_station_suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #ccd3dc;
+    border-top: none;
+    max-height: 250px;
+    overflow-y: auto;
+    z-index: 2000;
+
+    /* IMPORTANT */
+    display: none;
+
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+
+.medical-station-option {
+    padding: 13px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #edf0f3;
+    font-size: 15px;
+    background: white;
+    transition: 0.15s ease;
+}
+
+.medical-station-option:hover {
+    background: #eef4ff;
+    color: #0052cc;
+}
+
+
         /* ==============================
            NO HOSPITAL
         ============================== */
@@ -702,6 +762,7 @@
             .emergency-options {
                 grid-template-columns: 1fr;
             }
+
 
         }
 
@@ -900,11 +961,15 @@
                     </label>
 
                     <input
-                        type="text"
-                        name="train_number"
-                        placeholder="Enter train number"
-                        required
-                    >
+    type="text"
+    name="train_number"
+    placeholder="Enter 5-digit train number"
+    maxlength="5"
+    minlength="5"
+    pattern="[0-9]{5}"
+    inputmode="numeric"
+    required
+>
 
                 </div>
 
@@ -929,33 +994,51 @@
 
                 <!-- Station -->
 
-                <div class="medical-form-group">
+                <!-- Station -->
 
-                    <label>
-                        Station <span>*</span>
-                    </label>
+<div class="medical-form-group">
 
-                    <select
-                        name="station"
-                        required
-                    >
+    <label>
+        Station <span>*</span>
+    </label>
 
-                        <option value="">
-                            Select station
-                        </option>
+    <div class="medical-station-search">
 
-                        {% for station in stations %}
+        <input
+            type="text"
+            id="medical_station_search"
+            placeholder="🔍 Search railway station..."
+            autocomplete="off"
+            required
+        >
 
-                            <option value="{{ station.id }}">
-                                {{ station.station_name }}
-                            </option>
+        <!-- Selected station ID will be submitted -->
+        <input
+            type="hidden"
+            name="station"
+            id="medical_station_id"
+        >
 
-                        {% endfor %}
+        <!-- Suggestions -->
+        <div id="medical_station_suggestions">
 
-                    </select>
+            {% for station in stations %}
 
+                <div
+                    class="medical-station-option"
+                    data-id="{{ station.id }}"
+                    data-name="{{ station.station_name|escapejs }}"
+                >
+                    {{ station.station_name }}
                 </div>
 
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
 
                 <!-- Coach Number -->
 
@@ -1123,11 +1206,15 @@
                 </label>
 
                 <input
-                    type="tel"
-                    name="contact_number"
-                    placeholder="Enter contact number"
-                    required
-                >
+    type="tel"
+    name="contact_number"
+    placeholder="Enter 10-digit mobile number"
+    maxlength="10"
+    minlength="10"
+    pattern="[6-9][0-9]{9}"
+    inputmode="numeric"
+    required
+>
 
             </div>
 
@@ -1732,6 +1819,204 @@
 
         }
     );
+
+    /* =====================================================
+   MEDICAL ASSISTANCE STATION SEARCH
+===================================================== */
+
+const medicalSearchInput =
+    document.getElementById(
+        "medical_station_search"
+    );
+
+const medicalStationIdInput =
+    document.getElementById(
+        "medical_station_id"
+    );
+
+const medicalSuggestions =
+    document.getElementById(
+        "medical_station_suggestions"
+    );
+
+const medicalStationOptions =
+    document.querySelectorAll(
+        ".medical-station-option"
+    );
+
+
+/* =====================================================
+   SHOW MATCHING MEDICAL STATIONS
+===================================================== */
+
+medicalSearchInput.addEventListener(
+    "input",
+    function() {
+
+        const searchText =
+            this.value
+                .toLowerCase()
+                .trim();
+
+        medicalSuggestions.innerHTML = "";
+
+        /* Empty search */
+
+        if (searchText === "") {
+
+            medicalSuggestions.style.display =
+                "none";
+
+            medicalStationIdInput.value =
+                "";
+
+            return;
+        }
+
+
+        let found = false;
+
+
+        medicalStationOptions.forEach(
+            function(option) {
+
+                const stationName =
+                    option.dataset.name
+                        .toLowerCase();
+
+
+                if (
+                    stationName.includes(
+                        searchText
+                    )
+                ) {
+
+                    const newOption =
+                        document.createElement(
+                            "div"
+                        );
+
+                    newOption.className =
+                        "medical-station-option";
+
+                    newOption.textContent =
+                        option.dataset.name;
+
+                    newOption.dataset.id =
+                        option.dataset.id;
+
+
+                    /* Select station */
+
+                    newOption.addEventListener(
+                        "click",
+                        function() {
+
+                            medicalSearchInput.value =
+                                this.textContent;
+
+                            medicalStationIdInput.value =
+                                this.dataset.id;
+
+                            medicalSuggestions.style.display =
+                                "none";
+
+                        }
+                    );
+
+
+                    medicalSuggestions.appendChild(
+                        newOption
+                    );
+
+                    found = true;
+                }
+
+            }
+        );
+
+
+        if (found) {
+
+            medicalSuggestions.style.display =
+                "block";
+
+        }
+
+        else {
+
+            const noResult =
+                document.createElement(
+                    "div"
+                );
+
+            noResult.className =
+                "no-station";
+
+            noResult.textContent =
+                "No station found";
+
+            medicalSuggestions.appendChild(
+                noResult
+            );
+
+            medicalSuggestions.style.display =
+                "block";
+        }
+
+    }
+);
+
+
+/* =====================================================
+   HIDE MEDICAL SUGGESTIONS WHEN CLICKING OUTSIDE
+===================================================== */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            !event.target.closest(
+                ".medical-station-search"
+            )
+        ) {
+
+            medicalSuggestions.style.display =
+                "none";
+        }
+
+    }
+);
+
+
+/* =====================================================
+   MEDICAL FORM VALIDATION
+===================================================== */
+
+const medicalForm =
+    document.getElementById(
+        "medical-form"
+    );
+
+
+medicalForm.addEventListener(
+    "submit",
+    function(event) {
+
+        if (!medicalStationIdInput.value) {
+
+            event.preventDefault();
+
+            alert(
+                "Please search and select a railway station."
+            );
+
+            medicalSearchInput.focus();
+        }
+
+    }
+);
 
 
 </script>
