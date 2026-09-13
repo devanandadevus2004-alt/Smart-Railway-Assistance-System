@@ -1505,6 +1505,20 @@ from .models import Hospital
 
 def emergency_assistance(request):
 
+    # ==========================================
+    # LOGIN CHECK
+    # ==========================================
+
+    passenger_id = request.session.get("passenger_id")
+
+    if not passenger_id:
+        return redirect("login")
+
+    passenger = get_object_or_404(
+        Passenger,
+        id=passenger_id
+    )
+
     stations = Station.objects.all().order_by("station_name")
 
     hospitals = None
@@ -1518,18 +1532,6 @@ def emergency_assistance(request):
         # ==========================================
 
         if "medical_request" in request.POST:
-
-            passenger_id = request.session.get(
-                "passenger_id"
-            )
-
-            if not passenger_id:
-                return redirect("login")
-
-            passenger = get_object_or_404(
-                Passenger,
-                id=passenger_id
-            )
 
             train_number = request.POST.get(
                 "train_number"
@@ -1559,7 +1561,6 @@ def emergency_assistance(request):
                 "contact_number"
             )
 
-            # Get selected station
             station = get_object_or_404(
                 Station,
                 id=station_id
@@ -1570,45 +1571,27 @@ def emergency_assistance(request):
             # ==========================================
 
             if emergency_type == "OTHER":
-
-                emergency_details = (
-                    other_description
-                )
-
+                emergency_details = other_description
             else:
-
-                emergency_details = (
-                    emergency_type
-                )
+                emergency_details = emergency_type
 
             # ==========================================
             # CREATE MEDICAL REQUEST
             # ==========================================
 
             MedicalAssistanceRequest.objects.create(
-
                 passenger=passenger,
-
                 train_number=train_number,
-
                 patient_name=patient_name,
-
                 station=station,
-
                 coach_number=coach_number,
-
                 emergency_type=emergency_type,
-
                 description=emergency_details,
-
                 contact_number=contact_number,
-
                 status="PENDING"
             )
 
-            return redirect(
-                "my_medical_requests"
-            )
+            return redirect("my_medical_requests")
 
         # ==========================================
         # HOSPITAL SEARCH
@@ -1616,9 +1599,7 @@ def emergency_assistance(request):
 
         else:
 
-            station_id = request.POST.get(
-                "station"
-            )
+            station_id = request.POST.get("station")
 
             selected_distance = request.POST.get(
                 "distance"
@@ -1637,10 +1618,8 @@ def emergency_assistance(request):
 
                 if (
                     selected_distance
-                    and
-                    selected_distance != "all"
+                    and selected_distance != "all"
                 ):
-
                     hospitals = hospitals.filter(
                         distance_km__lte=selected_distance
                     )
