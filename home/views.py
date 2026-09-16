@@ -1155,9 +1155,16 @@ def officer_dashboard(request):
 
     # Get luggage requests for this officer's assigned station
     bookings = LuggageBooking.objects.filter(
-        source_station=officer.station
-    )
+    source_station=officer.station
+)
 
+    pending_bookings = bookings.filter(
+    status__iexact="PENDING"
+    ).order_by("travel_date")
+
+    worked_bookings = bookings.exclude(
+    status__iexact="PENDING"
+    ).order_by("-travel_date")
     # Get trains stopping at this officer's assigned station
     trains = Train.objects.filter(
         stops__station=officer.station,
@@ -1169,7 +1176,8 @@ def officer_dashboard(request):
         "home/officer_dashboard.html",
         {
             "officer": officer,
-            "bookings": bookings,
+            "pending_bookings": pending_bookings,
+            "worked_bookings": worked_bookings,
             "trains": trains,
         }
     )

@@ -474,6 +474,30 @@
                 gap:10px;
             }
 
+
+        /* ================= REQUEST SECTIONS ================= */
+
+.request-section {
+    margin-top: 25px;
+}
+
+.request-section-title {
+    margin: 0 0 6px;
+    color: #073d70;
+    font-size: 19px;
+}
+
+.request-section-subtitle {
+    margin: 0 0 15px;
+    color: #7b8794;
+    font-size: 13px;
+}
+
+.worked-section {
+    margin-top: 35px;
+    padding-top: 30px;
+    border-top: 1px solid #e2e8f0;
+}
         }
 
     </style>
@@ -636,70 +660,62 @@
     <!-- ================================================= -->
     <!-- LUGGAGE SERVICE -->
     <!-- ================================================= -->
+    <!-- ================================================= -->
+<!-- LUGGAGE SERVICE -->
+<!-- ================================================= -->
 
-    <div id="luggageService" class="service-content">
+<div id="luggageService" class="service-content">
+
+    <div class="content-header">
+
+        <h2>
+            🧳 Luggage Transfer
+        </h2>
+
+        <button
+            class="back-button"
+            onclick="showServices()"
+        >
+            ← Services
+        </button>
+
+    </div>
+
+    <p class="section-subtitle">
+        Manage luggage transfer requests assigned to
+        {{ officer.station.station_name }}.
+    </p>
 
 
-        <div class="content-header">
+    <!-- ================= PENDING REQUESTS ================= -->
 
-            <h2>
-                🧳 Luggage Transfer
-            </h2>
+    <div class="request-section">
 
-            <button
-                class="back-button"
-                onclick="showServices()"
-            >
-                ← Services
-            </button>
+        <h3 class="request-section-title">
+            📋 Pending Luggage Requests
+        </h3>
 
-        </div>
-
-
-        <p class="section-subtitle">
-
-            Manage luggage transfer requests assigned to
-            {{ officer.station.station_name }}.
-
+        <p class="request-section-subtitle">
+            Requests waiting for officer action, arranged by travel date.
         </p>
-
 
         <div class="table-container">
 
             <table>
 
                 <thead>
-
                     <tr>
-
-                        <th>
-                            Passenger
-                        </th>
-
-                        <th>
-                            Destination
-                        </th>
-
-                        <th>
-                            Travel Date
-                        </th>
-
-                        <th>
-                            Status
-                        </th>
-
-                        <th>
-                            Action
-                        </th>
-
+                        <th>Passenger</th>
+                        <th>Destination</th>
+                        <th>Travel Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
                     </tr>
-
                 </thead>
-
 
                 <tbody>
 
-                    {% for booking in bookings %}
+                    {% for booking in pending_bookings %}
 
                     <tr>
 
@@ -716,47 +732,28 @@
                         </td>
 
                         <td>
-
-                            {% if booking.status|upper|cut:" " == "PENDING" %}
-
-                                <span class="status pending">
-                                    {{ booking.status }}
-                                </span>
-
-                            {% else %}
-
-                                <span class="status">
-                                    {{ booking.status }}
-                                </span>
-
-                            {% endif %}
-
+                            <span class="status pending">
+                                {{ booking.status }}
+                            </span>
                         </td>
 
                         <td>
-
                             <a
                                 href="/booking/{{ booking.id }}/"
                                 class="open-btn"
                             >
                                 Open
                             </a>
-
                         </td>
 
                     </tr>
 
-
                     {% empty %}
 
                     <tr>
-
                         <td colspan="5" class="empty">
-
-                            📭 No luggage transfer requests available.
-
+                            ✅ No pending luggage requests.
                         </td>
-
                     </tr>
 
                     {% endfor %}
@@ -768,6 +765,88 @@
         </div>
 
     </div>
+
+
+    <!-- ================= WORKED REQUESTS ================= -->
+
+    <div class="request-section worked-section">
+
+        <h3 class="request-section-title">
+            ✅ Requests Already Worked On
+        </h3>
+
+        <p class="request-section-subtitle">
+            Previously processed luggage requests.
+        </p>
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Passenger</th>
+                        <th>Destination</th>
+                        <th>Travel Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for booking in worked_bookings %}
+
+                    <tr>
+
+                        <td class="passenger">
+                            {{ booking.passenger.full_name }}
+                        </td>
+
+                        <td class="destination">
+                            {{ booking.destination_station.station_name }}
+                        </td>
+
+                        <td class="travel-date">
+                            {{ booking.travel_date }}
+                        </td>
+
+                        <td>
+                            <span class="status">
+                                {{ booking.status }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <a
+                                href="/booking/{{ booking.id }}/"
+                                class="open-btn"
+                            >
+                                Open
+                            </a>
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="empty">
+                            No previously worked requests.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
 
 
     <!-- ================================================= -->
