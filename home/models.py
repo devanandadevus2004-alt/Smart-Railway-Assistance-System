@@ -212,13 +212,18 @@ class LuggageItem(models.Model):
         null=True
     )
 
+    rc_book = models.FileField(
+        upload_to="rc_books/",
+        blank=True,
+        null=True
+    )
+
     def __str__(self):
         return (
             f"Item {self.item_number} - "
             f"{self.luggage_type} - "
             f"{self.weight} kg"
         )
-
 
 class MedicalAssistanceRequest(models.Model):
 

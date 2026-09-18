@@ -1422,6 +1422,25 @@ $('#transfer_type').on('change', function() {
 
             </select>
 
+          <div class="rc-upload" style="display:none; margin-top:15px;">
+
+    <label>
+        RC Book
+    </label>
+
+    <input
+        type="file"
+        name="rc_book_${i}"
+        id="rc_book_${i}"
+        accept=".pdf,.jpg,.jpeg,.png"
+    >
+
+    <small style="color:#666;">
+        Upload the vehicle's RC Book (PDF, JPG or PNG).
+    </small>
+
+</div>
+
         </div>
 
 
@@ -1526,6 +1545,20 @@ $('#transfer_type').on('change', function() {
             "item_image_" + itemNumber
         );
 
+    const rcSection =
+        document.getElementById(
+            "rc_upload_" + itemNumber
+        );
+
+    const rcInput =
+        document.getElementById(
+            "rc_book_" + itemNumber
+        );
+
+
+    /* =========================
+       OTHER ITEM
+    ========================= */
 
     if (this.value === "Other") {
 
@@ -1548,8 +1581,30 @@ $('#transfer_type').on('change', function() {
 
     }
 
-});
 
+    /* =========================
+       VEHICLE
+    ========================= */
+
+    if (this.value === "Vehicle") {
+
+        rcSection.style.display = "block";
+
+        rcInput.required = true;
+
+    }
+
+    else {
+
+        rcSection.style.display = "none";
+
+        rcInput.required = false;
+
+        rcInput.value = "";
+
+    }
+
+});
 
         /* ======================================
            UPDATE TOTAL WHEN WEIGHT CHANGES
